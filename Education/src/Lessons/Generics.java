@@ -20,7 +20,8 @@ public class Generics {
             //list.set(i, tmp.get(list.size()-i-1));        \\ записываем элементы
         }
     }
-    //Возникла тшибка компиляции, т к согласно PECS <? extends...> - producer, а значит может только продюсировать элементы, а мы пытаемся в него записывать элементы!
+    //Возникла тшибка компиляции, т к согласно PECS <? extends...> - producer, а значит может только
+    // продюсировать элементы, а мы пытаемся в него записывать элементы!
 
 
     //Паттерн WildCart Capture:
@@ -239,14 +240,15 @@ public class Generics {
                     //list.set(i, tmp.get(list.size()-i-1));        \\ записываем элементы
                 }
             }
-            //Возникла тшибка компиляции, т к согласно PECS <? extends...> - producer, а значит может только продюсировать элементы, а мы пытаемся в него записывать элементы!
+            //Возникла тшибка компиляции, т к согласно PECS <? extends...> - producer, а значит может только
+            // продюсировать элементы, а мы пытаемся в него записывать элементы!
 
             //Паттерн WildCart Capture:
             public void goodReverse(List<?> list) {
                 rev(list);
             }
-            private <T> void rev(List<T> list) {       //Работаем с параметризованным методом, аргумент это лист с конкретным парметром типа, а значит и consumer и producer
-                List<T> tmp = new ArrayList<T>(list);
+            private <T> void rev(List<T> list) {       //Работаем с параметризованным методом, аргумент это лист с конкретным
+                List<T> tmp = new ArrayList<T>(list);   //парметром типа, а значит и consumer и producer
                 for (int i = 0; i < list.size(); i++) {
                     list.set(i, tmp.get(list.size()-i-1));      //теперь все компилится
                 }
