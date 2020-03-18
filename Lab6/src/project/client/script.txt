@@ -1,0 +1,22 @@
+awd
+awd
+awd
+help
+info
+clear
+head
+print_ascending
+filter_contains_name 123
+filter_contains_name
+max_by_employees_count
+add_if_min
+qwe
+qwe
+qwe
+123
+123
+123
+2
+COMMERCIAL
+qweqwe
+exit

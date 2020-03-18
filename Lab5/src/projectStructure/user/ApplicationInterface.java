@@ -40,7 +40,6 @@ public class ApplicationInterface {
                 String parameter = "";
                 NameOfCommands command = null;
                 boolean flag;
-
                 while (true) {
                     flag = true;
                     System.out.print("Введите команду: ");
