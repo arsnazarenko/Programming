@@ -1,16 +1,12 @@
-package project.client.commands.uiCommands;
+package project.client.commands.commandType;
 
 import project.client.commands.Command;
-import project.client.commands.NameOfCommands;
 import project.client.сlassModel.Organization;
 
-import java.io.Serializable;
-
-public class AddCommand extends Command{
+public class AddIfMinCommand extends Command {
     private Organization organization;
 
-
-    public AddCommand(Organization organization) {
+    public AddIfMinCommand(Organization organization) {
         this.organization = organization;
     }
 

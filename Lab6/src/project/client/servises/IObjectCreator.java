@@ -1,4 +1,4 @@
-package project.client.ui;
+package project.client.servises;
 
 import project.client.сlassModel.Organization;
 

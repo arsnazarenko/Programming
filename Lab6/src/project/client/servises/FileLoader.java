@@ -1,10 +1,9 @@
-package project.client.ui;
+package project.client.servises;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.function.DoubleToIntFunction;
 
 public class FileLoader {
 

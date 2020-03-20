@@ -1,11 +1,6 @@
 package project.client.serialization;
 
-import project.client.commands.Command;
-import project.client.commands.uiCommands.AddCommand;
-import project.client.сlassModel.*;
-
 import java.io.*;
-import java.util.Date;
 
 public class SerializationManager {
     public<T extends Serializable> byte[] objectSerial(T serial) {

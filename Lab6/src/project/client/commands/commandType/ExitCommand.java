@@ -1,7 +1,6 @@
-package project.client.commands.uiCommands;
+package project.client.commands.commandType;
 
 import project.client.commands.Command;
-import project.client.commands.NameOfCommands;
 
 public class ExitCommand extends Command {
     public ExitCommand() {

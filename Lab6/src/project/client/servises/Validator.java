@@ -1,10 +1,12 @@
-package project.client.ui;
+package project.client.servises;
 
 import project.client.commands.Command;
+import project.client.commands.CommandData;
 import project.client.commands.NameOfCommands;
-import project.client.commands.uiCommands.*;
+import project.client.commands.commandType.*;
 
-import java.util.Scanner;
+import java.util.*;
+
 public class Validator {
     private IObjectCreator objectCreator;
     private ValidateManager validateManager;
@@ -15,6 +17,7 @@ public class Validator {
     }
 
     public Command buildCommand(CommandData commandData, Scanner scanner) {
+
         Command command = null;
         NameOfCommands nameOfCommand = commandData.getCommand();
         String parameter = commandData.getParam();
@@ -86,6 +89,7 @@ public class Validator {
         return command;
     }
 
+
     public IObjectCreator getObjectCreator() {
         return objectCreator;
     }
@@ -101,4 +105,5 @@ public class Validator {
     public void setValidateManager(ValidateManager validateManager) {
         this.validateManager = validateManager;
     }
+
 }

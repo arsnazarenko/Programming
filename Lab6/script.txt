@@ -1,0 +1,21 @@
+12123
+qwe
+qwe
+qwe
+qwe
+qe
+add
+s
+2
+2
+2
+2
+COMMERCIAL
+
+update_id awdawd
+info
+head
+print_ascending
+head
+execute_script D:\Files\Documents\Java\GitHub\Lab6\script2.txt
+exit

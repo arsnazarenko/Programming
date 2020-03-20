@@ -1,5 +1,7 @@
 package project.client.commands;
 
+import project.client.commands.NameOfCommands;
+
 public class CommandData {
     private NameOfCommands command;
     private String param;

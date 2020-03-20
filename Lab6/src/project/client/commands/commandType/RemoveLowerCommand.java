@@ -1,7 +1,6 @@
-package project.client.commands.uiCommands;
+package project.client.commands.commandType;
 
 import project.client.commands.Command;
-import project.client.commands.NameOfCommands;
 import project.client.сlassModel.Organization;
 
 public class RemoveLowerCommand extends Command {
