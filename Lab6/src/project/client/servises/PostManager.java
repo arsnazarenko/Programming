@@ -1,9 +1,11 @@
 package project.client.servises;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import project.client.commands.Command;
 import project.client.commands.commandType.ExecuteScriptCommand;
 import project.client.commands.commandType.ExitCommand;
 import java.io.*;
+import java.net.SocketAddress;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
@@ -19,18 +21,19 @@ public class PostManager {
         this.receiver = receiver;
     }
 
-    public void exchange(Command command){
-        sender.send(command);
+    public void exchange(Command command, SocketAddress address){
+        sender.send(command, address);
         System.out.println(receiver.receive()); //временно
     }
 
-    public void exchangeWithServer(Command[] commands) {
+    public void exchangeWithServer(Command[] commands, SocketAddress address) {
         for(Command command : commands) {
             if (command != null) {
                 if (command.getClass() == ExecuteScriptCommand.class) {
-                    scriptRun(command);
+                    exchange(command, address);
+                    scriptRun(command, address);
                 } else {
-                    exchange(command);
+                    exchange(command, address);
                     if (command.getClass() == ExitCommand.class) {
                         System.out.println("ЗАВЕРШЕНИЕ....");
                     }
@@ -40,14 +43,15 @@ public class PostManager {
     }
 
 
-    private void scriptRun(Command command) {
+
+
+    private void scriptRun(Command command, SocketAddress address) {
         ExecuteScriptCommand script = (ExecuteScriptCommand) command;
         try (InputStream scriptStream = new FileInputStream(new File(script.getScript()))) {
-            System.out.println("С К Р И П Т");
             Queue<Command> commandQueue = commandCreator.createCommandQueue(scriptStream);
             Command[] commands = commandQueue.toArray(new Command[commandQueue.size()]);
-            exchangeWithServer(commands);
-            System.out.println("С К Р И П Т");
+            System.out.println("КОНЕЦ СКРИПТА");
+            exchangeWithServer(commands, address);
         } catch (NoSuchElementException e) {
             System.out.println("ОШИБКА СКРИПТА");
         } catch (IOException e) {

@@ -49,10 +49,10 @@ public class NioClient {
 
                     SerializationManager serializationManager = new SerializationManager();
                     Receiver receiver = new Receiver(ByteBuffer.allocate(8*1024), client);
-                    Sender sender = new Sender(client, serverAddress, serializationManager);
+                    Sender sender = new Sender(client, serializationManager);
                     PostManager postManager = new PostManager(commandCreator, sender, receiver);
                     //Изначально серверу нужно отправить содержимое xml файла, причем только один раз, при запуске приложения
-                    postManager.exchange(new LoadCommand(fileLoader.fileData(fileForSaveAndLoad)));
+                    postManager.exchange(new LoadCommand(fileLoader.fileData(fileForSaveAndLoad)), serverAddress);
 
 
                     //для преобразования строки в InputStream, что потом поможет создать xml из строки , переданной с сервера
@@ -66,7 +66,7 @@ public class NioClient {
                         while (true) {
                             command = commandCreator.createCommand(inputStream);
                             commandLetter[0] = command;
-                            postManager.exchangeWithServer(commandLetter);
+                            postManager.exchangeWithServer(commandLetter, serverAddress);
                             if (command != null) {
                                 if (command.getClass() == ExitCommand.class) {
                                     break;

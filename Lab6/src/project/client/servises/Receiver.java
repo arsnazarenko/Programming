@@ -16,21 +16,20 @@ public class Receiver {
     }
 
 
-    public String receive() {
-        String result = "";
+    public byte[] receive() {
+        byte bytes[] = new byte[0];
         try {
             datagramChannel.receive(byteBuffer);
             byteBuffer.flip();
             int limits = byteBuffer.limit();
-            byte bytes[] = new byte[limits];
+            bytes = new byte[limits];
             byteBuffer.get(bytes, 0, limits);
             byteBuffer.clear();
-            result = new String(bytes);
-            return result;
+            return bytes;
         } catch (IOException e) {
             System.out.println("БУФФЕР НЕ ПОДДЕРЖИВАЕТ ЗАПИСЬ");;
         }
-        return result;
+        return bytes;
     }
 
     public ByteBuffer getByteBuffer() {
