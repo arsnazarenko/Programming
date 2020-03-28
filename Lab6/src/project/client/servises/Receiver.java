@@ -17,7 +17,7 @@ public class Receiver {
 
 
     public byte[] receive() {
-        byte bytes[] = new byte[0];
+        byte[] bytes = new byte[0];
         try {
             datagramChannel.receive(byteBuffer);
             byteBuffer.flip();

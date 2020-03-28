@@ -10,5 +10,4 @@ import java.util.Scanner;
 
 public interface IObjectCreator {
     Organization create(Scanner reader);
-    Organization create(Scanner reader, Long strId);//можно убрать
 }

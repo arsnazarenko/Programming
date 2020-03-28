@@ -6,7 +6,6 @@ import project.client.сlassModel.Organization;
 public class AddCommand extends Command{
     private Organization organization;
 
-
     public AddCommand(Organization organization) {
         this.organization = organization;
     }

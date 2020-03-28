@@ -20,8 +20,8 @@ public class Sender {
     }
 
     public<T extends Serializable> void send(T letter, SocketAddress address) {
-        ByteBuffer buffer = ByteBuffer.wrap(serializationManager.objectSerial(letter));
         try {
+            ByteBuffer buffer = ByteBuffer.wrap(serializationManager.objectSerial(letter));
             datagramChannel.send(buffer, address);
             buffer.clear();
         } catch (IOException e) {

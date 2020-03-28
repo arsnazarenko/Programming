@@ -1,5 +1,7 @@
 package project.client.serialization;
 
+import project.client.commands.Command;
+
 import java.io.*;
 
 public class SerializationManager {
@@ -10,22 +12,19 @@ public class SerializationManager {
             oos.writeObject(serial);
             oos.flush();
             baos.flush();
-            byte[] objectByte = baos.toByteArray();
-            return objectByte;
+            return baos.toByteArray();
         } catch (IOException e) {
             System.err.println("ОШИБКА СЕРИАЛИЗАЦИИ");
         }
         return null;
     }
 
-    public<T extends Serializable> T objectDeserial(byte[] array) {
+    public Command objectDeserial(byte[] array) {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(array);
              ObjectInputStream ois = new ObjectInputStream(bais)
         ) {
-            return (T) ois.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            return (Command) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;

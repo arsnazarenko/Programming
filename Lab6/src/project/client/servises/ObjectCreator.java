@@ -391,16 +391,5 @@ public class ObjectCreator implements IObjectCreator {
      * @see ObjectCreator#create(Scanner, Long)
      * @return возвращает значение объекта
      */
-    public Organization create(Scanner rd, Long thatId) {
-        Long id = thatId;
-        String name = setName(rd);
-        Coordinates coordinates = setCoordinates(rd);
-        Double annualTurnover = setAnnualTurnover(rd);
-        Integer employeesCount = setEmployeesCount(rd);
-        OrganizationType type = setOrganizationType(rd);
-        Address officialAddress = setOfficialAddress(rd);
-        Date creationDate = null;
-        return new Organization(id, name, coordinates, creationDate, employeesCount,
-                type, annualTurnover, officialAddress);
-    }
+
 }

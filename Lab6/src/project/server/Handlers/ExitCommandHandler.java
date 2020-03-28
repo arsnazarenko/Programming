@@ -4,7 +4,9 @@ import project.client.commands.Command;
 
 public class ExitCommandHandler implements ICommandHandler {
     @Override
-    public void processCommand(Command command) {
+    public String processCommand(Command command) {
+        //сервер получил команду закрытия клиента
 
+        return "ЗАВЕРШЕНИЕ...";
     }
 }

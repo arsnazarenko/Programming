@@ -1,10 +1,21 @@
 package project.server.Handlers;
 
 import project.client.commands.Command;
+import project.server.CollectionManager;
 
 public class ClearCommandHandler implements ICommandHandler {
-    @Override
-    public void processCommand(Command command) {
 
+    private CollectionManager collectionManager;
+
+    public ClearCommandHandler(CollectionManager collectionManager) {
+        this.collectionManager = collectionManager;
+    }
+
+    @Override
+    public String processCommand(Command command) {
+        collectionManager.getOrgCollection().clear();
+        //можно не кастовать к классу команды, т к параметры нам не нужны
+
+        return "Коллекция отчищена";
     }
 }

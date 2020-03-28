@@ -4,8 +4,11 @@ import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import project.client.commands.Command;
 import project.client.commands.commandType.ExecuteScriptCommand;
 import project.client.commands.commandType.ExitCommand;
+import project.client.serialization.SerializationManager;
+
 import java.io.*;
 import java.net.SocketAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
@@ -14,16 +17,15 @@ public class PostManager {
     private Sender sender;
     private Receiver receiver;
 
-
     public PostManager(CommandCreator commandCreator, Sender sender, Receiver receiver) {
         this.commandCreator = commandCreator;
         this.sender = sender;
         this.receiver = receiver;
     }
 
-    public void exchange(Command command, SocketAddress address){
+    public void exchange(Command command, SocketAddress address) {
         sender.send(command, address);
-        System.out.println(receiver.receive()); //временно
+        System.out.println(new String(receiver.receive(), StandardCharsets.UTF_8)); //временно
     }
 
     public void exchangeWithServer(Command[] commands, SocketAddress address) {
@@ -34,9 +36,8 @@ public class PostManager {
                     scriptRun(command, address);
                 } else {
                     exchange(command, address);
-                    if (command.getClass() == ExitCommand.class) {
-                        System.out.println("ЗАВЕРШЕНИЕ....");
-                    }
+
+
                 }
             }
         }

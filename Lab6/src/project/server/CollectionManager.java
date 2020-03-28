@@ -10,6 +10,9 @@ import java.util.Deque;
 import java.util.Objects;
 @XmlRootElement(name = "Organizations")
 public class CollectionManager {
+
+    public static long OBJECT_ID_COUNTER = 0;
+
     /**
      * Класс, содержащий коллекцию, с которой ведется работа.
      */
@@ -61,13 +64,5 @@ public class CollectionManager {
         return Objects.hash(orgCollection);
     }
 
-    @Override
-    public String toString() {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (Organization elem : orgCollection) {
-            stringBuffer.append(elem + "\n");
-        }
-        return stringBuffer.toString();
-    }
 
 }
