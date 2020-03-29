@@ -11,14 +11,14 @@ import java.io.File;
 /**
  * Класс, отвечающий за чтение и запись объектов из/в файл
  */
-public class JaxbWorker implements IFileWorker {
+public class JaxbWorker{
 
     /**
      * Метод, предоставляющий процесс сериализации объекта в файл формата xml
      * @param organizationCollection объект типа CollectionManager
      * @param filePath имя файла, куда нужно записать объекты
      */
-    public void convertObjectToXml(CollectionManager organizationCollection, String filePath) {
+    public static void convertObjectToXml(CollectionManager organizationCollection, String filePath) {
         try {
             JAXBContext context = JAXBContext.newInstance(CollectionManager.class);
             Marshaller marshaller = context.createMarshaller();
@@ -35,7 +35,7 @@ public class JaxbWorker implements IFileWorker {
      * @param file файл, хранящий объекты
      * @return объект типа CollectionManager
      */
-    public CollectionManager fromXmlToObject(File file) {
+    public static CollectionManager fromXmlToObject(File file) {
 
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(CollectionManager.class);

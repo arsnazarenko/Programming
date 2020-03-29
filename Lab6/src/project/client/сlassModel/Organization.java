@@ -172,7 +172,7 @@ public class Organization implements Comparable<Organization>, Serializable {
 
     @Override
     public int compareTo(Organization o) {
-        return this.getEmployeesCount().compareTo(o.getEmployeesCount());
+        return this.creationDate.compareTo(o.getCreationDate());
     }
 
 

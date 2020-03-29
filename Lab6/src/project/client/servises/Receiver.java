@@ -1,10 +1,12 @@
 package project.client.servises;
 
-import javax.xml.crypto.Data;
+import javafx.util.Pair;
+
 import java.io.IOException;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 
 public class Receiver {
     private ByteBuffer byteBuffer;
@@ -16,20 +18,20 @@ public class Receiver {
     }
 
 
-    public byte[] receive() {
-        byte[] bytes = new byte[0];
+    public LetterInfo receive() {
+        byte[] bytes;
         try {
-            datagramChannel.receive(byteBuffer);
+            SocketAddress remoteAdd = datagramChannel.receive(byteBuffer);
             byteBuffer.flip();
             int limits = byteBuffer.limit();
             bytes = new byte[limits];
             byteBuffer.get(bytes, 0, limits);
             byteBuffer.clear();
-            return bytes;
+            return new LetterInfo(remoteAdd, bytes);
         } catch (IOException e) {
             System.out.println("БУФФЕР НЕ ПОДДЕРЖИВАЕТ ЗАПИСЬ");;
         }
-        return bytes;
+        return null;
     }
 
     public ByteBuffer getByteBuffer() {
@@ -47,4 +49,6 @@ public class Receiver {
     public void setDatagramChannel(DatagramChannel datagramChannel) {
         this.datagramChannel = datagramChannel;
     }
+
 }
+

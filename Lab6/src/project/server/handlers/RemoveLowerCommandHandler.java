@@ -1,7 +1,11 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
+import project.client.commands.commandType.RemoveLowerCommand;
+import project.client.сlassModel.Organization;
 import project.server.CollectionManager;
+
+import java.util.Deque;
 
 public class RemoveLowerCommandHandler implements ICommandHandler {
 
@@ -13,8 +17,9 @@ public class RemoveLowerCommandHandler implements ICommandHandler {
 
     @Override
     public String processCommand(Command command) {
-        //удаляем наименьший элемент коллекции
-
+        RemoveLowerCommand removeLowerCommand = (RemoveLowerCommand) command;
+        Organization organization = removeLowerCommand.getOrganization();
+         collectionManager.getOrgCollection().removeIf(o -> o.compareTo(organization) < 0);
         return "не реализовано";
     }
 }

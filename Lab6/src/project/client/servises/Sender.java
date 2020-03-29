@@ -30,6 +30,14 @@ public class Sender {
 
     }
 
+    public SerializationManager getSerializationManager() {
+        return serializationManager;
+    }
+
+    public void setSerializationManager(SerializationManager serializationManager) {
+        this.serializationManager = serializationManager;
+    }
+
     public DatagramChannel getDatagramChannel() {
         return datagramChannel;
     }

@@ -1,12 +1,10 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
 import project.client.commands.commandType.AddCommand;
 import project.client.сlassModel.Organization;
 import project.server.CollectionManager;
 import project.server.FieldSetter;
-
-import java.lang.reflect.Field;
 
 public class AddCommandHandler implements ICommandHandler {
     private FieldSetter fieldSetter;

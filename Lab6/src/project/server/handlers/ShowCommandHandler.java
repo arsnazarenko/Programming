@@ -1,4 +1,4 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
 import project.server.CollectionManager;
@@ -13,8 +13,10 @@ public class ShowCommandHandler implements ICommandHandler {
 
     @Override
     public String processCommand(Command command) {
+        StringBuilder stringBuilder = new StringBuilder();
+        collectionManager.getOrgCollection().forEach((o) -> stringBuilder.append(o + "\n"));
 
 
-        return collectionManager.getOrgCollection().toString();
+        return stringBuilder.toString();
     }
 }

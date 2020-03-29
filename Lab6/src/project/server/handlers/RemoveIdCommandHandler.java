@@ -1,4 +1,4 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
 import project.client.commands.commandType.RemoveIdCommand;
@@ -15,8 +15,8 @@ public class RemoveIdCommandHandler implements ICommandHandler {
     @Override
     public String processCommand(Command command) {
         RemoveIdCommand removeIdCommand = (RemoveIdCommand) command;
-        removeIdCommand.getId();
-
-        return "не реализовано";
+        Long id = removeIdCommand.getId();
+        collectionManager.getOrgCollection().removeIf((o1) -> o1.getId().equals(id));
+        return "Команды выполнена";
     }
 }

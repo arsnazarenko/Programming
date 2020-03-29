@@ -16,16 +16,19 @@ public class PostManager {
     private CommandCreator commandCreator;
     private Sender sender;
     private Receiver receiver;
+    SerializationManager serializationManager;
 
-    public PostManager(CommandCreator commandCreator, Sender sender, Receiver receiver) {
+    public PostManager(CommandCreator commandCreator, Sender sender, Receiver receiver, SerializationManager serializationManager) {
         this.commandCreator = commandCreator;
         this.sender = sender;
         this.receiver = receiver;
+        this.serializationManager = serializationManager;
     }
 
     public void exchange(Command command, SocketAddress address) {
         sender.send(command, address);
-        System.out.println(new String(receiver.receive(), StandardCharsets.UTF_8)); //временно
+        String serverAnswer = (String) serializationManager.objectDeserial(receiver.receive().getBytes());
+        System.out.println(serverAnswer);//временно
     }
 
     public void exchangeWithServer(Command[] commands, SocketAddress address) {

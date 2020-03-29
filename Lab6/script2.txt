@@ -14,9 +14,10 @@ COMMERCIAL
 update_id awdawd
 info
 head
-print_ascending
-head
 show
+print_ascending
+show
+head
 save
 
 exit

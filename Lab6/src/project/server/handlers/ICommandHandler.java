@@ -1,4 +1,4 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
 

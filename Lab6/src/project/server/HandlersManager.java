@@ -2,7 +2,7 @@ package project.server;
 
 import project.client.commands.Command;
 import project.client.commands.commandType.*;
-import project.server.Handlers.*;
+import project.server.handlers.*;
 
 import java.util.HashMap;
 import java.util.Map;

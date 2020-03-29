@@ -37,7 +37,7 @@ public class NioClient {
             SerializationManager serializationManager = new SerializationManager();
             Receiver receiver = new Receiver(ByteBuffer.allocate(8*1024), client);
             Sender sender = new Sender(client, serializationManager);
-            PostManager postManager = new PostManager(commandCreator, sender, receiver);
+            PostManager postManager = new PostManager(commandCreator, sender, receiver, serializationManager);
 
             try(InputStream inputStream = System.in) {
                 Command command;

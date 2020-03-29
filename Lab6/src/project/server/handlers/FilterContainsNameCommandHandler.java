@@ -1,4 +1,4 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
 import project.client.commands.commandType.FilterContainsNameCommand;
@@ -14,9 +14,10 @@ public class FilterContainsNameCommandHandler implements ICommandHandler {
 
     @Override
     public String processCommand(Command command) {
+        StringBuilder stringBuilder = new StringBuilder();
         FilterContainsNameCommand filterContainsNameCommand = (FilterContainsNameCommand) command;
-        filterContainsNameCommand.getSubString();
-
-        return "не реализовано";
+        String subString = filterContainsNameCommand.getSubString();
+        collectionManager.getOrgCollection().stream().filter((o) -> o.getName().contains(subString)).forEach(o -> stringBuilder.append(o + "\n"));
+        return stringBuilder.toString();
     }
 }

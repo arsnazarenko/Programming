@@ -1,4 +1,4 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
 import project.server.CollectionManager;
@@ -15,6 +15,9 @@ public class InfoCommandHandler implements ICommandHandler {
     public String processCommand(Command command) {
         //информация о колллекции
 
-        return "не реализовано";
+        return "Тип: " + collectionManager.getOrgCollection().getClass() +
+                "\nКоличество элементов: " + collectionManager.getOrgCollection().size() +
+                "\nДата инициализации: " + collectionManager.getCreationCollectionDate() + "\n";
+
     }
 }

@@ -15,7 +15,9 @@ COMMERCIAL
 update_id awdawd
 info
 head
+show
 print_ascending
+show
 head
 execute_script D:\Files\Documents\Java\GitHub\Lab6\script2.txt
 exit

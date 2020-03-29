@@ -1,4 +1,4 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
 import project.client.commands.commandType.UpdateIdCommand;
@@ -19,8 +19,8 @@ public class UpdateIdCommandHandler implements ICommandHandler {
     public String processCommand(Command command) {
         UpdateIdCommand updateIdCommand= (UpdateIdCommand) command;
         long id = updateIdCommand.getId();
-        //ищем в коллекции такой ай ди , еслли нет отправляем строку что нет
-        //если да, сеттим поле ай ди этим самым значение и заменяем тот элемент нашимж
+
+        collectionManager.getOrgCollection().stream().filter(o -> o.getId().equals(id));
 
 
         return "не реализовано";

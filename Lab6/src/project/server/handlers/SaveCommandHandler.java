@@ -1,19 +1,20 @@
-package project.server.Handlers;
+package project.server.handlers;
 
 import project.client.commands.Command;
 import project.server.CollectionManager;
 
-public class PrintAscendingCommandHandler implements ICommandHandler {
+public class SaveCommandHandler implements ICommandHandler {
 
     private CollectionManager collectionManager;
 
-    public PrintAscendingCommandHandler(CollectionManager collectionManager) {
+    public SaveCommandHandler(CollectionManager collectionManager) {
         this.collectionManager = collectionManager;
     }
 
     @Override
     public String processCommand(Command command) {
-        //возвращаем коллекцию отсортированную
+        //берем нашу коллекцию, маршаллером преобразуем ее к XML, сохраняем на файл
+
 
         return "не реализовано";
     }

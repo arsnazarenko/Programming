@@ -19,13 +19,13 @@ public class SerializationManager {
         return null;
     }
 
-    public Command objectDeserial(byte[] array) {
+    public Object objectDeserial(byte[] array) {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(array);
              ObjectInputStream ois = new ObjectInputStream(bais)
         ) {
-            return (Command) ois.readObject();
+            return  ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.err.println("ОШИБКА СЕРИАЛИЗАЦИИ");
         }
         return null;
     }
