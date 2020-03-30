@@ -7,6 +7,7 @@ import project.server.CollectionManager;
 import project.server.FieldSetter;
 
 import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 public class AddIfMinCommandHandler implements ICommandHandler {
 
@@ -22,25 +23,28 @@ public class AddIfMinCommandHandler implements ICommandHandler {
     public String processCommand(Command command) {
         AddIfMinCommand addIfMinCommand = (AddIfMinCommand) command;
         Organization organization = fieldSetter.setDateNow(addIfMinCommand.getOrganization());
-        try {
-            boolean flag = (collectionManager.getOrgCollection().stream().
-                    min(Comparator.comparing(Organization::getCreationDate)).
-                    get().
-                    compareTo(organization) > 0);
-            if (flag) {
-                fieldSetter.setId(organization, ++CollectionManager.OBJECT_ID_COUNTER);
-                collectionManager.getOrgCollection().add(organization);
-                return "Объект добавлен";
-            } else {
-                return "Объект не добавлен";
-            }
+        StringBuilder result = new StringBuilder("Коллекция пуста");
+        //try {
+            //boolean flag =
+                    collectionManager.getOrgCollection().stream().
+                    min(Comparator.comparing(Organization::getCreationDate)).ifPresent(
+                            o -> { if(o.compareTo(organization) > 0) {
+                                collectionManager.getOrgCollection().
+                                        add(fieldSetter.setId(organization, ++CollectionManager.OBJECT_ID_COUNTER));
+                                result.delete(0, result.length()).append("Объект добавлен");
+                            } else {
+                               result.delete(0, result.length()).append("Объект не добавлен");
+                            }
 
-        } catch (NullPointerException e) {
-            return "Коллекция пуста";
-        }
+                            }
+
+                            );
 
 
 
+
+
+        return result.toString();
     }
     //то же самое, что адд, но добавляем в случае , если элемент меньше других
 

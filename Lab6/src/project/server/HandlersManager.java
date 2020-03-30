@@ -21,7 +21,7 @@ public class HandlersManager {
             put(HelpCommand.class, new HelpCommandHandler());
             put(PrintAscendingCommand.class, new PrintAscendingCommandHandler(collectionManager));
             put(RemoveIdCommand.class, new RemoveIdCommandHandler(collectionManager));
-            put(RemoveLowerCommand.class, new RemoveLowerCommandHandler(collectionManager));
+            put(RemoveLowerCommand.class, new RemoveLowerCommandHandler(collectionManager, fieldSetter));
             put(AddIfMinCommand.class, new AddIfMinCommandHandler(collectionManager, fieldSetter));
             put(FilterContainsNameCommand.class, new FilterContainsNameCommandHandler(collectionManager));
             put(HeadCommand.class, new HeadCommandHandler(collectionManager));

@@ -1,6 +1,7 @@
 package project.server.handlers;
 
 import project.client.commands.Command;
+import project.client.сlassModel.Organization;
 import project.server.CollectionManager;
 
 public class HeadCommandHandler implements ICommandHandler {
@@ -15,6 +16,6 @@ public class HeadCommandHandler implements ICommandHandler {
     public String processCommand(Command command) {
         //можно не кастовать к команде, просто выводим первый элемент списка
 
-        return collectionManager.getOrgCollection().getFirst().toString();
+        return collectionManager.getOrgCollection().stream().findFirst().map(Organization::toString).orElse("Коллекция пуста");
     }
 }
