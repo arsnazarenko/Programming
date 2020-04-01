@@ -1,127 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Organizations>
-    <creationCollectionDate>2020-03-31T20:56:00.245+03:00</creationCollectionDate>
-    <Organization>
-        <annualTurnover>345.0</annualTurnover>
-        <coordinates>
-            <x>123.0</x>
-            <y>321.0</y>
-        </coordinates>
-        <creationDate>2020-03-21T20:22:41.597+03:00</creationDate>
-        <employeesCount>666</employeesCount>
-        <id>122</id>
-        <name>ITMO</name>
-        <officialAddress>
-            <street>COrcovskaya</street>
-            <town>
-                <name>Saint-P</name>
-                <x>777</x>
-                <y>888.0</y>
-                <z>999.0</z>
-            </town>
-            <zipCode>14881488</zipCode>
-        </officialAddress>
-        <type>GOVERNMENT</type>
-    </Organization>
-    <Organization>
-        <annualTurnover>333.0</annualTurnover>
-        <coordinates>
-            <x>111.0</x>
-            <y>222.0</y>
-        </coordinates>
-        <creationDate>2020-05-11T20:23:27.587+03:00</creationDate>
-        <employeesCount>444444444</employeesCount>
-        <id>123</id>
-        <name>Macdonalds</name>
-        <type>COMMERCIAL</type>
-    </Organization>
-    <Organization>
-        <annualTurnover>1.0</annualTurnover>
-        <coordinates>
-            <x>1.0</x>
-            <y>1.0</y>
-        </coordinates>
-        <creationDate>2020-06-21T20:25:19.743+03:00</creationDate>
-        <employeesCount>1</employeesCount>
-        <id>124</id>
-        <name>RussianPostOffice</name>
-        <officialAddress>
-            <street>NONE!!!!!!!!!</street>
-            <town>
-                <name>Vorkuta</name>
-                <x>5555</x>
-                <y>4444.0</y>
-                <z>333333.0</z>
-            </town>
-            <zipCode>444444444</zipCode>
-        </officialAddress>
-        <type>GOVERNMENT</type>
-    </Organization>
-    <Organization>
-        <annualTurnover>10.0</annualTurnover>
-        <coordinates>
-            <x>11212.0</x>
-            <y>121212.0</y>
-        </coordinates>
-        <creationDate>2020-01-12T20:27:55.928+03:00</creationDate>
-        <employeesCount>2</employeesCount>
-        <id>125</id>
-        <name>Fedor'sOrganization</name>
-        <officialAddress>
-            <street>Nevskiy</street>
-            <town>
-                <name>Pskov</name>
-                <x>55</x>
-                <y>55.0</y>
-                <z>44.0</z>
-            </town>
-            <zipCode>666999999</zipCode>
-        </officialAddress>
-        <type>OPEN_JOINT_STOCK_COMPANY</type>
-    </Organization>
-    <Organization>
-        <annualTurnover>234.0</annualTurnover>
-        <coordinates>
-            <x>567.0</x>
-            <y>543.0</y>
-        </coordinates>
-        <creationDate>2020-02-23T20:28:44.429+03:00</creationDate>
-        <employeesCount>2</employeesCount>
-        <id>126</id>
-        <name>Politech</name>
-        <type>GOVERNMENT</type>
-    </Organization>
-    <Organization>
-        <annualTurnover>99999.0</annualTurnover>
-        <coordinates>
-            <x>9999.0</x>
-            <y>9999.0</y>
-        </coordinates>
-        <creationDate>2020-07-14T20:30:58.745+03:00</creationDate>
-        <employeesCount>99999999</employeesCount>
-        <id>127</id>
-        <name>Apple</name>
-        <officialAddress>
-            <street>St. Patrick 8</street>
-            <town>
-                <name>Los-Angeles</name>
-                <x>213</x>
-                <y>123.0</y>
-                <z>123.0</z>
-            </town>
-            <zipCode>55555555</zipCode>
-        </officialAddress>
-        <type>COMMERCIAL</type>
-    </Organization>
+    <creationCollectionDate>2020-04-01T23:18:40.269+03:00</creationCollectionDate>
     <Organization>
         <annualTurnover>24.0</annualTurnover>
         <coordinates>
             <x>22.0</x>
             <y>23.0</y>
         </coordinates>
-        <creationDate>2020-03-31T20:58:05.799+03:00</creationDate>
+        <creationDate>2020-04-01T23:24:48.392+03:00</creationDate>
         <employeesCount>2</employeesCount>
-        <id>128</id>
+        <id>135</id>
         <name>FromScript</name>
         <type>COMMERCIAL</type>
     </Organization>
@@ -131,9 +19,9 @@
             <x>34.0</x>
             <y>35.0</y>
         </coordinates>
-        <creationDate>2020-03-31T20:58:05.812+03:00</creationDate>
+        <creationDate>2020-04-01T23:24:48.404+03:00</creationDate>
         <employeesCount>27</employeesCount>
-        <id>129</id>
+        <id>136</id>
         <name>FromScript2</name>
         <type>GOVERNMENT</type>
     </Organization>

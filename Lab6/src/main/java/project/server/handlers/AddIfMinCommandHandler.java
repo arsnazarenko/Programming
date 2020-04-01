@@ -44,6 +44,5 @@ public class AddIfMinCommandHandler implements ICommandHandler {
 
         return result.toString();
     }
-    //то же самое, что адд, но добавляем в случае , если элемент меньше других
 
 }

@@ -21,20 +21,20 @@ public class NioClient {
     public static void runClient() throws IOException {
 
         ValidateManager validateManager = new ValidateManager();
-        ObjectCreator objectCreator = new ObjectCreator();
-        Validator validator = new Validator(objectCreator, validateManager);
-        Reader reader = new Reader(validator);
-        CommandCreator commandCreator = new CommandCreator(reader, validator);
+        IObjectCreator objectCreator = new ObjectCreator();
+        IValidator validator = new Validator(objectCreator, validateManager);
+        IReader reader = new Reader(validator);
+        ICommandCreator commandCreator = new CommandCreator(reader);
         SocketAddress serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), serverPort);
 
 
 
-        try (DatagramChannel client = DatagramChannel.open()) {
-            client.connect(serverAddress);
+        try (DatagramChannel clientChannel = DatagramChannel.open()) {
+            clientChannel.connect(serverAddress);
             SerializationManager serializationManager = new SerializationManager();
-            Receiver receiver = new Receiver(ByteBuffer.allocate(8*1024), client);
-            Sender sender = new Sender(client, serializationManager);
-            PostManager postManager = new PostManager(commandCreator, sender, receiver, serializationManager);
+            IClientReceiver clientReceiver = new ClientReceiver(ByteBuffer.allocate(8*1024), clientChannel, serializationManager);
+            IClientSender clientSender = new ClientSender(clientChannel, serializationManager);
+            PostManager postManager = new PostManager(commandCreator, clientSender, clientReceiver);
 
             try(InputStream inputStream = System.in) {
                 Command command;

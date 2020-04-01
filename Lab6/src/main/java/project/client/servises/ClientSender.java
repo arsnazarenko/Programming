@@ -7,16 +7,16 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
-public class Sender {
+public class ClientSender implements IClientSender{
     private SerializationManager serializationManager;
     private DatagramChannel datagramChannel;
 
-    public Sender(DatagramChannel datagramChannel, SerializationManager serializationManager) {
+    public ClientSender(DatagramChannel datagramChannel, SerializationManager serializationManager) {
         this.datagramChannel = datagramChannel;
         this.serializationManager = serializationManager;
     }
 
-    public<T extends Serializable> void send(T letter, SocketAddress address) {
+    public void send(Serializable letter, SocketAddress address) {
         try {
             ByteBuffer buffer = ByteBuffer.wrap(serializationManager.objectSerial(letter));
             datagramChannel.send(buffer, address);

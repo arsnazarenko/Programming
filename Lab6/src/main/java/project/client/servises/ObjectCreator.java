@@ -386,10 +386,6 @@ public class ObjectCreator implements IObjectCreator {
         return new Organization(id, name, coordinates, creationDate, employeesCount,
                 type, annualTurnover, officialAddress);
     }
-    /**
-     * Метод для создания объекта типа {@link Organization}
-     * @see ObjectCreator#create(Scanner, Long)
-     * @return возвращает значение объекта
-     */
+
 
 }

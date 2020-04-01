@@ -7,11 +7,11 @@ import project.client.commands.commandType.*;
 
 import java.util.*;
 
-public class Validator {
+public class Validator implements IValidator{
     private IObjectCreator objectCreator;
     private ValidateManager validateManager;
 
-    public Validator(ObjectCreator objectCreator, ValidateManager validateManager) {
+    public Validator(IObjectCreator objectCreator, ValidateManager validateManager) {
         this.objectCreator = objectCreator;
         this.validateManager = validateManager;
     }

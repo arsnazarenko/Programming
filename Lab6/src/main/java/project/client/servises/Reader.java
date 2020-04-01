@@ -7,13 +7,12 @@ import project.client.commands.commandType.ExitCommand;
 
 import java.util.*;
 
-public class Reader {
-    private Validator validator;
+public class Reader implements IReader{
+    private IValidator validator;
 
-    public Reader(Validator validator) {
+    public Reader(IValidator validator) {
         this.validator = validator;
     }
-
 
     public Command read(Scanner reader) {
         String str;
@@ -60,13 +59,11 @@ public class Reader {
         return commandQueue;
     }
 
-    public Validator getValidator() {
+    public IValidator getValidator() {
         return validator;
     }
 
-    public void setValidator(Validator validator) {
+    public void setValidator(IValidator validator) {
         this.validator = validator;
     }
-
-
 }

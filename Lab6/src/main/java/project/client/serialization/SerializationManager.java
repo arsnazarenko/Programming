@@ -4,8 +4,8 @@ import project.client.commands.Command;
 
 import java.io.*;
 
-public class SerializationManager {
-    public<T extends Serializable> byte[] objectSerial(T serial) {
+public class SerializationManager implements ISerializationManager{
+    public byte[] objectSerial(Serializable serial) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(baos);
         ) {

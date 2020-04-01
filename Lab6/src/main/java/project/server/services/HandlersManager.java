@@ -7,7 +7,7 @@ import project.server.handlers.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HandlersManager {
+public class HandlersManager implements IHandlersManager{
     private CollectionManager collectionManager;
     private Map<Class<?>, ICommandHandler> handlers;
     private FieldSetter fieldSetter;

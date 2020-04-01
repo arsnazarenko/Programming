@@ -3,23 +3,14 @@ package nioUDP;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import project.client.commands.Command;
+import project.client.serialization.ISerializationManager;
 import project.client.serialization.SerializationManager;
-import project.client.servises.LetterInfo;
-import project.client.servises.Receiver;
-import project.client.servises.Sender;
-import project.client.servises.XmlLoader;
-import project.server.services.CollectionManager;
-import project.server.services.FieldSetter;
-import project.server.services.HandlersManager;
+import project.server.services.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
+import java.net.*;
 
 public class NioServer {
     private static final int BUFFER_SIZE = 8 * 1024;
@@ -28,41 +19,30 @@ public class NioServer {
     final static Logger logger = LogManager.getLogger(NioServer.class.getName());
 
 
-
     public static void run() throws IOException {
-        SocketAddress serverAddress = new InetSocketAddress(InetAddress.getLocalHost(), port);
-        try (DatagramChannel serverChannel = DatagramChannel.open()) {
-            serverChannel.bind(serverAddress);
-            ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
-            SerializationManager serializationManager = new SerializationManager();
-            CollectionManager collectionManager = XmlLoader.fromXmlToCollection(file);
-            HandlersManager handlersManager = new HandlersManager(collectionManager, new FieldSetter());
-            Sender sender = new Sender(serverChannel, serializationManager);
-            //данные из файда загрузим на сервер без какого ибо оповещения серверу
-            logger.info("SERVER STARTED: " + serverAddress + "\n" + collectionManager.getOrgCollection().size() + " objects in Collection");
-            //System.err.println("SERVER STARTED: " + serverAddress + "\n" + collectionManager.getOrgCollection().size() + " объектов в коллекции");
-            Receiver receiver = new Receiver(buffer, serverChannel);
-
-
+        SocketAddress serverAddress = new InetSocketAddress(port);
+        ISerializationManager serializationManager = new SerializationManager();
+        CollectionManager collectionManager = XmlLoader.fromXmlToCollection(file);
+        IHandlersManager handlersManager = new HandlersManager(collectionManager, new FieldSetter());
+        logger.info("SERVER STARTED: " + serverAddress);
+        logger.debug(collectionManager.getOrgCollection().size() + " objects in Collection\n");
+        try (DatagramSocket serverSocket = new DatagramSocket(serverAddress)) {
+            ServerReceiver serverReceiver = new ServerReceiver(serverSocket, new byte[4 * 1024], serializationManager);
+            ServerSender serverSender = new ServerSender(serverSocket, serializationManager);
             while (true) {
-                LetterInfo letterInfo = receiver.receive();
-                //сообщение
-                byte[] bytes = letterInfo.getBytes();
-                //адресс отправителя
-                SocketAddress letterFrom = letterInfo.getAddress();
-                Command receiveCommand = (Command) serializationManager.objectDeserial(bytes);
-
-                //обработка команды и получение результата выполнения
+                //получили запрос от сервера
+                LetterInfo receiveLetter = serverReceiver.receive();
+                //получили команду
+                Command receiveCommand = receiveLetter.getReceiveCommand();
+                //получили адрес клиента
+                SocketAddress remoteAddress = receiveLetter.getRemoteAddress();
+                //обработали запрос и сформировали тестовый ответ
                 String msg = handlersManager.handling(receiveCommand);
-                logger.info("CLIENT AT " + letterFrom + " SENT: " + receiveCommand.getClass().getName() + "\n");
-                //System.err.println("Client at " + letterFrom + " sent: " + receiveCommand.getClass().getName() + "\n\n");
-                //отправка сообщения клиенту
-                sender.send(msg, letterFrom);
-                logger.info("SERVER SENT ANSWER TO " + letterFrom + "\n");
-
+                logger.info("CLIENT AT " + remoteAddress + " SENT: " + receiveCommand.getClass().getName());
+                //отправили ответ клиенту
+                serverSender.send(msg, remoteAddress);
             }
         }
-
     }
 
 

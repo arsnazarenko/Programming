@@ -5,16 +5,17 @@ import java.io.*;
 import java.util.Queue;
 import java.util.Scanner;
 
-public class CommandCreator {
-    private Reader reader;
+public class CommandCreator implements ICommandCreator{
+    private IReader reader;
 
 
-    public CommandCreator(Reader reader, Validator validator) {
+    public CommandCreator(IReader reader) {
         this.reader = reader;
     }
 
     public Command createCommand(InputStream inputStream) {
         Scanner scanner = new Scanner(inputStream, "UTF-8");
+        //получии команду
         Command command = reader.read(scanner);
         return command;
 
@@ -23,6 +24,7 @@ public class CommandCreator {
 
     public Queue<Command> createCommandQueue(InputStream inputStream) {
         Scanner scanner = new Scanner(inputStream, "UTF-8");
+        //получили очередь из команд для скрипта
         Queue<Command> commandQueue = reader.scriptRead(scanner);
         return commandQueue;
 
