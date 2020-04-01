@@ -4,12 +4,12 @@ hello
 hello
 hello
 add
-s
-3
-3
-2
-2
-COMMERCIAL
+FromScript2
+34
+35
+26
+27
+GOVERNMENT
 
 update_id awdawd
 info
