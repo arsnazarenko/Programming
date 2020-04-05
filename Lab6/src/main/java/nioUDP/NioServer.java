@@ -13,13 +13,11 @@ import java.io.IOException;
 import java.net.*;
 
 public class NioServer {
-    private static final int BUFFER_SIZE = 8 * 1024;
-    private static int port = 9999;
     public static File file;
     final static Logger logger = LogManager.getLogger(NioServer.class.getName());
 
 
-    public static void run() throws IOException {
+    public static void run(int port) throws IOException {
         SocketAddress serverAddress = new InetSocketAddress(port);
         ISerializationManager serializationManager = new SerializationManager();
         CollectionManager collectionManager = XmlLoader.fromXmlToCollection(file);
@@ -49,6 +47,7 @@ public class NioServer {
     public static void main(String[] args) throws IOException {
         try {
             String pathFile = args[0];
+            int port = Integer.parseInt(args[1]);
             File fileForSaveAndLoad = new File(pathFile);
             if (!fileForSaveAndLoad.exists()) {
                 throw new FileNotFoundException();
@@ -59,7 +58,7 @@ public class NioServer {
             } else {
 
                 NioServer.file = fileForSaveAndLoad;
-                run();
+                run(port);
 
 
             }
@@ -69,6 +68,8 @@ public class NioServer {
         } catch (IndexOutOfBoundsException e) {
             //System.err.println("НУЖНО ВВЕСТИ ПУТЬ К ФАЙЛУ");
             logger.error("НУЖНО ВВЕСТИ ПУТЬ К ФАЙЛУ", e);
+        } catch (IOException e) {
+            logger.error("ОШИБКА ЗАПУСКА СЕРВЕРА");
         }
 
     }

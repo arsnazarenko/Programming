@@ -7,6 +7,6 @@ public class ExecuteScriptCommandHandler implements ICommandHandler {
     public String processCommand(Command command) {
         //можно не кастовать, просто отправляем сообщение о том, что сервер получил команду запуска скрипта
 
-        return "Запуск скрипта";
+        return "РЕЗУЛЬТАТ ВЫПОЛНЕНИЯ СКРИПТА";
     }
 }

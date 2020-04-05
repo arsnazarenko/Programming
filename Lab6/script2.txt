@@ -18,6 +18,5 @@ show
 print_ascending
 show
 head
-save
 
 exit

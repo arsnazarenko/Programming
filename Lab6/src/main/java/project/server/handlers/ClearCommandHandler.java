@@ -16,6 +16,6 @@ public class ClearCommandHandler implements ICommandHandler {
         collectionManager.getOrgCollection().clear();
         //можно не кастовать к классу команды, т к параметры нам не нужны
 
-        return "Коллекция отчищена";
+        return "Коллекция отчищена от объектов";
     }
 }

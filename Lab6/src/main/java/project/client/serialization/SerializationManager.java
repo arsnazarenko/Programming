@@ -1,10 +1,13 @@
 package project.client.serialization;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import project.client.commands.Command;
 
 import java.io.*;
 
 public class SerializationManager implements ISerializationManager{
+    static final Logger logger = LogManager.getLogger(SerializationManager.class.getName());
     public byte[] objectSerial(Serializable serial) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -25,7 +28,8 @@ public class SerializationManager implements ISerializationManager{
         ) {
             return  ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            System.err.println("ОШИБКА СЕРИАЛИЗАЦИИ");
+            //System.err.println("ОШИБКА СЕРИАЛИЗАЦИИ");
+            logger.error("Error ser", e);
         }
         return null;
     }

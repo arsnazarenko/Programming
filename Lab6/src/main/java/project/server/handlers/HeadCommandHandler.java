@@ -13,9 +13,8 @@ public class HeadCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public String processCommand(Command command) {
-        //можно не кастовать к команде, просто выводим первый элемент списка
+    public Object processCommand(Command command) {
 
-        return collectionManager.getOrgCollection().stream().findFirst().map(Organization::toString).orElse("Коллекция пуста");
+        return collectionManager.getOrgCollection().stream().findFirst().orElse(null) + "\n";
     }
 }

@@ -15,10 +15,8 @@ public class MaxByEmployeeCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public String processCommand(Command command) {
-        String result;
-        result = collectionManager.getOrgCollection().stream().max(Comparator.comparing(Organization::getCreationDate)).map(Organization::toString).orElse("Коллекция пуста");
+    public Object processCommand(Command command) {
+        return collectionManager.getOrgCollection().stream().max(Comparator.comparing(Organization::getCreationDate)).orElse(null);
         //выводим элемент с наибольшим показателем количества работников
-        return result;
     }
 }

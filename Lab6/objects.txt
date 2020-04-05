@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Organizations>
-    <creationCollectionDate>2020-04-01T23:18:40.269+03:00</creationCollectionDate>
+    <creationCollectionDate>2020-04-04T12:30:43.549+03:00</creationCollectionDate>
     <Organization>
         <annualTurnover>24.0</annualTurnover>
         <coordinates>
             <x>22.0</x>
             <y>23.0</y>
         </coordinates>
-        <creationDate>2020-04-01T23:24:48.392+03:00</creationDate>
+        <creationDate>2020-04-04T12:44:19.812+03:00</creationDate>
         <employeesCount>2</employeesCount>
-        <id>135</id>
+        <id>139</id>
         <name>FromScript</name>
         <type>COMMERCIAL</type>
     </Organization>
@@ -19,9 +19,9 @@
             <x>34.0</x>
             <y>35.0</y>
         </coordinates>
-        <creationDate>2020-04-01T23:24:48.404+03:00</creationDate>
+        <creationDate>2020-04-04T12:44:19.829+03:00</creationDate>
         <employeesCount>27</employeesCount>
-        <id>136</id>
+        <id>140</id>
         <name>FromScript2</name>
         <type>GOVERNMENT</type>
     </Organization>

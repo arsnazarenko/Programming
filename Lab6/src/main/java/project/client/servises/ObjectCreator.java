@@ -10,7 +10,6 @@ import java.util.Scanner;
  * Класс порождающий объект объект. Свойства <b>objectCounter</b>
  */
 public class ObjectCreator implements IObjectCreator {
-    public static long objectCounter = 1;
 
     /**
      * Метод для инициализации поля name {@link ObjectCreator#setName(Scanner)}

@@ -3,6 +3,13 @@ qwe
 qwe
 qwe
 qwe
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
 qe
 add
 FromScript
@@ -19,5 +26,5 @@ show
 print_ascending
 show
 head
-execute_script D:\Files\Documents\Java\GitHub\Lab6\script2.txt
+execute_script script2.txt
 exit
