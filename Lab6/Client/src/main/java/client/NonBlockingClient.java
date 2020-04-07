@@ -45,10 +45,11 @@ public class NonBlockingClient {
         datagramChannel.register(selector, SelectionKey.OP_WRITE);
         out:
         while (true) {
-            selector.select();
+            selector.select();  //блокирующий
             Iterator<SelectionKey> selectionKeyIterator = selector.selectedKeys().iterator();
             while (selectionKeyIterator.hasNext()) {
                 SelectionKey selectionKey = selectionKeyIterator.next();
+                selectionKeyIterator.remove(); //ВНИМАТЕЛЬНО!!!
                 if (!selectionKey.isValid()) {
                     continue;
                 }
