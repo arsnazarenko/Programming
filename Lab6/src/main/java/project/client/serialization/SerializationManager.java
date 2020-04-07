@@ -5,10 +5,26 @@ import org.apache.logging.log4j.Logger;
 import project.client.commands.Command;
 
 import java.io.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class SerializationManager implements ISerializationManager{
     static final Logger logger = LogManager.getLogger(SerializationManager.class.getName());
-    public byte[] objectSerial(Serializable serial) {
+    public byte[] objectSerial(Object serial) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ObjectOutputStream oos = new ObjectOutputStream(baos);
+        ) {
+            oos.writeObject(serial);
+            oos.flush();
+            baos.flush();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            System.err.println("ОШИБКА СЕРИАЛИЗАЦИИ");
+        }
+        return null;
+    }
+
+    public byte[] objectSerialtest(Object serial) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(baos);
         ) {
@@ -34,16 +50,19 @@ public class SerializationManager implements ISerializationManager{
         return null;
     }
 
-    //public static void main(String[] args) {
-    //    SerializationManager m= new SerializationManager();
-    //    Coordinates coordinates = new Coordinates(12, 12);
-    //    Organization organization = new Organization(12L, "awd", coordinates, new Date(), 12, OrganizationType.COMMERCIAL, 12.23,
-    //            new Address("awdawd", "awdawd", new Location(12L, 1d, 12, "Ad")));
-    //    Command c = new AddCommand(organization);
-    //    byte[] arr = m.objectSerial(c);
-    //c = (Command) m.objectDeserial(arr);
-    //    AddCommand ac = (AddCommand) c;
-    //    System.out.println(ac.getOrganization());
-    //}
+    public static void main(String[] args) {
+        SerializationManager m= new SerializationManager();
+        Deque<Integer> o = new ArrayDeque<>();
+        o.addFirst(123);
+        o.addFirst(123);
+        o.addFirst(123);
+        o.addFirst(123);
+        o.addFirst(123);
+        byte[] arr = m.objectSerialtest(o);
+        Deque<Integer> d = (Deque<Integer>) m.objectDeserial(arr);
+        d.addFirst(234234);
+        System.out.println(d.getFirst().getClass());
+
+    }
 }
 

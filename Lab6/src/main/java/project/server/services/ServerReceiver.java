@@ -39,7 +39,7 @@ public class ServerReceiver implements IServerReceiver{
             buffer = new byte[length];
             return new LetterInfo(remoteAddress, (Command) serializationManager.objectDeserial(letter));
         } catch (IOException e) {
-                logger.error("ОШИБКА ПАКЕТА ДЛЯ ПРИЕМА", e);
+                logger.error("RECEIVING PACKAGE ERROR\n", e);
             return null;
         }
     }

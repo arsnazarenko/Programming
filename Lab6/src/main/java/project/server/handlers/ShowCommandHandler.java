@@ -1,7 +1,12 @@
 package project.server.handlers;
 
 import project.client.commands.Command;
+import project.client.сlassModel.Organization;
 import project.server.services.CollectionManager;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
 
 public class ShowCommandHandler implements ICommandHandler {
 
@@ -12,11 +17,8 @@ public class ShowCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public String processCommand(Command command) {
-        StringBuilder stringBuilder = new StringBuilder();
-        collectionManager.getOrgCollection().forEach((o) -> stringBuilder.append(o + "\n"));
+    public Deque<Organization> processCommand(Command command) {
 
-
-        return stringBuilder.toString();
+        return collectionManager.getOrgCollection().isEmpty()?null:collectionManager.getOrgCollection();
     }
 }

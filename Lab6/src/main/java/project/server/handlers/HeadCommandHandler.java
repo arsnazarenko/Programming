@@ -13,8 +13,11 @@ public class HeadCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public Object processCommand(Command command) {
+    public Organization processCommand(Command command) {
 
-        return collectionManager.getOrgCollection().stream().findFirst().orElse(null) + "\n";
+        return collectionManager.getOrgCollection().
+                stream().
+                findFirst().
+                orElse(null);
     }
 }

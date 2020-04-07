@@ -1,5 +1,7 @@
 package project.server.handlers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import project.client.commands.Command;
 import project.client.commands.commandType.AddCommand;
 import project.client.сlassModel.Organization;
@@ -17,12 +19,12 @@ public class AddCommandHandler implements ICommandHandler {
 
     @Override
     public String processCommand(Command command) {
+        Long start = System.currentTimeMillis();
         AddCommand addCommand = (AddCommand) command;
         Organization organization = fieldSetter.setDateNow(
                 fieldSetter.setId(addCommand.getOrganization(), ++CollectionManager.OBJECT_ID_COUNTER));
-        //сделай настройку ай ди при добавлении объектов при запумке сервера
+        //сделай настройку ай ди при добавлении объектов при запуcке сервера
         collectionManager.getOrgCollection().addLast(organization);
-
         return "Объект добавлен";
     }
 

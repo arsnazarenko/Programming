@@ -4,6 +4,7 @@ import project.client.commands.Command;
 import project.client.commands.commandType.*;
 import project.server.handlers.*;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +60,7 @@ public class HandlersManager implements IHandlersManager{
         this.fieldSetter = fieldSetter;
     }
 
-    public String handling(Command command) {
+    public Object handling(Command command) {
         return handlers.get(command.getClass()).processCommand(command);
     }
 

@@ -21,6 +21,10 @@ public class RemoveLowerCommandHandler implements ICommandHandler {
         Organization organization = fieldSetter.setDateNow(removeLowerCommand.getOrganization());
         int oldSize = collectionManager.getOrgCollection().size();
         collectionManager.getOrgCollection().removeIf(o -> o.compareTo(organization) < 0);
-        if (collectionManager.getOrgCollection().size() < oldSize) {return "Команда выполнена";} else {return "Объектов меньшет нет!";}
+        if (collectionManager.getOrgCollection().size() < oldSize) {
+            return "Команда выполнена";
+        } else {
+            return "Объектов меньшет нет!";
+        }
     }
 }

@@ -15,8 +15,11 @@ public class MaxByEmployeeCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public Object processCommand(Command command) {
-        return collectionManager.getOrgCollection().stream().max(Comparator.comparing(Organization::getCreationDate)).orElse(null);
+    public Organization processCommand(Command command) {
+        return collectionManager.getOrgCollection().
+                stream().
+                max(Comparator.comparing(Organization::getCreationDate)).
+                orElse(null);
         //выводим элемент с наибольшим показателем количества работников
     }
 }

@@ -2,6 +2,8 @@ package project.server.services;
 
 import project.client.commands.Command;
 
+import java.io.Serializable;
+
 public interface IHandlersManager {
-    String handling(Command command);
+    Object handling(Command command);
 }

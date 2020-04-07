@@ -22,8 +22,10 @@ public class RemoveIdCommandHandler implements ICommandHandler {
         RemoveIdCommand removeIdCommand = (RemoveIdCommand) command;
         Long id = removeIdCommand.getId();
         int oldSize = collectionManager.getOrgCollection().size();
-        //для разнообразия вместо removeIf, хотя и не оптимально в плане памяти
-        Deque<Organization> newOrganizations = collectionManager.getOrgCollection().stream().filter(o1 -> !(o1.getId().equals(id))).collect(Collectors.toCollection(ArrayDeque::new));
+        Deque<Organization> newOrganizations = collectionManager.getOrgCollection().
+                stream().
+                filter(o1 -> !(o1.getId().equals(id))).
+                collect(Collectors.toCollection(ArrayDeque::new));
 
         if (newOrganizations.size() < oldSize) {
             collectionManager.setOrgCollection(newOrganizations);

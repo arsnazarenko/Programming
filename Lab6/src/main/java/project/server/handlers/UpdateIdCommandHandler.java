@@ -24,13 +24,18 @@ public class UpdateIdCommandHandler implements ICommandHandler {
         UpdateIdCommand updateIdCommand = (UpdateIdCommand) command;
         long id = updateIdCommand.getId();
         StringBuilder stringBuilder = new StringBuilder("Элементов с таким ID нет");
-        collectionManager.setOrgCollection(collectionManager.getOrgCollection().stream().map(o -> {if (o.getId().equals(id)) {
-            Organization updateOrganization = fieldSetter.setId(updateIdCommand.getOrganization(), id);
-            updateOrganization.setCreationDate(o.getCreationDate());
-            stringBuilder.delete(0, stringBuilder.length()).append("Объект обновлён!");
-            return updateOrganization;
-        } else { return o; }
-        }).collect(Collectors.toCollection(ArrayDeque::new)));
+        collectionManager.setOrgCollection(collectionManager.getOrgCollection().
+                stream().
+                map(o -> {
+                    if (o.getId().equals(id)) {
+                        Organization updateOrganization = fieldSetter.setId(updateIdCommand.getOrganization(), id);
+                        updateOrganization.setCreationDate(o.getCreationDate());
+                        stringBuilder.delete(0, stringBuilder.length()).append("Объект обновлён!");
+                        return updateOrganization;
+                    } else {
+                        return o;
+                    }
+                }).collect(Collectors.toCollection(ArrayDeque::new)));
 
         return stringBuilder.toString();
 

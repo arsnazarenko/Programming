@@ -23,13 +23,13 @@ public class ServerSender implements IServerSender{
         this.serializationManager = serializationManager;
     }
 
-    public void send(Serializable letter, SocketAddress address) {
+    public void send(Object letter, SocketAddress address) {
         byte[] bytes = serializationManager.objectSerial(letter);
         try {
             datagramSocket.send(new DatagramPacket(bytes, bytes.length, address));
             logger.info("SERVER SENT ANSWER TO " + address + "\n");
         } catch (IOException e) {
-            logger.error("ОШИБКА АДРЕСА", e);
+            logger.error("ADDRESS ERROR", e);
         }
     }
 
@@ -39,13 +39,5 @@ public class ServerSender implements IServerSender{
 
     public void setSerializationManager(ISerializationManager serializationManager) {
         this.serializationManager = serializationManager;
-    }
-
-    public DatagramSocket getDatagramSocket() {
-        return datagramSocket;
-    }
-
-    public void setDatagramSocket(DatagramSocket datagramSocket) {
-        this.datagramSocket = datagramSocket;
     }
 }

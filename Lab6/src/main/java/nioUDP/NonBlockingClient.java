@@ -30,12 +30,15 @@ public class NonBlockingClient {
     private ICommandCreator commandCreator;
     private ByteBuffer buffer;
     private SocketAddress address;
+    private AnswerHandler answerHandler;
 
-    public NonBlockingClient(ISerializationManager serializationManager, ICommandCreator commandCreator, ByteBuffer buffer, SocketAddress address) {
+    public NonBlockingClient(ISerializationManager serializationManager, ICommandCreator commandCreator, ByteBuffer buffer,
+                             SocketAddress address, AnswerHandler answerHandler) {
         this.serializationManager = serializationManager;
         this.commandCreator = commandCreator;
         this.buffer = buffer;
         this.address = address;
+        this.answerHandler = answerHandler;
     }
 
     public void process(DatagramChannel datagramChannel) throws IOException {
@@ -52,7 +55,7 @@ public class NonBlockingClient {
                     continue;
                 }
                 if (selectionKey.isReadable()) {
-                    System.out.println(read(selectionKey, buffer).toString());
+                    answerHandler.handling(read(selectionKey, buffer));
                 } else if (selectionKey.isWritable()) {
                     Command command = null;
                     if (!(commandQueue == null)) {      //проверка, если скрипт уже был запущен
@@ -73,11 +76,7 @@ public class NonBlockingClient {
                                 continue;   //иначе это команда скрипта, и завершать программу не надо
                             }
                         } else if (command.getClass() == ExecuteScriptCommand.class) {   //иначе если это скрипт, создаем очередь команд
-                            Queue<Command> commandQueue2 = scriptRun(command); //создаем очередь из данного файла
-                            if (commandQueue != null) {
-                                commandQueue2.addAll(commandQueue);     //добавляем оставшиеся члены очереди в конец новой очереди(при вложенном скрипте)
-                            }
-                            commandQueue = commandQueue2;       //заменяем старую очередь
+                            commandQueue = queueUpdate(commandQueue, command);       //заменяем старую очередь
                         }
                     }
                 }
@@ -100,19 +99,36 @@ public class NonBlockingClient {
         return commandQueue; // при возникшей ошибке возвращаем пустую очередь
     }
 
-    private Object read(SelectionKey selectionKey, ByteBuffer buffer) throws IOException {
+    private Object read(SelectionKey selectionKey, ByteBuffer buffer){
         buffer.clear();
         DatagramChannel channel = (DatagramChannel) selectionKey.channel();
-        channel.receive(buffer);
+        try {
+            channel.receive(buffer);
+        } catch (IOException e) {
+            System.out.println("БУФЕР НЕ ПОДДЕРЖИВАЕТ ФУНКЦИЮ ЗАПИСИ");
+        }
         selectionKey.interestOps(SelectionKey.OP_WRITE);
-        return serializationManager.objectDeserial(buffer.array());
+        Object result = serializationManager.objectDeserial(buffer.array());
+        return result == null?"ОТВЕТ НЕ ПРИНЯТ":result;
     }
 
-    private void write(SelectionKey selectionKey, Command command) throws IOException {
+    private void write(SelectionKey selectionKey, Command command){
         ByteBuffer answer = ByteBuffer.wrap(serializationManager.objectSerial(command));
         DatagramChannel datagramChannel = (DatagramChannel) selectionKey.channel();
-        datagramChannel.send(answer, address);  //отправляем команду сервера
+        try {
+            datagramChannel.send(answer, address);  //отправляем команду сервера
+        } catch (IOException e) {
+            System.out.println("СООБЩЕНИЕ НЕ ОТПРАВЛЕНО");
+        }
         selectionKey.interestOps(SelectionKey.OP_READ);
+    }
+
+    private Queue<Command> queueUpdate(Queue<Command> old, Command scriptCommand) {
+        Queue<Command> newQueue = scriptRun(scriptCommand);
+        if (old!= null) {
+          newQueue.addAll(old);
+        }
+        return newQueue;
     }
 
 }
