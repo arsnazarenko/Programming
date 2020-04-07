@@ -1,0 +1,22 @@
+12123
+gawd
+hello
+hello
+hello
+add
+FromScript2
+34
+35
+26
+27
+GOVERNMENT
+
+update_id awdawd
+info
+head
+show
+print_ascending
+show
+head
+
+exit
