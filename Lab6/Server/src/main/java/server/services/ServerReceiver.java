@@ -30,14 +30,10 @@ public class ServerReceiver implements IServerReceiver{
             serverSocket.receive(datagramPacket);
             SocketAddress remoteAddress = datagramPacket.getSocketAddress();
             byte[] bytes = datagramPacket.getData();
-            byte[] letter = new byte[datagramPacket.getLength()];
-            for(int i = 0; i < letter.length; i++) {
-                letter[i] = bytes[i];
-            }
             buffer = new byte[length];
-            return new LetterInfo(remoteAddress, (Command) serializationManager.objectDeserial(letter));
+            return new LetterInfo(remoteAddress, (Command) serializationManager.objectDeserial(bytes));
         } catch (IOException e) {
-                logger.error("RECEIVING PACKAGE ERROR\n", e);
+            logger.error("RECEIVING PACKAGE ERROR\n", e);
             return null;
         }
     }

@@ -63,25 +63,18 @@ public class NioServer {
             String pathFile = args[0];
             int port = Integer.parseInt(args[1]);
             File fileForSaveAndLoad = new File(pathFile);
-            if (!fileForSaveAndLoad.exists()) {
-                throw new FileNotFoundException();
-            } else if (!fileForSaveAndLoad.canRead()) {
-                throw new FileNotFoundException();
-            } else if (!fileForSaveAndLoad.canWrite()) {
-                throw new FileNotFoundException();
-            } else {
-                long start = System.currentTimeMillis();
+            if (fileForSaveAndLoad.exists() && fileForSaveAndLoad.canRead() && fileForSaveAndLoad.canWrite()) {
                 NioServer.file = fileForSaveAndLoad;
                 run(port);
+            } else {
+                logger.error("THE FILE MUST HAVE READ AND WRITE PERMISSIONS");
             }
-        } catch (FileNotFoundException e) {
-            //System.err.println("ФАЙЛ ДОЛЖЕН СУЩЕСТВОВАТЬ И ИМЕТЬ ПРАВА НА ЧТЕНИЕ И ЗАПИСЬ");
-            logger.error("FILE MUST HAVE READ AND WRITE PERMISSIONS\n" , e);
         } catch (IndexOutOfBoundsException e) {
-            //System.err.println("НУЖНО ВВЕСТИ ПУТЬ К ФАЙЛУ");
             logger.error("NECESSARY TO SPECIFY THE PATH TO THE FILE\n", e);
         } catch (IOException e) {
             logger.error("SERVER STARTING ERROR");
+        } catch (NumberFormatException e) {
+            logger.error("INVALID PORT SPECIFIED");
         }
 
     }

@@ -1,8 +1,6 @@
 package library.serialization;
 
 import java.io.*;
-import java.util.ArrayDeque;
-import java.util.Deque;
 
 public class SerializationManager implements ISerializationManager {
 
@@ -10,20 +8,6 @@ public class SerializationManager implements ISerializationManager {
     }
 
     public byte[] objectSerial(Object serial) {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(baos);
-        ) {
-            oos.writeObject(serial);
-            oos.flush();
-            baos.flush();
-            return baos.toByteArray();
-        } catch (IOException e) {
-            System.err.println("ОШИБКА СЕРИАЛИЗАЦИИ");
-        }
-        return null;
-    }
-
-    public byte[] objectSerialtest(Object serial) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(baos);
         ) {

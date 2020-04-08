@@ -9,9 +9,9 @@ import java.util.Deque;
 public class AnswerHandler {
     public void handling(Object answerObject) {
         if(answerObject instanceof Deque) {
-            Deque<Organization> organizationDeque = (Deque) answerObject;
+            Deque<?> organizationDeque = (Deque<?>) answerObject;
             StringBuilder stringBuilder = new StringBuilder();
-            organizationDeque.forEach(o -> stringBuilder.append(o.toString() + "\n"));
+            organizationDeque.forEach(o -> stringBuilder.append(o.toString()).append("\n"));
             System.out.println(stringBuilder.toString());
         } else if (answerObject instanceof String || answerObject instanceof Organization) {
             System.out.println(answerObject);
