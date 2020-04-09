@@ -5,8 +5,14 @@ package client.servises;
 import library.сlassModel.Organization;
 
 import java.util.Deque;
-
+/**
+ * Класс-обработчик ответов от сервера
+ * @see AnswerHandler
+ */
 public class AnswerHandler {
+    /**В зависимости от класса ответа делает ту или иную операцию
+     * @param answerObject - объект ответа от сервера
+     */
     public void handling(Object answerObject) {
         if(answerObject instanceof Deque) {
             Deque<?> organizationDeque = (Deque<?>) answerObject;

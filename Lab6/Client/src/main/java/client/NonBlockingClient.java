@@ -9,20 +9,17 @@ import library.clientCommands.commandType.ExecuteScriptCommand;
 import library.clientCommands.commandType.ExitCommand;
 import library.serialization.ISerializationManager;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Queue;
+import java.util.*;
 
+/**
+ * Реализация неблокиующего клиента
+ */
 public class NonBlockingClient {
     private ISerializationManager serializationManager;
     private ICommandCreator commandCreator;
@@ -39,6 +36,11 @@ public class NonBlockingClient {
         this.answerHandler = answerHandler;
     }
 
+    /**
+     *
+     * @param datagramChannel - канал
+     * @throws IOException - в случае ошибки подключения
+     */
     public void process(DatagramChannel datagramChannel) throws IOException {
         Selector selector = Selector.open();
         Queue<Command> commandQueue = null;

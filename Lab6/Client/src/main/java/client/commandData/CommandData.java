@@ -2,8 +2,11 @@ package client.commandData;
 
 
 import library.clientCommands.NameOfCommands;
-
+/**
+ * Класс для промедуточного хранения данных команды для ее создания
+*/
 public class CommandData {
+
     private NameOfCommands command;
     private String param;
 

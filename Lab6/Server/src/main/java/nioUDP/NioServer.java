@@ -20,8 +20,7 @@ public class NioServer {
     private static ArrayList<SocketAddress> clients = new ArrayList<>();
 
 
-    public static void run(int port) throws IOException {
-        SocketAddress serverAddress = new InetSocketAddress(port);
+    public static void run(SocketAddress serverAddress) throws IOException {
         ISerializationManager serializationManager = new SerializationManager();
         CollectionManager collectionManager = XmlLoader.fromXmlToCollection(file);
         IHandlersManager handlersManager = new HandlersManager(collectionManager, new FieldSetter());
@@ -58,23 +57,30 @@ public class NioServer {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         try {
-            String pathFile = args[0];
+            String pathFile = args[2];
             int port = Integer.parseInt(args[1]);
+            SocketAddress socketAddress = new InetSocketAddress(args[0], port);
             File fileForSaveAndLoad = new File(pathFile);
             if (fileForSaveAndLoad.exists() && fileForSaveAndLoad.canRead() && fileForSaveAndLoad.canWrite()) {
                 NioServer.file = fileForSaveAndLoad;
-                run(port);
+                run(socketAddress);
             } else {
                 logger.error("THE FILE MUST HAVE READ AND WRITE PERMISSIONS");
             }
         } catch (IndexOutOfBoundsException e) {
-            logger.error("NECESSARY TO SPECIFY THE PATH TO THE FILE\n", e);
+            logger.error("NECESSARY TO SPECIFY THE PATH TO THE FILE");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] [file with objects]");
         } catch (IOException e) {
             logger.error("SERVER STARTING ERROR");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] [file with objects]");
         } catch (NumberFormatException e) {
             logger.error("INVALID PORT SPECIFIED");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] [file with objects]");
+        } catch (IllegalArgumentException e) {
+            logger.error("INVALID PARAMETERS");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] [file with objects]");
         }
 
     }

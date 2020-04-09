@@ -9,6 +9,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 
+/**
+ * Класс для чтения команд из консли/файла и создания их объектов
+ */
 public class Reader implements IReader{
     private IValidator validator;
 
@@ -16,6 +19,11 @@ public class Reader implements IReader{
         this.validator = validator;
     }
 
+    /**
+     *
+     * @param reader - класс сканер для чтения пользовательского ввода
+     * @return объект команды
+     */
     public Command read(Scanner reader) {
         String str;
         String parameter = "";
@@ -43,7 +51,11 @@ public class Reader implements IReader{
         return validator.buildCommand(new CommandData(command, parameter), reader);
     }
 
-
+    /**
+     *
+     * @param reader - класс сканер для чтения пользовательского ввода
+     * @return - очередь из команд
+     */
     public Queue<Command> scriptRead(Scanner reader) {
         Queue<Command> commandQueue = new LinkedList<>();
         Command command;

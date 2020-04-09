@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 /**
- * Класс порождающий объект объект. Свойства <b>objectCounter</b>
+ * Класс порождающий объект объект.
  */
 public class ObjectCreator implements IObjectCreator {
 

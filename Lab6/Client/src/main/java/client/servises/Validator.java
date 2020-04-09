@@ -9,6 +9,10 @@ import library.clientCommands.commandType.*;
 
 import java.util.Scanner;
 
+/**
+ * Класс, отвечающий за валидацию данных
+ * @see Validator
+ */
 public class Validator implements IValidator{
     private IObjectCreator objectCreator;
     private ValidateManager validateManager;
@@ -18,6 +22,12 @@ public class Validator implements IValidator{
         this.validateManager = validateManager;
     }
 
+    /**
+     *
+     * @param commandData - данные команды(название, аргумент)
+     * @param scanner - способ чтения данных
+     * @return - класс команды, если данные невалидны - null
+     */
     public Command buildCommand(CommandData commandData, Scanner scanner) {
         //в случае невалидных параметров возвращается null вместо объкта Command
         Command command = null;
