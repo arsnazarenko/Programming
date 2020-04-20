@@ -7,10 +7,7 @@ execute_script script2.txt
 execute_script script2.txt
 execute_script script2.txt
 execute_script script2.txt
-clear
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
+
 qe
 add
 FromScript

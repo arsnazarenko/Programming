@@ -9,13 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HandlersManager implements IHandlersManager{
-    private CollectionManager collectionManager;
     private Map<Class<?>, ICommandHandler> handlers;
-    private FieldSetter fieldSetter;
 
     public HandlersManager(CollectionManager collectionManager, FieldSetter fieldSetter) {
-        this.collectionManager = collectionManager;
-        this.fieldSetter = fieldSetter;
         this.handlers = new HashMap<Class<?>, ICommandHandler>() {{
             put(ExitCommand.class, new ExitCommandHandler());
             put(AddCommand.class, new AddCommandHandler(collectionManager, fieldSetter));
@@ -34,30 +30,6 @@ public class HandlersManager implements IHandlersManager{
             put(ClearCommand.class, new ClearCommandHandler(collectionManager));
             put(ExecuteScriptCommand.class, new ExecuteScriptCommandHandler());
         }};
-    }
-
-    public CollectionManager getCollectionManager() {
-        return collectionManager;
-    }
-
-    public void setCollectionManager(CollectionManager collectionManager) {
-        this.collectionManager = collectionManager;
-    }
-
-    public Map<Class<?>, ICommandHandler> getHandlers() {
-        return handlers;
-    }
-
-    public void setHandlers(Map<Class<?>, ICommandHandler> handlers) {
-        this.handlers = handlers;
-    }
-
-    public FieldSetter getFieldSetter() {
-        return fieldSetter;
-    }
-
-    public void setFieldSetter(FieldSetter fieldSetter) {
-        this.fieldSetter = fieldSetter;
     }
 
     public Object handling(Command command) {

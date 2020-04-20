@@ -11,7 +11,7 @@
         <employeesCount>2</employeesCount>
         <id>139</id>
         <name>FromScript</name>
-        <type>COMMERCIAL</type>
+        <type>GOVERNMENT</type>
     </Organization>
     <Organization>
         <annualTurnover>26.0</annualTurnover>

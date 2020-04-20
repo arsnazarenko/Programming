@@ -100,7 +100,7 @@ public class NonBlockingClient {
         return commandQueue; // при возникшей ошибке возвращаем пустую очередь
     }
 
-    private Object read(SelectionKey selectionKey, ByteBuffer buffer) throws IOException {     //пробрасываем исключения и обрабатываем их в NioClient
+    private Object read(SelectionKey selectionKey, ByteBuffer buffer) throws IOException {    //пробрасываем исключения и обрабатываем их в NioClient
         buffer.clear();
         DatagramChannel channel = (DatagramChannel) selectionKey.channel();
         channel.receive(buffer);
