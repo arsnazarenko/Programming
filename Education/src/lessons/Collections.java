@@ -1,7 +1,11 @@
 package lessons;
+
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Collections {
     public static void main(String[] args) {
@@ -16,7 +20,7 @@ public class Collections {
         ints.add(9);
         ints.add(34);
         System.out.println(ints);
-        ints.subList(3,ints.size()).clear();
+        ints.subList(3, ints.size()).clear();
         System.out.println(ints);
 
 
@@ -29,7 +33,6 @@ public class Collections {
         ints.add(45231);
         ints.add(4115);
         ints.add(451111);
-
 
 
         //Очерердь
@@ -58,8 +61,6 @@ public class Collections {
         System.out.println(ints);
 
 
-
-
         //Deque - стек и очередь в одном флаконе
         Deque<Integer> deqInts = new ArrayDeque<>();        //ArrayDeque - реализация интерфейса Deque
         deqInts.offerFirst(1);      //функции вставки и удаления в начале и конце дека
@@ -68,7 +69,7 @@ public class Collections {
         deqInts.offerLast(9989);
         deqInts.pollFirst();
         deqInts.pollLast();
-        for (Integer el:deqInts) {
+        for (Integer el : deqInts) {
             System.out.println("My element in ArrayDeque " + el);
         }
 
@@ -89,8 +90,6 @@ public class Collections {
 
         //TreeSet - двоичное дерево поиска из объектов, элементы должны быть comparable или коллекции нужно передать Comparator
         Set<Pair<Float, Integer>> tree = new TreeSet<>();
-
-
 
 
         // Трюк для удаления одинаковых объектов
@@ -116,7 +115,6 @@ public class Collections {
          */
 
 
-
         Map<Integer, String> database = new HashMap<>();
         database.put(283333, "Назаренко Арсений Евгеньевич");
         database.put(283343, "Назаренко Артем Евгеньевич");
@@ -138,7 +136,7 @@ public class Collections {
         System.out.println(databaseKeys);
 
 
-        for (Map.Entry<Integer, String> entry: database.entrySet()) {
+        for (Map.Entry<Integer, String> entry : database.entrySet()) {
             System.out.println(entry.getKey() + "---" + entry.getValue());
         }
 
@@ -180,7 +178,7 @@ public class Collections {
         System.out.println(err.keySet());
         System.out.println(err.values());
 
-        for (Map.Entry<Ob, Integer> entry: err.entrySet()) {
+        for (Map.Entry<Ob, Integer> entry : err.entrySet()) {
             System.out.println(entry.getKey() + "---" + entry.getValue());
         }
 
@@ -207,13 +205,11 @@ public class Collections {
             }
 
 
-
             @Override
             public int hashCode() {
                 return Objects.hash(a, b);
             }
         }
-
 
 
         Map<Bad, Integer> example = new HashMap<>();
@@ -228,7 +224,7 @@ public class Collections {
         System.out.println(example.values());
         System.out.println(example.keySet());
         System.out.println("=================================");
-        for(Map.Entry<Bad, Integer> element : example.entrySet()) {
+        for (Map.Entry<Bad, Integer> element : example.entrySet()) {
             System.out.println(element.getKey() + " ------>>>> " + element.getValue());
         }
 
@@ -271,7 +267,6 @@ public class Collections {
         //}
 
 
-
         //При копировании объектов надо быть аккуртаным
         Map<Integer, ArrayList<String>> maps = new HashMap<>();
         //java.util.Arrays$ArrayList cannot be cast to java.util.ArrayList, посмотри, какой класс возвращает этот метод
@@ -294,6 +289,12 @@ public class Collections {
         System.out.println(maps.values());
         System.out.println(maps2);
         String a = "awdawd awdawd awdawd";
+
+        Vector<Integer> vector = new Vector<>();
+
+        vector.addAll(Stream.iterate(1, n -> n + 1).limit(5000).collect(Collectors.toList()));
+        //vector.forEach(i -> {if (i % 2 == 1 && i % 5 == 0) System.out.println(i);});
+
 
 
     }
