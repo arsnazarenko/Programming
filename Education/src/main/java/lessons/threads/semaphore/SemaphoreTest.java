@@ -1,10 +1,8 @@
 package lessons.threads.semaphore;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.stream.IntStream;
 
 public class SemaphoreTest {
 
@@ -28,7 +26,7 @@ public class SemaphoreTest {
         Semaphore semaphore = new Semaphore(2, true);
         Service serviceForWork = new Service();
 
-        ExecutorService service = Executors.newFixedThreadPool(8);
+        ExecutorService service = Executors.newFixedThreadPool(6);
 
         List<Future<String>> futures = new ArrayList<>();
 
@@ -40,6 +38,7 @@ public class SemaphoreTest {
         /*
         Упорядоченное завершение работы, при котором ранее отправленные задачи выполняются, а новые задачи не принимаются
         Ждет завершение всех задач
+        Все которые были засабмитчены, будут выполнены, а нвые приниматься не будут
          */
         service.shutdown();
 

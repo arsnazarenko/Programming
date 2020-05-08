@@ -1,8 +1,12 @@
 package lessons.threads;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.zip.GZIPOutputStream;
 
 public class PoolMain {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
@@ -29,10 +33,18 @@ public class PoolMain {
             futures.add(future);
         }
         System.out.println("1)============================");
+        //Метод get() - блокирующий, он блокирует наш метод до тех пор, пока тред не закончит работу и вернет future
         for (Future f: futures) {
             System.out.println(f.toString() + " result: " + f.get()); // можно запускать и с Runnable, результат всегда будет null
         }
         System.out.println("2)=============================");
+        //метод invokeAll блокируется до тез пор, пока не закончат работу все задачи, и возвращает лист future
+        List<Future<Integer>> resultFutures = service.invokeAll(Arrays.asList(new Task(4), new Task(7), new Task(9)));
+        for (Future<Integer> f : resultFutures) {
+            System.out.println(f.toString() + ": " + f.get());
+        }
+        System.out.println("____________________________________");
+        service.shutdown();
     }
     static class Task implements Callable<Integer> {
         private int num;

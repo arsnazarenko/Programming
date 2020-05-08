@@ -61,6 +61,7 @@ public class BlockingQueueTest {
         //MyBlockingQueue<Integer> blockingQueue = new WaitBlockingQueue<>(10);
         MyBlockingQueue<Integer> blockingQueue = new LockBlockingQueue<>(10);
         Thread[] cThreads = new Thread[2];
+        Thread[] pThreads = new Thread[3];
 
         ProducerThread pt_1 = new ProducerThread(blockingQueue, 0, 35);
         ProducerThread pt_2 = new ProducerThread(blockingQueue, 100, 135);
@@ -69,17 +70,27 @@ public class BlockingQueueTest {
         ConsumerThread ct_1 = new ConsumerThread(blockingQueue);
         ConsumerThread ct_2 = new ConsumerThread(blockingQueue);
 
+        pThreads[0] = pt_1;
+        pThreads[1] = pt_2;
+        pThreads[2] = pt_3;
+
+
         cThreads[0] = ct_1;
         cThreads[1] = ct_2;
 
 
-        pt_1.start();
-        pt_2.start();
-        pt_3.start();
+        for(Thread pt: pThreads) {
+            pt.start();
+        }
         for(Thread ct: cThreads) {
             ct.start();
         }
-        TimeUnit.SECONDS.sleep(48);
+
+
+        for (Thread pt: pThreads) {
+            pt.join();
+        }
+        TimeUnit.SECONDS.sleep(10);
 
         for(Thread ct: cThreads) {
             ct.interrupt();

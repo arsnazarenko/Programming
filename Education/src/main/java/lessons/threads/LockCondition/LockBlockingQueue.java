@@ -19,7 +19,6 @@ public class LockBlockingQueue<E> implements MyBlockingQueue<E> {
     private final Lock lock = new ReentrantLock();
     private final Condition notFull = lock.newCondition();
     private final Condition notEmpty = lock.newCondition();
-    new BlockingQueue
 
 
     public LockBlockingQueue(int max) {
