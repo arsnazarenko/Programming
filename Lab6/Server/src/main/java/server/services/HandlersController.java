@@ -8,10 +8,10 @@ import server.handlers.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HandlersManager implements IHandlersManager{
+public class HandlersController implements IHandlersController {
     private Map<Class<?>, ICommandHandler> handlers;
 
-    public HandlersManager(CollectionManager collectionManager, FieldSetter fieldSetter) {
+    public HandlersController(CollectionManager collectionManager, FieldSetter fieldSetter) {
         this.handlers = new HashMap<Class<?>, ICommandHandler>() {{
             put(ExitCommand.class, new ExitCommandHandler());
             put(AddCommand.class, new AddCommandHandler(collectionManager, fieldSetter));
@@ -24,7 +24,6 @@ public class HandlersManager implements IHandlersManager{
             put(FilterContainsNameCommand.class, new FilterContainsNameCommandHandler(collectionManager));
             put(HeadCommand.class, new HeadCommandHandler(collectionManager));
             put(MaxByEmployeeCommand.class, new MaxByEmployeeCommandHandler(collectionManager));
-            put(SaveCommand.class, new SaveCommandHandler(collectionManager));
             put(ShowCommand.class, new ShowCommandHandler(collectionManager));
             put(UpdateIdCommand.class, new UpdateIdCommandHandler(collectionManager, fieldSetter));
             put(ClearCommand.class, new ClearCommandHandler(collectionManager));

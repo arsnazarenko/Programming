@@ -4,7 +4,7 @@ import java.util.Scanner;
 /**
  * Интерфес команды, которая для создания использует различные потоки вводы
  */
-public interface ScanProperties {
+public interface ScanProperties extends StandardCommandProducer{
     /**
      *
      * @param scanner - способ чтения входных данных

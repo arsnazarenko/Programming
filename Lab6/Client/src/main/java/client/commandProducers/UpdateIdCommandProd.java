@@ -8,7 +8,7 @@ import library.clientCommands.commandType.UpdateIdCommand;
 
 import java.util.Scanner;
 
-public class UpdateIdCommandProd implements StandardCommandProducer, ScanProperties, ArgumentProperties {
+public class UpdateIdCommandProd implements ScanProperties, ArgumentProperties {
     private ValidateManager validateManager;
     private IObjectCreator objectCreator;
     private Long id = null;
@@ -31,10 +31,10 @@ public class UpdateIdCommandProd implements StandardCommandProducer, ScanPropert
 
     @Override
     public Command createCommand() {
-        if(scanner == null || id == null) {
-            return null;
-        } else {
+        if(!(scanner == null) && !(id == null)) {
             return new UpdateIdCommand(objectCreator.create(scanner), id);
+        } else {
+            return null;
         }
     }
 }

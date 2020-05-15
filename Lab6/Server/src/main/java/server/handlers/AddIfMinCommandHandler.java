@@ -31,8 +31,10 @@ public class AddIfMinCommandHandler implements ICommandHandler {
                 ifPresent(
                         o -> {
                             if (o.compareTo(organization) > 0) {
-                                collectionManager.getOrgCollection().
-                                        add(fieldSetter.setId(organization, ++CollectionManager.OBJECT_ID_COUNTER));
+                                synchronized (collectionManager) {
+                                    collectionManager.getOrgCollection().
+                                            add(fieldSetter.setId(organization, ++CollectionManager.OBJECT_ID_COUNTER));
+                                }
                                 result.delete(0, result.length()).append("Объект добавлен");
                             } else {
                                 result.delete(0, result.length()).append("Объект не добавлен");

@@ -5,8 +5,6 @@ import client.commandData.CommandData;
 import client.commandProducers.*;
 import library.clientCommands.Command;
 import library.clientCommands.NameOfCommands;
-import library.clientCommands.commandType.UpdateIdCommand;
-
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -35,7 +33,6 @@ public class Validator implements IValidator {
         commandProducers.put(print_ascending, new PrintAscendingCommandProd());
         commandProducers.put(remove_by_id, new RemoveByIdCommandProd(validateManager));
         commandProducers.put(remove_lower, new RemoveLowerCommandProd(objectCreator));
-        commandProducers.put(save, new SaveCommandProd());
         commandProducers.put(show, new ShowCommandProd());
         commandProducers.put(update_id, new UpdateIdCommandProd(validateManager, objectCreator));
 
@@ -47,14 +44,18 @@ public class Validator implements IValidator {
      * @return - класс команды, если данные невалидны - null
      */
     public Command buildCommand(CommandData commandData, Scanner scanner) {
-        //в случае невалидных параметров возвращается null вместо объкта Command
+        //Находим нужного продюсера команды по названию команды
         StandardCommandProducer commandProducer = commandProducers.get(commandData.getCommand());
+        //проверяем, есть ли в команде аргументы
         if (commandProducer instanceof ArgumentProperties) {
             ((ArgumentProperties) commandProducer).setArgument(commandData.getParam());
         }
+        //проверяем, работает ли команда с данными, уоторые вводятся пользователями
         if (commandProducer instanceof ScanProperties) {
             ((ScanProperties) commandProducer).setReaderForCreate(scanner);
         }
+        //создаем объект команды
+        //в случае невалидных параметров возвращается null вместо объкта Command
         return commandProducer.createCommand();
     }
 

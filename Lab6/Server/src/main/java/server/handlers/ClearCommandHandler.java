@@ -13,9 +13,10 @@ public class ClearCommandHandler implements ICommandHandler {
 
     @Override
     public String processCommand(Command command) {
-        collectionManager.getOrgCollection().clear();
+        synchronized (collectionManager) {
+            collectionManager.getOrgCollection().clear();
+        }
         //можно не кастовать к классу команды, т к параметры нам не нужны
-
         return "Коллекция отчищена от объектов";
     }
 }

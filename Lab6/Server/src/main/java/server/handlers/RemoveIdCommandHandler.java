@@ -21,17 +21,19 @@ public class RemoveIdCommandHandler implements ICommandHandler {
     public String processCommand(Command command) {
         RemoveIdCommand removeIdCommand = (RemoveIdCommand) command;
         Long id = removeIdCommand.getId();
-        int oldSize = collectionManager.getOrgCollection().size();
-        Deque<Organization> newOrganizations = collectionManager.getOrgCollection().
-                stream().
-                filter(o1 -> !(o1.getId().equals(id))).
-                collect(Collectors.toCollection(ArrayDeque::new));
+        synchronized (collectionManager) {
+            int oldSize = collectionManager.getOrgCollection().size();
+            Deque<Organization> newOrganizations = collectionManager.getOrgCollection().
+                    stream().
+                    filter(o1 -> !(o1.getId().equals(id))).
+                    collect(Collectors.toCollection(ArrayDeque::new));
 
-        if (newOrganizations.size() < oldSize) {
-            collectionManager.setOrgCollection(newOrganizations);
-            return "Команды выполнена";
-        } else {
-            return "Объекта с таким ID нет";
+
+            if (newOrganizations.size() < oldSize) {
+                collectionManager.setOrgCollection(newOrganizations);
+                return "Команды выполнена";
+            }
         }
+        return "Объекта с таким ID нет";
     }
 }

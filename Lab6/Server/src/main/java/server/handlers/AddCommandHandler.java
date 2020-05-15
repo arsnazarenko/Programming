@@ -19,12 +19,13 @@ public class AddCommandHandler implements ICommandHandler {
 
     @Override
     public String processCommand(Command command) {
-        Long start = System.currentTimeMillis();
         AddCommand addCommand = (AddCommand) command;
         Organization organization = fieldSetter.setDateNow(
                 fieldSetter.setId(addCommand.getOrganization(), ++CollectionManager.OBJECT_ID_COUNTER));
         //сделай настройку ай ди при добавлении объектов при запуcке сервера
-        collectionManager.getOrgCollection().addLast(organization);
+        synchronized (collectionManager) {
+            collectionManager.getOrgCollection().addLast(organization);
+        }
         return "Объект добавлен";
     }
 

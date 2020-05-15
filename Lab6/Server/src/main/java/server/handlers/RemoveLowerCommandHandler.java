@@ -19,12 +19,13 @@ public class RemoveLowerCommandHandler implements ICommandHandler {
     public String processCommand(Command command) {
         RemoveLowerCommand removeLowerCommand = (RemoveLowerCommand) command;
         Organization organization = fieldSetter.setDateNow(removeLowerCommand.getOrganization());
-        int oldSize = collectionManager.getOrgCollection().size();
-        collectionManager.getOrgCollection().removeIf(o -> o.compareTo(organization) < 0);
-        if (collectionManager.getOrgCollection().size() < oldSize) {
-            return "Команда выполнена";
-        } else {
-            return "Объектов меньшет нет!";
+        synchronized (collectionManager) {
+            int oldSize = collectionManager.getOrgCollection().size();
+            collectionManager.getOrgCollection().removeIf(o -> o.compareTo(organization) < 0);
+            if (collectionManager.getOrgCollection().size() < oldSize) {
+                return "Команда выполнена";
+            }
         }
+        return "Объектов меньшет нет!";
     }
 }

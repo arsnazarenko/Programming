@@ -1,6 +1,6 @@
 package client.commandProducers;
 
-public interface ArgumentProperties {
+public interface ArgumentProperties extends StandardCommandProducer{
     /**
      * Метод для установки параметров команде
      * @param parameter

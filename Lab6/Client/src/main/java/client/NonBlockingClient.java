@@ -2,12 +2,12 @@ package client;
 
 
 
-import client.servises.AnswerHandler;
+import client.servises.IAnswerHandler;
 import client.servises.ICommandCreator;
 import library.clientCommands.Command;
 import library.clientCommands.commandType.ExecuteScriptCommand;
 import library.clientCommands.commandType.ExitCommand;
-import library.serialization.ISerializationManager;
+import library.serialization.SerializationManager;
 
 import java.io.*;
 import java.net.SocketAddress;
@@ -21,19 +21,17 @@ import java.util.*;
  * Реализация неблокиующего клиента
  */
 public class NonBlockingClient {
-    private ISerializationManager serializationManager;
     private ICommandCreator commandCreator;
     private ByteBuffer buffer;
     private SocketAddress address;
-    private AnswerHandler answerHandler;
+    private IAnswerHandler IAnswerHandler;
 
-    public NonBlockingClient(ISerializationManager serializationManager, ICommandCreator commandCreator, ByteBuffer buffer,
-                             SocketAddress address, AnswerHandler answerHandler) {
-        this.serializationManager = serializationManager;
+    public NonBlockingClient(ICommandCreator commandCreator, ByteBuffer buffer,
+                             SocketAddress address, IAnswerHandler IAnswerHandler) {
         this.commandCreator = commandCreator;
         this.buffer = buffer;
         this.address = address;
-        this.answerHandler = answerHandler;
+        this.IAnswerHandler = IAnswerHandler;
     }
 
     /**
@@ -56,7 +54,7 @@ public class NonBlockingClient {
                     continue;
                 }
                 if (selectionKey.isReadable()) {
-                    answerHandler.handling(read(selectionKey, buffer));
+                    IAnswerHandler.handling(read(selectionKey, buffer));
                 } else if (selectionKey.isWritable()) {
                     Command command = null;
                     if (!(commandQueue == null)) {      //проверка, если скрипт уже был запущен
@@ -105,11 +103,11 @@ public class NonBlockingClient {
         DatagramChannel channel = (DatagramChannel) selectionKey.channel();
         channel.receive(buffer);
         selectionKey.interestOps(SelectionKey.OP_WRITE);
-        return serializationManager.objectDeserial(buffer.array());
+        return SerializationManager.objectDeserial(buffer.array());
     }
 
     private void write(SelectionKey selectionKey, Command command) throws IOException {
-        ByteBuffer answer = ByteBuffer.wrap(serializationManager.objectSerial(command));
+        ByteBuffer answer = ByteBuffer.wrap(SerializationManager.objectSerial(command));
         DatagramChannel datagramChannel = (DatagramChannel) selectionKey.channel();
         datagramChannel.send(answer, address);  //отправляем команду сервера
         selectionKey.interestOps(SelectionKey.OP_READ);

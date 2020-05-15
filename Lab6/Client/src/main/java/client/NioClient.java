@@ -2,7 +2,7 @@ package client;
 
 
 import client.servises.*;
-import library.serialization.ISerializationManager;
+
 import library.serialization.SerializationManager;
 
 import java.io.IOException;
@@ -18,17 +18,16 @@ public class NioClient {
         try(DatagramChannel datagramChannel = DatagramChannel.open()) {
             int port = Integer.parseInt(args[1]);
             SocketAddress socketAddress = new InetSocketAddress(args[0], port);
-            ISerializationManager serializationManager = new SerializationManager();
             IObjectCreator objectCreator = new ObjectCreator();
             ValidateManager validateManager = new ValidateManager();
             IValidator validator = new Validator(objectCreator, validateManager);
             IReader reader = new Reader(validator);
-            AnswerHandler answerHandler = new AnswerHandler();
+            IAnswerHandler IAnswerHandler = new AnswerHandler();
             ICommandCreator commandCreator = new CommandCreator(reader);
             datagramChannel.connect(socketAddress);
             datagramChannel.configureBlocking(false);
-            NonBlockingClient nonBlockingClient = new NonBlockingClient(serializationManager, commandCreator, ByteBuffer.allocate(4 * 1024),
-                    socketAddress, answerHandler);
+            NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(4 * 1024),
+                    socketAddress, IAnswerHandler);
 
             nonBlockingClient.process(datagramChannel);
 

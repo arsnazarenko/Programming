@@ -12,7 +12,6 @@ public enum NameOfCommands {
     update_id("update_id{element} - Обновить значение элемента колллекции, id которого равен заданному"),
     remove_by_id("remove_by_id id - Удалить элемент из колллекции по его id"),
     clear("clear - Отчистить коллекцию"),
-    save("save - Сохранить коллекцию в файл"),
     execute_script("execute_script file_name - Считать скрипт из указанного файла"),
     head("head - Вывести первый элемент коллекции"),
     add_if_min("add_if_min{element} - Добавить новый элемент в коллекцию, если его значение меньше чем у наименьшего элемента коллекции"),

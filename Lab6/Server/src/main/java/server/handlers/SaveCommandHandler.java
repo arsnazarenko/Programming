@@ -15,7 +15,6 @@ public class SaveCommandHandler implements ICommandHandler {
 
     @Override
     public String processCommand(Command command) {
-        JaxbWorker.convertObjectToXml(collectionManager, NioServer.file);
         return "Сохранено!";
     }
 }

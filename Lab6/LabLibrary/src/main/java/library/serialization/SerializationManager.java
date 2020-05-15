@@ -2,12 +2,12 @@ package library.serialization;
 
 import java.io.*;
 
-public class SerializationManager implements ISerializationManager {
+public class SerializationManager{
 
     public SerializationManager() {
     }
 
-    public byte[] objectSerial(Object serial) {
+    public static byte[] objectSerial(Object serial) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(baos);
         ) {
@@ -21,7 +21,7 @@ public class SerializationManager implements ISerializationManager {
         return null;
     }
 
-    public Object objectDeserial(byte[] array) {
+    public static Object objectDeserial(byte[] array) {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(array);
              ObjectInputStream ois = new ObjectInputStream(bais)
         ) {
