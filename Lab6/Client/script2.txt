@@ -11,6 +11,22 @@ FromScript2
 27
 GOVERNMENT
 
+add
+FromScript2
+34
+35
+26
+27
+GOVERNMENT
+
+add
+FromScript2
+34
+35
+26
+27
+GOVERNMENT
+
 update_id awdawd
 info
 head
@@ -18,5 +34,29 @@ show
 print_ascending
 show
 head
+
+update_id 1
+UPDATE1
+341231
+351322
+2622
+272
+GOVERNMENT
+
+update_id 2
+UPDATE1
+341231
+351322
+2622
+272
+GOVERNMENT
+
+update_id 3
+UPDATE1
+341231
+351322
+2622
+272
+GOVERNMENT
 
 exit

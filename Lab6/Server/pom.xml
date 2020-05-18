@@ -18,6 +18,11 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.12</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -52,7 +57,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>nioUDP.NioServer</mainClass>
+                            <mainClass>mainClass.ServerStarter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

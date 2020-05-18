@@ -26,7 +26,7 @@ public class NioClient {
             ICommandCreator commandCreator = new CommandCreator(reader);
             datagramChannel.connect(socketAddress);
             datagramChannel.configureBlocking(false);
-            NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(4 * 1024),
+            NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(15 * 1024),
                     socketAddress, IAnswerHandler);
 
             nonBlockingClient.process(datagramChannel);

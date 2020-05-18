@@ -7,7 +7,22 @@ execute_script script2.txt
 execute_script script2.txt
 execute_script script2.txt
 execute_script script2.txt
-
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
+execute_script script2.txt
 qe
 add
 FromScript
@@ -17,7 +32,7 @@ FromScript
 2
 COMMERCIAL
 
-update_id 149
+update_id 21
 UPDATE
 22
 45
@@ -29,17 +44,6 @@ info
 head
 show
 print_ascending
-remove_by_id 150
-add
-ADD
-32
-32
-32
-4
-COMMERCIAL
-
 max_by_employees_count
 filter_contains_name f
-
-execute_script script2.txt
 exit
