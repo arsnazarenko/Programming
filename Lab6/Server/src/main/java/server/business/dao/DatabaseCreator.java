@@ -16,9 +16,11 @@ public class DatabaseCreator {
         try {
             connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/studs",
                     "s283333", "wts704");
+            connection.setAutoCommit(false);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
 
@@ -28,29 +30,49 @@ public class DatabaseCreator {
         String sql;
 
         stmt = connection.createStatement();
+        sql = "CREATE SEQUENCE IF NOT EXISTS auto_id_locations";
+        stmt.executeUpdate(sql);
+        stmt.close();
+
+        stmt = connection.createStatement();
+        sql = "CREATE SEQUENCE IF NOT EXISTS auto_id_address";
+        stmt.executeUpdate(sql);
+        stmt.close();
+
+        stmt = connection.createStatement();
+        sql = "CREATE SEQUENCE IF NOT EXISTS auto_id_coordinates";
+        stmt.executeUpdate(sql);
+        stmt.close();
+
+        stmt = connection.createStatement();
+        sql = "CREATE SEQUENCE IF NOT EXISTS auto_id_organizations";
+        stmt.executeUpdate(sql);
+        stmt.close();
+
+        stmt = connection.createStatement();
         sql = "CREATE TABLE IF NOT EXISTS Locations("
-                + "id SERIAL PRIMARY KEY, "
+                + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_locations') UNIQUE, "
                 + "x BIGINT NOT NULL, "
-                + "y FLOAT NOT NULL, "
-                + "z FLOAT NOT NULL, "
+                + "y DOUBLE PRECISION NOT NULL, "
+                + "z DOUBLE PRECISION NOT NULL, "
                 + "name CHAR(50) NOT NULL )";
         stmt.executeUpdate(sql);
         stmt.close();
 
         stmt = connection.createStatement();
         sql = "CREATE TABLE IF NOT EXISTS Address("
-                + "id SERIAL PRIMARY KEY, "
+                + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_address') UNIQUE, "
                 + "street CHAR(50) NOT NULL, "
                 + "zipcode CHAR(50) NOT NULL, "
-                + "town  SERIAL REFERENCES Locations (id) ON UPDATE CASCADE ON DELETE CASCADE )";
+                + "town BIGINT REFERENCES Locations (id) UNIQUE ON DELETE CASCADE ON UPDATE CASCADE)  ";
 
         stmt.executeUpdate(sql);
         stmt.close();
 
         stmt = connection.createStatement();
         sql = "CREATE TABLE IF NOT EXISTS Coordinates("
-                + "id SERIAL PRIMARY KEY, "
-                + "x FLOAT NOT NULL CHECK(x > -98), "
+                + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_coordinates') UNIQUE, "
+                + "x DOUBLE PRECISION NOT NULL CHECK(x > -98), "
                 + "y FLOAT NOT NULL CHECK(y > -148) )";
         stmt.executeUpdate(sql);
         stmt.close();
@@ -58,19 +80,17 @@ public class DatabaseCreator {
 
         stmt = connection.createStatement();
         sql = "CREATE TABLE IF NOT EXISTS Organizations("
-                + "id SERIAL PRIMARY KEY, "
+                + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_organizations') UNIQUE, "
                 + "name CHAR(50) NOT NULL, "
-                + "coordinates SERIAL REFERENCES Coordinates (id) ON UPDATE CASCADE ON DELETE CASCADE NOT NULL, "
+                + "coordinates BIGINT REFERENCES Coordinates (id) UNIQUE ON DELETE CASCADE ON UPDATE CASCADE, "
                 + "creation_date TIMESTAMP NOT NULL, "
                 + "employees_count INT CHECK(employees_count > 0) NOT NULL, "
                 + "type CHAR (35)  NOT NULL, "
-                + "annualTurnover FLOAT CHECK(annualTurnover > 0), "
-                + "officialAddress SERIAL references Address (id) ON UPDATE CASCADE ON DELETE CASCADE )";
+                + "annualTurnover DOUBLE PRECISION CHECK(annualTurnover > 0), "
+                + "officialAddress BIGINT references Address (id) UNIQUE ON DELETE CASCADE ON UPDATE CASCADE)";
         stmt.executeUpdate(sql);
         stmt.close();
 
-
-        connection.setAutoCommit(false);
 
 
 
@@ -80,18 +100,52 @@ public class DatabaseCreator {
         connection.close();
     }
     public static void testInsert() throws SQLException {
-        Statement stmt = connection.createStatement();
+        String sql ="INSERT INTO Locations (x, y, z, name) VALUES ((?), (?), (?), (?)) RETURNING id";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setLong(1, 1231231);
+        ps.setDouble(2, 5.55);
+        ps.setDouble(3, 6.66);
+        ps.setString(4, "locat");
 
-        String sql ="INSERT INTO Locations (x, y, z, name) VALUES (25, 5.5, 5.5, 'russia') RETURNING id";
 
-        ResultSet rs = stmt.executeQuery(sql);
-        int i = 0;
+
+        ResultSet rs = ps.executeQuery();
+        long i = 0;
         if (rs.next()) {
             i = rs.getInt(1);
         }
-        sql = "INSERT INTO Address (street, zipcode, town) VALUES ('Mira', '14881488', " + i + ")";
-        stmt.executeUpdate(sql);
+        String sql2 = "INSERT INTO Address (street, zipcode, town) VALUES ((?), (?), (?)) RETURNING id";
+        ps = connection.prepareStatement(sql2);
+        ps.setString(1, "street");
+        ps.setString(2, "zipzip");
+        ps.setLong(3, i);
+        rs = ps.executeQuery();
+        i = 0;
+        if (rs.next()) {
+            i = rs.getLong(1);
+        }
+        String sql3 = "INSERT INTO Coordinates (x, y) VALUES ((?), (?)) RETURNING id";
+        ps = connection.prepareStatement(sql3);
+        ps.setDouble(1, 4.4);
+        ps.setDouble(2, 98.6);
+        rs = ps.executeQuery();
+        long j = 0;
+        if (rs.next()) {
+            j = rs.getLong(1);
+        }
+        String sql4 = "INSERT INTO Organizations (name, coordinates, creation_date, employees_count, type, annualTurnover, officialAddress) " +
+                "VALUES ((?), (?), (?), (?), (?), (?), (?)) RETURNING id";//address i
+        ps = connection.prepareStatement(sql4);
+        ps.setString(1, "name");
+        ps.setLong(2, j);
+        ps.setTimestamp(3, new Timestamp(new java.util.Date().getTime()));
+        ps.setInt(4, 123);
+        ps.setString(5, "COMMERCIAL");
+        ps.setNull(6, Types.DOUBLE);
+        ps.setLong(7, i);
+
+        ps.executeQuery();
         connection.commit();
-        stmt.close();
+        ps.close();
     }
 }
