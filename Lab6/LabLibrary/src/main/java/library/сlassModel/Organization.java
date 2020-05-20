@@ -73,8 +73,6 @@ public class Organization implements Comparable<Organization>, Serializable {
     public Organization() {
     }
 
-    ;
-
     public Long getId() {
         return id;
     }

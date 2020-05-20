@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 
 public class OrganizationDAO implements DAO<Organization, Long> {
+    //для удобной проверки, совмещает все таблицы в одну (почти)
+    //select o.id, o.name, coordinates, creation_date, employees_count, type, annualturnover, street, zipcode, town, x, y, z, b.name from Organizations o left join (select a.id, street, zipcode, town, x, y, z, name from address a left join locations l on a.town = l.id) b on o.id = b.id
 
     private static final Logger logger = LogManager.getLogger(OrganizationDAO.class);
     private final Connection connection;
@@ -21,14 +23,14 @@ public class OrganizationDAO implements DAO<Organization, Long> {
 
     @Override
     public long create(final Organization organization) {
-        Long i = 0L;
-        Long j = 0L;
-        Long k = 0L;
+        long i = 0L;
+        long j = 0L;
+        long k = 0L;
 
         long result = 0L;
 
         Address address = organization.getOfficialAddress();
-        Location town = address.getTown();
+        Location town = (address != null) ? address.getTown() : null;
         Coordinates coordinates = organization.getCoordinates();
 
         try {
@@ -38,7 +40,7 @@ public class OrganizationDAO implements DAO<Organization, Long> {
                     ps.setDouble(2, town.getY());
                     ps.setDouble(3, town.getZ());
                     ps.setString(4, town.getName());
-                    try(ResultSet rs = ps.executeQuery()) {
+                    try (ResultSet rs = ps.executeQuery()) {
                         if (rs.next()) {
                             i = rs.getLong(1);
                         }
@@ -63,23 +65,23 @@ public class OrganizationDAO implements DAO<Organization, Long> {
                 }
             }
 
-            try(PreparedStatement ps = connection.prepareStatement(SQLOrganizations.INSERT_COORDINATES.query)) {
+            try (PreparedStatement ps = connection.prepareStatement(SQLOrganizations.INSERT_COORDINATES.query)) {
                 ps.setDouble(1, coordinates.getX());
                 ps.setDouble(2, coordinates.getY());
-                try(ResultSet rs = ps.executeQuery()) {
+                try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         k = rs.getLong(1);
                     }
                 }
             }
 
-            try(PreparedStatement ps = connection.prepareStatement(SQLOrganizations.INSERT_ORGANIZATIONS.query)) {
+            try (PreparedStatement ps = connection.prepareStatement(SQLOrganizations.INSERT_ORGANIZATIONS.query)) {
                 ps.setString(1, organization.getName());
                 ps.setLong(2, k);
                 ps.setTimestamp(3, new Timestamp(organization.getCreationDate().getTime()));
                 ps.setInt(4, organization.getEmployeesCount());
                 ps.setString(5, organization.getType().name());
-                if (organization.getAnnualTurnover()!= null) {
+                if (organization.getAnnualTurnover() != null) {
                     ps.setDouble(6, organization.getAnnualTurnover());
                 } else {
                     ps.setNull(6, Types.DOUBLE);
@@ -90,7 +92,7 @@ public class OrganizationDAO implements DAO<Organization, Long> {
                     ps.setNull(7, Types.BIGINT);
                 }
 
-                try(ResultSet rs = ps.executeQuery()) {
+                try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         result = rs.getLong(1);
                     }
@@ -102,7 +104,7 @@ public class OrganizationDAO implements DAO<Organization, Long> {
             }
 
         } catch (SQLException e) {
-            logger.error("INSERT ERROR");
+            logger.error("INSERT ERROR", e);
             try {
                 connection.rollback();
             } catch (SQLException ex) {
@@ -124,32 +126,84 @@ public class OrganizationDAO implements DAO<Organization, Long> {
 
     @Override
     public long delete(Long id) {
-        long result = 0;
-        try(PreparedStatement ps = connection.prepareStatement(SQLOrganizations.DELETE_ORGANIZATIONS.query)) {
-            ps.setLong(1, id);
-
-            try(ResultSet rs = ps.executeQuery()) {
-                if(rs.next()) {
-                    result = rs.getLong(1);
-                }
-            }
+        long orgId = 0;//если он остался 0, то такого id нет, можно идти дальше
+        try{
+            orgId = deleteOrganization(id);
             connection.commit();
-            return result;
+            logger.debug("DELETE OPERATION is completed");
+            return orgId;
         } catch (SQLException e) {
-            logger.error("DELETE ERROR");
+            logger.error("DELETE ERROR", e);
             try {
                 connection.rollback();
             } catch (SQLException ex) {
 
             }
-            return 0L;
+            return orgId;
         }
 
     }
 
     @Override
     public boolean deleteByKeys(Long[] ids) {
-        return false;
+        try {
+            for(Long id: ids) {
+                deleteOrganization(id);
+            }
+            connection.commit();
+            logger.debug("DELETE_ALL OPERATION is completed");
+            return true;
+        } catch (SQLException e) {
+            try {
+                logger.error("DELETE_ALL OPERATION ERROR", e);
+                connection.rollback();
+            } catch (SQLException ex) {
+
+            }
+            return false;
+        }
+
+
+    }
+    private long deleteOrganization(long id) throws SQLException {
+        long orgId = 0;//если он остался 0, то такого id нет, можно идти дальше
+        long coordinatesId = 0;
+        long addressId = 0;
+        long locationId = 0;
+
+        try (PreparedStatement ps = connection.prepareStatement(SQLOrganizations.DELETE_ORGANIZATIONS.query)) {
+            ps.setLong(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) ;
+                orgId = rs.getLong("id");
+                coordinatesId = rs.getLong("coordinates");
+                addressId = rs.getLong("officialAddress");
+            }
+        }
+        if (orgId != 0) {//такой id есть, продолжаемудалять остальные таблицы
+            try (PreparedStatement ps = connection.prepareStatement(SQLOrganizations.DELETE_COORDINATES.query)) {
+                ps.setLong(1, coordinatesId);
+                ps.executeUpdate();
+            }
+
+            if (addressId != 0) {
+                try (PreparedStatement ps = connection.prepareStatement(SQLOrganizations.DELETE_ADDRESSES.query)) {
+                    ps.setLong(1, addressId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) ;
+                        locationId = rs.getLong("town");
+                    }
+                }
+                if (locationId != 0) {
+                    try (PreparedStatement ps = connection.prepareStatement(SQLOrganizations.DELETE_LOCATIONS.query)) {
+                        ps.setLong(1, locationId);
+                        ps.executeUpdate();
+                    }
+                }
+            }
+        }
+        return orgId;
+
     }
 
     enum SQLOrganizations {
@@ -159,17 +213,22 @@ public class OrganizationDAO implements DAO<Organization, Long> {
         INSERT_ADDRESSES("INSERT INTO Address (street, zipcode, town) VALUES ((?), (?), (?)) RETURNING id"),
         INSERT_COORDINATES("INSERT INTO Coordinates (x, y) VALUES ((?), (?)) RETURNING id"),
 
-        DELETE_ORGANIZATIONS("DELETE FROM Organizations WHERE id = (?)");
+        DELETE_ORGANIZATIONS("DELETE FROM Organizations WHERE id = (?) RETURNING id, coordinates, officialAddress"),
+        DELETE_LOCATIONS("DELETE FROM Locations WHERE id = (?)"),
+        DELETE_ADDRESSES("DELETE FROM Address WHERE id = (?) RETURNING town"),
+        DELETE_COORDINATES("DELETE FROM Coordinates WHERE id = (?)");
 
-
+        //UPDATE_OR
 
 
         String query;
-
 
 
         SQLOrganizations(String query) {
             this.query = query;
         }
     }
+
+
+
 }

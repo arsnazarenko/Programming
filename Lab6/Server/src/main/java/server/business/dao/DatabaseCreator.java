@@ -23,7 +23,9 @@ public class DatabaseCreator {
 
     }
 
-
+    public static Connection getConnection() {
+        return connection;
+    }
 
     public static void createTables() throws SQLException {
         Statement stmt;
@@ -64,7 +66,7 @@ public class DatabaseCreator {
                 + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_address') UNIQUE, "
                 + "street CHAR(50) NOT NULL, "
                 + "zipcode CHAR(50) NOT NULL, "
-                + "town BIGINT REFERENCES Locations (id) UNIQUE ON DELETE CASCADE ON UPDATE CASCADE)  ";
+                + "town BIGINT REFERENCES Locations (id) UNIQUE)  ";
 
         stmt.executeUpdate(sql);
         stmt.close();
@@ -82,12 +84,12 @@ public class DatabaseCreator {
         sql = "CREATE TABLE IF NOT EXISTS Organizations("
                 + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_organizations') UNIQUE, "
                 + "name CHAR(50) NOT NULL, "
-                + "coordinates BIGINT REFERENCES Coordinates (id) UNIQUE ON DELETE CASCADE ON UPDATE CASCADE, "
+                + "coordinates BIGINT REFERENCES Coordinates (id) UNIQUE, "
                 + "creation_date TIMESTAMP NOT NULL, "
                 + "employees_count INT CHECK(employees_count > 0) NOT NULL, "
                 + "type CHAR (35)  NOT NULL, "
                 + "annualTurnover DOUBLE PRECISION CHECK(annualTurnover > 0), "
-                + "officialAddress BIGINT references Address (id) UNIQUE ON DELETE CASCADE ON UPDATE CASCADE)";
+                + "officialAddress BIGINT references Address (id) UNIQUE)";
         stmt.executeUpdate(sql);
         stmt.close();
 
@@ -96,8 +98,12 @@ public class DatabaseCreator {
 
     }
 
-    public static void closeConnection() throws SQLException {
-        connection.close();
+    public static void closeConnection(){
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     public static void testInsert() throws SQLException {
         String sql ="INSERT INTO Locations (x, y, z, name) VALUES ((?), (?), (?), (?)) RETURNING id";
