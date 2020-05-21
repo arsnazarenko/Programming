@@ -6,7 +6,7 @@ import library.clientCommands.commandType.ShowCommand;
 
 public class ShowCommandProd implements StandardCommandProducer {
     @Override
-    public Command createCommand() {
-        return new ShowCommand();
+    public Command createCommand(String login, String password) {
+        return new ShowCommand(login, password);
     }
 }

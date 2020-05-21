@@ -10,7 +10,8 @@ public class UpdateIdCommand extends Command {
     private Organization organization;
     private Long id;
 
-    public UpdateIdCommand(Organization organization, Long id) {
+    public UpdateIdCommand(Organization organization, Long id, String login, String password) {
+        super(login, password);
         this.organization = organization;
         this.id = id;
     }

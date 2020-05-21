@@ -6,7 +6,7 @@ import library.clientCommands.commandType.MaxByEmployeeCommand;
 
 public class MaxByEmployeesCommandProd implements StandardCommandProducer{
     @Override
-    public Command createCommand() {
-        return new MaxByEmployeeCommand();
+    public Command createCommand(String login, String password) {
+        return new MaxByEmployeeCommand(login, password);
     }
 }

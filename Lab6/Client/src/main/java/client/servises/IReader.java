@@ -7,7 +7,7 @@ import java.util.Queue;
 import java.util.Scanner;
 
 public interface IReader {
-    Command read(Scanner scanner);
-    Queue<Command> scriptRead(Scanner scanner);
+    Command read(Scanner scanner, String login, String password);
+    Queue<Command> scriptRead(Scanner scanner, String login, String password);
 
 }

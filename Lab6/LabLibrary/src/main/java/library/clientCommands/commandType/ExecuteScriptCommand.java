@@ -6,10 +6,12 @@ import library.clientCommands.Command;
 import java.util.Objects;
 
 public class ExecuteScriptCommand extends Command {
-    public String script;
+    private String script;
 
-    public ExecuteScriptCommand(String script) {
+    public ExecuteScriptCommand(String script, String login, String password) {
+        super(login, password);
         this.script = script;
+
     }
 
     public String getScript() {

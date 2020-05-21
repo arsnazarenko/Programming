@@ -6,7 +6,7 @@ import library.clientCommands.commandType.HeadCommand;
 
 public class HeadCommandProd implements StandardCommandProducer {
     @Override
-    public Command createCommand() {
-        return new HeadCommand();
+    public Command createCommand(String login, String password) {
+        return new HeadCommand(login, password);
     }
 }

@@ -7,7 +7,7 @@ import library.clientCommands.commandType.InfoCommand;
 public class InfoCommandProd implements StandardCommandProducer{
 
     @Override
-    public Command createCommand() {
-        return new InfoCommand();
+    public Command createCommand(String login, String password) {
+        return new InfoCommand(login, password);
     }
 }

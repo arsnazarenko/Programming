@@ -9,7 +9,8 @@ import java.util.Objects;
 public class RemoveLowerCommand extends Command {
     Organization organization;
 
-    public RemoveLowerCommand(Organization organization) {
+    public RemoveLowerCommand(Organization organization, String login, String password) {
+        super(login, password);
         this.organization = organization;
     }
 

@@ -8,8 +8,8 @@ public class ExecuteScriptCommandProd implements StandardCommandProducer, Argume
     private String script = null;
     //тут проверка тсроки не нужна, проверяеся при запуске
     @Override
-    public Command createCommand() {
-        return new ExecuteScriptCommand(script);
+    public Command createCommand(String login, String password) {
+        return new ExecuteScriptCommand(script, login, password);
     }
 
     @Override

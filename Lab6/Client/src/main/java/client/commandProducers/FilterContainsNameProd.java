@@ -18,7 +18,7 @@ public class FilterContainsNameProd implements StandardCommandProducer, Argument
     }
 
     @Override
-    public Command createCommand() {
-        return name!= null?new FilterContainsNameCommand(name):null;
+    public Command createCommand(String login, String password) {
+        return name!= null?new FilterContainsNameCommand(name, login, password):null;
     }
 }

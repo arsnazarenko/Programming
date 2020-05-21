@@ -18,7 +18,7 @@ public class RemoveByIdCommandProd implements StandardCommandProducer, ArgumentP
     }
 
     @Override
-    public Command createCommand() {
-        return (id != null)?new RemoveIdCommand(id):null;
+    public Command createCommand(String login, String password) {
+        return (id != null)?new RemoveIdCommand(id, login, password):null;
     }
 }

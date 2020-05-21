@@ -8,7 +8,8 @@ import java.util.Objects;
 public class RemoveIdCommand extends Command {
     private Long id;
 
-    public RemoveIdCommand(Long id) {
+    public RemoveIdCommand(Long id, String login, String password) {
+        super(login, password);
         this.id = id;
     }
 

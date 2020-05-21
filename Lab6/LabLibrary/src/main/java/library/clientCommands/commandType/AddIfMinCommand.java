@@ -9,7 +9,8 @@ import java.util.Objects;
 public class AddIfMinCommand extends Command {
     private Organization organization;
 
-    public AddIfMinCommand(Organization organization) {
+    public AddIfMinCommand(Organization organization, String login, String password) {
+        super(login, password);
         this.organization = organization;
     }
 

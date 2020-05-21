@@ -9,5 +9,5 @@ import java.util.Queue;
 
 public interface ICommandCreator {
     Command createCommand(InputStream inputStream);
-    Queue<Command> createCommandQueue(InputStream inputStream);
+    Queue<Command> createCommandQueue(InputStream inputStream, String login, String password);
 }

@@ -6,7 +6,7 @@ import library.clientCommands.commandType.PrintAscendingCommand;
 public class PrintAscendingCommandProd implements StandardCommandProducer{
 
     @Override
-    public Command createCommand() {
-        return new PrintAscendingCommand();
+    public Command createCommand(String login, String password) {
+        return new PrintAscendingCommand(login, password);
     }
 }

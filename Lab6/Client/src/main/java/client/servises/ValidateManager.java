@@ -14,7 +14,7 @@ public class ValidateManager {
 
     public String nameValid(String param) {
         String result = null;
-        if (param.equals("")) {
+        if (param.trim().equals("")) {
             System.out.println("НЕВЕРНАЯ ПОДСТРОКА");
         } else {
             result = param;

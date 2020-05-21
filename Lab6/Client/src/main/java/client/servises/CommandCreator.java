@@ -27,7 +27,7 @@ public class CommandCreator implements ICommandCreator{
     public Command createCommand(InputStream inputStream) {
         Scanner scanner = new Scanner(inputStream, "UTF-8");
         //получии команду
-        Command command = reader.read(scanner);
+        Command command = reader.read(scanner, null, null);
         return command;
 
 
@@ -36,12 +36,12 @@ public class CommandCreator implements ICommandCreator{
     /**
      * Метод для создания очереди из команд для скрипта
      * @param inputStream - stream, с помощью которого создаются команды
-     * @return очередб из команд
+     * @return очередь из команд с логином и паролем, которая были введены при запуске скрипта
      */
-    public Queue<Command> createCommandQueue(InputStream inputStream) {
+    public Queue<Command> createCommandQueue(InputStream inputStream, String login, String password) {
         Scanner scanner = new Scanner(inputStream, "UTF-8");
         //получили очередь из команд для скрипта
-        Queue<Command> commandQueue = reader.scriptRead(scanner);
+        Queue<Command> commandQueue = reader.scriptRead(scanner, login, password);
         return commandQueue;
 
     }

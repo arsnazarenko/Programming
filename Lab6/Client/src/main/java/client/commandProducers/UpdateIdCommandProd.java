@@ -30,9 +30,9 @@ public class UpdateIdCommandProd implements ScanProperties, ArgumentProperties {
     }
 
     @Override
-    public Command createCommand() {
+    public Command createCommand(String login, String password) {
         if(!(scanner == null) && !(id == null)) {
-            return new UpdateIdCommand(objectCreator.create(scanner), id);
+            return new UpdateIdCommand(objectCreator.create(scanner), id, login, password);
         } else {
             return null;
         }

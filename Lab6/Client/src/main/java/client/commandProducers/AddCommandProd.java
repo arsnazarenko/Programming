@@ -22,9 +22,9 @@ public class AddCommandProd implements StandardCommandProducer, ScanProperties{
     }
 
     @Override
-    public Command createCommand() {
+    public Command createCommand(String login, String password) {
         if (scanner != null) {
-            return new AddCommand(objectCreator.create(scanner));
+            return new AddCommand(objectCreator.create(scanner), login, password);
         } else {
             return null;
         }

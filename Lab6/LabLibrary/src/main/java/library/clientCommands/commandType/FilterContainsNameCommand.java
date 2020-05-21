@@ -8,7 +8,8 @@ import java.util.Objects;
 public class FilterContainsNameCommand extends Command {
     private String subString;
 
-    public FilterContainsNameCommand(String subString) {
+    public FilterContainsNameCommand(String subString, String login, String password) {
+        super(login, password);
         this.subString = subString;
     }
 

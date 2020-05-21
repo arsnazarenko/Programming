@@ -56,7 +56,7 @@ public class Validator implements IValidator {
         }
         //создаем объект команды
         //в случае невалидных параметров возвращается null вместо объкта Command
-        return commandProducer.createCommand();
+        return commandProducer.createCommand(commandData.getLogin(), commandData.getPassword());
     }
 
 

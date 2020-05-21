@@ -24,13 +24,32 @@ public class Reader implements IReader{
      * @param reader - класс сканер для чтения пользовательского ввода
      * @return объект команды
      */
-    public Command read(Scanner reader) {
+    public Command read(Scanner reader, String login, String password) {
         String str;
         String parameter = "";
         NameOfCommands command = null;
+        String thisRequestLogin = "";
+        String thisRequestPassword = "";
         boolean flag;
         while (true) {
             flag = true;
+            if (login == null || password == null) {
+                System.out.print("Введите логин: ");
+                thisRequestLogin = reader.nextLine();
+                System.out.print("Введите пароль: ");
+                thisRequestPassword = reader.nextLine();
+                /*
+                здесь мы только проверяем на пустую строку или строку только из проелов, но если введен хотя бы один символ с пробелом,
+                пароль является допустимым и отправляется серверу
+                 */
+                if(thisRequestLogin.trim().equals("") || thisRequestPassword.trim().equals("")) {
+                    System.out.println("ПАРОЛЬ И ЛОГИН НЕ МОГУТ БЫТЬ ПУСТОЙ СТРОКОЙ");
+                    continue;
+                }
+            } else {
+                thisRequestLogin = login;
+                thisRequestPassword = password;
+            }
             System.out.print("Введите команду: ");
             try {
                 str = reader.nextLine();
@@ -48,7 +67,8 @@ public class Reader implements IReader{
             }
             System.out.println("НЕВЕРНАЯ КОМАНДА");
         }
-        return validator.buildCommand(new CommandData(command, parameter), reader);
+        System.out.println("логин: " + thisRequestLogin + ", пароль: " + thisRequestPassword + ", команда: " + command.name());
+        return validator.buildCommand(new CommandData(command, parameter, thisRequestLogin, thisRequestPassword), reader);
     }
 
     /**
@@ -56,11 +76,11 @@ public class Reader implements IReader{
      * @param reader - класс сканер для чтения пользовательского ввода
      * @return - очередь из команд
      */
-    public Queue<Command> scriptRead(Scanner reader) {
+    public Queue<Command> scriptRead(Scanner reader, String login, String password) {
         Queue<Command> commandQueue = new LinkedList<>();
         Command command;
         while (true) {
-            command = read(reader);
+            command = read(reader, login, password);
             commandQueue.offer(command);
             System.out.println();
             if (command != null) {
@@ -80,4 +100,5 @@ public class Reader implements IReader{
     public void setValidator(IValidator validator) {
         this.validator = validator;
     }
+
 }

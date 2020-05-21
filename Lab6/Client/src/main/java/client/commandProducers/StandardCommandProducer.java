@@ -4,5 +4,5 @@ import client.commandData.CommandData;
 import library.clientCommands.Command;
 
 public interface StandardCommandProducer {
-    Command createCommand();
+    Command createCommand(String login, String password);
 }

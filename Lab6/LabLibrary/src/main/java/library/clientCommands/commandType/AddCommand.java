@@ -10,7 +10,8 @@ import java.util.Objects;
 public class AddCommand extends Command {
     private Organization organization;
 
-    public AddCommand(Organization organization) {
+    public AddCommand(Organization organization, String login, String password) {
+        super(login, password);
         this.organization = organization;
     }
 

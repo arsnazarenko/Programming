@@ -88,7 +88,8 @@ public class NonBlockingClient {
         Queue<Command> commandQueue = new LinkedList<>();
         ExecuteScriptCommand script = (ExecuteScriptCommand) command;
         try (InputStream scriptStream = new FileInputStream(new File(script.getScript()))) {
-            commandQueue = commandCreator.createCommandQueue(scriptStream);
+            //генерим список команд с логином и паролем, которые указаны при отправке команды execute_script
+            commandQueue = commandCreator.createCommandQueue(scriptStream, script.getLogin(), script.getPassword());
             return commandQueue;
         } catch (NoSuchElementException e) {
             System.out.println("ОШИБКА СКРИПТА");

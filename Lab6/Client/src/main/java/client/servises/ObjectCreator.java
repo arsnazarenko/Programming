@@ -23,7 +23,7 @@ public class ObjectCreator implements IObjectCreator {
             System.out.print("name: ");
             str = rd.nextLine();
             if (str != null) {
-                if (!str.equals("")) {
+                if (!str.trim().equals("")) {
 
                     System.out.println();
                     return str;
@@ -360,7 +360,7 @@ public class ObjectCreator implements IObjectCreator {
             System.out.print("name: ");
             str = rd.nextLine();
             if (str != null) {
-                if (!str.equals("")) {
+                if (!str.trim().equals("")) {
                     System.out.println();
                     return str;
                 }

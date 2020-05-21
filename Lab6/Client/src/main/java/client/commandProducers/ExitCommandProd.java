@@ -6,7 +6,7 @@ import library.clientCommands.commandType.ExitCommand;
 
 public class ExitCommandProd implements StandardCommandProducer {
     @Override
-    public Command createCommand() {
-        return new ExitCommand();
+    public Command createCommand(String login, String password) {
+        return new ExitCommand(login, password);
     }
 }

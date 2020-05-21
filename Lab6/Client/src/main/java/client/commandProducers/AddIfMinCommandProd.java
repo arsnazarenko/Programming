@@ -21,9 +21,9 @@ public class AddIfMinCommandProd implements StandardCommandProducer, ScanPropert
     }
 
     @Override
-    public Command createCommand() {
+    public Command createCommand(String login, String password) {
         if (scanner != null) {
-            return new AddIfMinCommand(objectCreator.create(scanner));
+            return new AddIfMinCommand(objectCreator.create(scanner), login, password);
         } else {
             return null;
         }

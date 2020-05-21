@@ -21,9 +21,9 @@ public class RemoveLowerCommandProd implements StandardCommandProducer, ScanProp
     }
 
     @Override
-    public Command createCommand() {
+    public Command createCommand(String login, String password) {
         if (scanner != null) {
-            return new RemoveLowerCommand(objectCreator.create(scanner));
+            return new RemoveLowerCommand(objectCreator.create(scanner), login, password);
         } else {
             return null;
         }

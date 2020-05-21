@@ -6,7 +6,7 @@ import library.clientCommands.commandType.HelpCommand;
 
 public class HelpCommandProd  implements StandardCommandProducer{
     @Override
-    public Command createCommand() {
-        return new HelpCommand();
+    public Command createCommand(String login, String password) {
+        return new HelpCommand(login, password);
     }
 }
