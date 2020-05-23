@@ -9,7 +9,6 @@ import java.util.Deque;
 import java.util.Objects;
 public class CollectionManager {
 
-    public static long OBJECT_ID_COUNTER = 0;
 
     /**
      * Класс, содержащий коллекцию, с которой ведется работа.

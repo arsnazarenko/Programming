@@ -2,6 +2,8 @@ package client.commandData;
 
 
 import library.clientCommands.NameOfCommands;
+import library.clientCommands.UserData;
+
 /**
  * Класс для промедуточного хранения данных команды для ее создания
 */
@@ -9,30 +11,20 @@ public class CommandData {
 
     private NameOfCommands command;
     private String param;
-    private String login;
-    private String password;
+    private UserData userData;
 
-    public CommandData(NameOfCommands command, String param, String login, String password) {
+    public CommandData(NameOfCommands command, String param, UserData userData) {
         this.command = command;
         this.param = param;
-        this.login = login;
-        this.password = password;
+        this.userData = userData;
     }
 
-    public String getLogin() {
-        return login;
+    public UserData getUserData() {
+        return userData;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 
     public NameOfCommands getCommand() {

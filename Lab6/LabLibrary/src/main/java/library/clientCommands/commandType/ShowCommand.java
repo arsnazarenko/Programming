@@ -2,9 +2,10 @@ package library.clientCommands.commandType;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 
 public class ShowCommand extends Command {
-    public ShowCommand(String login, String password) {
-        super(login, password);
+    public ShowCommand(UserData userData) {
+        super(userData);
     }
 }

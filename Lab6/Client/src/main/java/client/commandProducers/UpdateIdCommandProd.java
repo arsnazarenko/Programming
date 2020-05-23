@@ -4,6 +4,7 @@ import client.servises.IObjectCreator;
 import client.servises.ObjectCreator;
 import client.servises.ValidateManager;
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.clientCommands.commandType.UpdateIdCommand;
 
 import java.util.Scanner;
@@ -30,9 +31,9 @@ public class UpdateIdCommandProd implements ScanProperties, ArgumentProperties {
     }
 
     @Override
-    public Command createCommand(String login, String password) {
+    public Command createCommand(UserData userData) {
         if(!(scanner == null) && !(id == null)) {
-            return new UpdateIdCommand(objectCreator.create(scanner), id, login, password);
+            return new UpdateIdCommand(objectCreator.create(scanner), id, userData);
         } else {
             return null;
         }

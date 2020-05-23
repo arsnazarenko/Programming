@@ -2,9 +2,10 @@ package library.clientCommands.commandType;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 
 public class ClearCommand extends Command {
-    public ClearCommand(String login, String password) {
-        super(login, password);
+    public ClearCommand(UserData userData) {
+        super(userData);
     }
 }

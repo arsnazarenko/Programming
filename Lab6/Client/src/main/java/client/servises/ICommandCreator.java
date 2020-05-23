@@ -3,11 +3,12 @@ package client.servises;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 
 import java.io.InputStream;
 import java.util.Queue;
 
 public interface ICommandCreator {
     Command createCommand(InputStream inputStream);
-    Queue<Command> createCommandQueue(InputStream inputStream, String login, String password);
+    Queue<Command> createCommandQueue(InputStream inputStream, UserData userData);
 }

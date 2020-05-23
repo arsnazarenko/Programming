@@ -2,6 +2,7 @@ package library.clientCommands.commandType;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.сlassModel.Organization;
 
 import java.util.Objects;
@@ -9,8 +10,8 @@ import java.util.Objects;
 public class AddIfMinCommand extends Command {
     private Organization organization;
 
-    public AddIfMinCommand(Organization organization, String login, String password) {
-        super(login, password);
+    public AddIfMinCommand(Organization organization, UserData userData) {
+        super(userData);
         this.organization = organization;
     }
 

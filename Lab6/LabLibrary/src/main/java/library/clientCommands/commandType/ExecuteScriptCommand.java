@@ -2,14 +2,15 @@ package library.clientCommands.commandType;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 
 import java.util.Objects;
 
 public class ExecuteScriptCommand extends Command {
     private String script;
 
-    public ExecuteScriptCommand(String script, String login, String password) {
-        super(login, password);
+    public ExecuteScriptCommand(String script, UserData userData) {
+        super(userData);
         this.script = script;
 
     }

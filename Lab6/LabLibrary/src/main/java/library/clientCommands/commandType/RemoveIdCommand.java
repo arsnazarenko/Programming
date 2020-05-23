@@ -2,14 +2,15 @@ package library.clientCommands.commandType;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 
 import java.util.Objects;
 
 public class RemoveIdCommand extends Command {
     private Long id;
 
-    public RemoveIdCommand(Long id, String login, String password) {
-        super(login, password);
+    public RemoveIdCommand(Long id, UserData userData) {
+        super(userData);
         this.id = id;
     }
 

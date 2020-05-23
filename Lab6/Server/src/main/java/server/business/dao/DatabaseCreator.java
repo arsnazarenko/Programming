@@ -5,8 +5,6 @@ import java.sql.*;
 
 public class DatabaseCreator {
     private static Connection connection;
-
-
     static {
         try {
             Class.forName("org.postgresql.Driver");
@@ -32,6 +30,11 @@ public class DatabaseCreator {
         String sql;
 
         stmt = connection.createStatement();
+        sql = "CREATE SEQUENCE IF NOT EXISTS auto_id_users";
+        stmt.executeUpdate(sql);
+        stmt.close();
+
+        stmt = connection.createStatement();
         sql = "CREATE SEQUENCE IF NOT EXISTS auto_id_locations";
         stmt.executeUpdate(sql);
         stmt.close();
@@ -48,6 +51,15 @@ public class DatabaseCreator {
 
         stmt = connection.createStatement();
         sql = "CREATE SEQUENCE IF NOT EXISTS auto_id_organizations";
+        stmt.executeUpdate(sql);
+        stmt.close();
+
+
+        stmt = connection.createStatement();
+        sql = "CREATE TABLE IF NOT EXISTS Users("
+                + "id BIGINT PRIMARY KEY NOT NULL DEFAULT nextval('auto_id_users') UNIQUE , "
+                + "login VARCHAR NOT NULL, "
+                + "password BYTEA NOT NULL )";
         stmt.executeUpdate(sql);
         stmt.close();
 
@@ -83,6 +95,7 @@ public class DatabaseCreator {
         stmt = connection.createStatement();
         sql = "CREATE TABLE IF NOT EXISTS Organizations("
                 + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_organizations') UNIQUE, "
+                + "object_user BIGINT REFERENCES Users (id), "
                 + "name CHAR(50) NOT NULL, "
                 + "coordinates BIGINT REFERENCES Coordinates (id) UNIQUE, "
                 + "creation_date TIMESTAMP NOT NULL, "
@@ -92,10 +105,7 @@ public class DatabaseCreator {
                 + "officialAddress BIGINT references Address (id) UNIQUE)";
         stmt.executeUpdate(sql);
         stmt.close();
-
-
-
-
+        connection.commit();
     }
 
     public static void closeConnection(){

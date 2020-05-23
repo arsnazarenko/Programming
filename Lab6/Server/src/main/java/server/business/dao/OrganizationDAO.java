@@ -8,8 +8,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.List;
 
-public class OrganizationDAO implements DAO<Organization, Long> {
+public class OrganizationDAO implements ObjectDAO<Organization, Long, String> {
     //для удобной проверки, совмещает все таблицы в одну (почти)
     //select o.id, o.name, coordinates, creation_date, employees_count, type, annualturnover, street, zipcode, town, x, y, z, b.name from Organizations o left join (select a.id, street, zipcode, town, x, y, z, name from address a left join locations l on a.town = l.id) b on o.id = b.id
 
@@ -22,7 +23,7 @@ public class OrganizationDAO implements DAO<Organization, Long> {
 
 
     @Override
-    public long create(final Organization organization) {
+    public long create(final Organization organization, Long login) {
         long i = 0L;
         long j = 0L;
         long k = 0L;
@@ -76,20 +77,21 @@ public class OrganizationDAO implements DAO<Organization, Long> {
             }
 
             try (PreparedStatement ps = connection.prepareStatement(SQLOrganizations.INSERT_ORGANIZATIONS.query)) {
-                ps.setString(1, organization.getName());
-                ps.setLong(2, k);
-                ps.setTimestamp(3, new Timestamp(organization.getCreationDate().getTime()));
-                ps.setInt(4, organization.getEmployeesCount());
-                ps.setString(5, organization.getType().name());
+                ps.setLong(1, login);
+                ps.setString(2, organization.getName());
+                ps.setLong(3, k);
+                ps.setTimestamp(4, new Timestamp(organization.getCreationDate().getTime()));
+                ps.setInt(5, organization.getEmployeesCount());
+                ps.setString(6, organization.getType().name());
                 if (organization.getAnnualTurnover() != null) {
-                    ps.setDouble(6, organization.getAnnualTurnover());
+                    ps.setDouble(7, organization.getAnnualTurnover());
                 } else {
-                    ps.setNull(6, Types.DOUBLE);
+                    ps.setNull(7, Types.DOUBLE);
                 }
                 if (address != null) {
-                    ps.setLong(7, j);
+                    ps.setLong(8, j);
                 } else {
-                    ps.setNull(7, Types.BIGINT);
+                    ps.setNull(8, Types.BIGINT);
                 }
 
                 try (ResultSet rs = ps.executeQuery()) {
@@ -115,12 +117,12 @@ public class OrganizationDAO implements DAO<Organization, Long> {
     }
 
     @Override
-    public Organization read(Long id) {
+    public Organization read(Long id, String login) {
         return null;
     }
 
     @Override
-    public boolean update(Long id) {
+    public boolean update(Long id, String login) {
         return false;
     }
 
@@ -145,7 +147,7 @@ public class OrganizationDAO implements DAO<Organization, Long> {
     }
 
     @Override
-    public boolean deleteByKeys(Long[] ids) {
+    public boolean deleteByKeys(List<Long> ids) {
         try {
             for(Long id: ids) {
                 deleteOrganization(id);
@@ -208,7 +210,7 @@ public class OrganizationDAO implements DAO<Organization, Long> {
 
     enum SQLOrganizations {
 
-        INSERT_ORGANIZATIONS("INSERT INTO Organizations (name, coordinates, creation_date, employees_count, type, annualTurnover, officialAddress) VALUES ((?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
+        INSERT_ORGANIZATIONS("INSERT INTO Organizations (object_user, name, coordinates, creation_date, employees_count, type, annualTurnover, officialAddress) VALUES ((?), (?), (?), (?), (?), (?), (?), (?)) RETURNING id"),
         INSERT_LOCATIONS("INSERT INTO Locations (x, y, z, name) VALUES ((?), (?), (?), (?)) RETURNING id"),
         INSERT_ADDRESSES("INSERT INTO Address (street, zipcode, town) VALUES ((?), (?), (?)) RETURNING id"),
         INSERT_COORDINATES("INSERT INTO Coordinates (x, y) VALUES ((?), (?)) RETURNING id"),

@@ -2,7 +2,8 @@ package client.commandProducers;
 
 import client.commandData.CommandData;
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 
 public interface StandardCommandProducer {
-    Command createCommand(String login, String password);
+    Command createCommand(UserData userData);
 }

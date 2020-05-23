@@ -1,21 +1,26 @@
 package server.business.handlers;
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.clientCommands.commandType.UpdateIdCommand;
 import library.сlassModel.Organization;
 import server.business.CollectionManager;
-import server.business.FieldSetter;
+import server.business.dao.ObjectDAO;
+import server.business.dao.UserDAO;
+
 import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 
 
 public class UpdateIdCommandHandler implements ICommandHandler {
-    private FieldSetter fieldSetter;
     private CollectionManager collectionManager;
+    private UserDAO<UserData, String> usrDao;
+    private ObjectDAO<Organization, Long, String> orgDao;
 
-    public UpdateIdCommandHandler(CollectionManager collectionManager, FieldSetter fieldSetter) {
+    public UpdateIdCommandHandler(CollectionManager collectionManager, UserDAO<UserData, String> usrDao, ObjectDAO<Organization, Long, String> orgDao) {
         this.collectionManager = collectionManager;
-        this.fieldSetter = fieldSetter;
+        this.usrDao = usrDao;
+        this.orgDao = orgDao;
     }
 
     @Override
@@ -28,7 +33,7 @@ public class UpdateIdCommandHandler implements ICommandHandler {
                     stream().
                     map(o -> {
                         if (o.getId().equals(id)) {
-                            Organization updateOrganization = fieldSetter.setId(updateIdCommand.getOrganization(), id);
+                            Organization updateOrganization = updateIdCommand.getOrganization();
                             updateOrganization.setCreationDate(o.getCreationDate());
                             stringBuilder.delete(0, stringBuilder.length()).append("Объект обновлён!");
                             return updateOrganization;

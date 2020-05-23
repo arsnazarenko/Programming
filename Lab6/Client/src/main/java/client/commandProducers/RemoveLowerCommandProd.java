@@ -3,6 +3,7 @@ package client.commandProducers;
 import client.servises.IObjectCreator;
 import client.servises.ObjectCreator;
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.clientCommands.commandType.RemoveLowerCommand;
 
 import java.util.Scanner;
@@ -21,9 +22,9 @@ public class RemoveLowerCommandProd implements StandardCommandProducer, ScanProp
     }
 
     @Override
-    public Command createCommand(String login, String password) {
+    public Command createCommand(UserData userData) {
         if (scanner != null) {
-            return new RemoveLowerCommand(objectCreator.create(scanner), login, password);
+            return new RemoveLowerCommand(objectCreator.create(scanner), userData);
         } else {
             return null;
         }

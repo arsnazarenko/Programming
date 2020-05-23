@@ -1,9 +1,12 @@
 package mainClass;
 
+import library.clientCommands.UserData;
+import library.сlassModel.Organization;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import server.business.*;
+import server.business.dao.*;
 import server.business.services.IService;
 import server.business.services.ServerHandler;
 import server.business.services.ServerReceiver;
@@ -11,6 +14,7 @@ import server.business.services.ServerSender;
 
 import java.io.IOException;
 import java.net.*;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -19,9 +23,12 @@ public class ServerStarter {
     private final static Logger logger = LogManager.getLogger(ServerStarter.class.getName());
     private static final ArrayList<SocketAddress> clients = new ArrayList<>();
 
-    public static void run(SocketAddress serverAddress) throws IOException {
+    public static void run(SocketAddress serverAddress) throws IOException, SQLException {
+        DatabaseCreator.createTables();
+        ObjectDAO<Organization, Long, String> orgDao = new OrganizationDAO(DatabaseCreator.getConnection());
+        UserDAO<UserData, String> userDAO = new UserDaoImpl(DatabaseCreator.getConnection());
         CollectionManager collectionManager = new CollectionManager();
-        IHandlersController handlersManager = new HandlersController(collectionManager, new FieldSetter());
+        IHandlersController handlersManager = new HandlersController(collectionManager, orgDao, userDAO);
         Scanner scanner = new Scanner(System.in);
 
         Map<Class<?>, BlockingQueue<LetterInfo>> queues = new HashMap<>();
@@ -49,6 +56,7 @@ public class ServerStarter {
                     for (IService service : services) {
                         service.stop();
                     }
+                    DatabaseCreator.closeConnection();
                     break;
                 }
             }
@@ -64,7 +72,7 @@ public class ServerStarter {
         }
 
     }
-        public static void main (String[] args){
+        public static void main (String[] args) throws SQLException {
             try {
                 String host = args[0].trim();
                 int port = Integer.parseInt(args[1].trim());

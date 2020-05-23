@@ -5,6 +5,7 @@ package client;
 import client.servises.IAnswerHandler;
 import client.servises.ICommandCreator;
 import library.clientCommands.Command;
+import library.clientCommands.SpecialSignals;
 import library.clientCommands.commandType.ExecuteScriptCommand;
 import library.clientCommands.commandType.ExitCommand;
 import library.serialization.SerializationManager;
@@ -43,6 +44,7 @@ public class NonBlockingClient {
         Selector selector = Selector.open();
         Queue<Command> commandQueue = null;
         datagramChannel.register(selector, SelectionKey.OP_WRITE);
+        Command scriptCommandTmp = null;
         out:
         while (true) {
             selector.select();  //блокирующий
@@ -54,7 +56,21 @@ public class NonBlockingClient {
                     continue;
                 }
                 if (selectionKey.isReadable()) {
-                    IAnswerHandler.handling(read(selectionKey, buffer));
+                    Object response = read(selectionKey, buffer);
+                    IAnswerHandler.handling(response);
+                    if(response instanceof SpecialSignals) {
+                        SpecialSignals signal = (SpecialSignals) response;
+                        if(signal == SpecialSignals.EXIT_TRUE) {
+                            if (commandQueue == null) {     // если скрипт закончился и команда exit введена пользователем, то выходим из цикла
+                                break out;
+                            } else {
+                                continue;
+                            }
+                        } else if(signal == SpecialSignals.SCRIPT_TRUE) {
+                            commandQueue = queueUpdate(commandQueue, scriptCommandTmp);
+                        }
+                    }
+
                 } else if (selectionKey.isWritable()) {
                     Command command = null;
                     if (!(commandQueue == null)) {      //проверка, если скрипт уже был запущен
@@ -68,14 +84,9 @@ public class NonBlockingClient {
                     }
                     if (command != null) {
                         write(selectionKey, command);
-                        if (command.getClass() == ExitCommand.class) {
-                            if (commandQueue == null) {     // если скрипт закончился и команда exit введена пользователем, то выходим из цикла
-                                break out;
-                            } else {
-                                continue;   //иначе это команда скрипта, и завершать программу не надо
-                            }
-                        } else if (command.getClass() == ExecuteScriptCommand.class) {   //иначе если это скрипт, создаем очередь команд
-                            commandQueue = queueUpdate(commandQueue, command);       //заменяем старую очередь
+                        System.out.println(command.toString());
+                        if (command.getClass() == ExecuteScriptCommand.class) {//иначе если это скрипт, создаем очередь команд
+                            scriptCommandTmp = command;//заменяем старую очередь
                         }
                     }
                 }
@@ -89,7 +100,7 @@ public class NonBlockingClient {
         ExecuteScriptCommand script = (ExecuteScriptCommand) command;
         try (InputStream scriptStream = new FileInputStream(new File(script.getScript()))) {
             //генерим список команд с логином и паролем, которые указаны при отправке команды execute_script
-            commandQueue = commandCreator.createCommandQueue(scriptStream, script.getLogin(), script.getPassword());
+            commandQueue = commandCreator.createCommandQueue(scriptStream, script.getUserData());
             return commandQueue;
         } catch (NoSuchElementException e) {
             System.out.println("ОШИБКА СКРИПТА");

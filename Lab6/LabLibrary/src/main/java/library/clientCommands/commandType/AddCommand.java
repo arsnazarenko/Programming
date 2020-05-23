@@ -2,6 +2,7 @@ package library.clientCommands.commandType;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.сlassModel.Organization;
 
 import java.util.Objects;
@@ -10,8 +11,8 @@ import java.util.Objects;
 public class AddCommand extends Command {
     private Organization organization;
 
-    public AddCommand(Organization organization, String login, String password) {
-        super(login, password);
+    public AddCommand(Organization organization, UserData userData) {
+        super(userData);
         this.organization = organization;
     }
 

@@ -3,6 +3,7 @@ package client.commandProducers;
 import client.servises.IObjectCreator;
 import client.servises.ObjectCreator;
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.clientCommands.commandType.AddIfMinCommand;
 
 import java.util.Scanner;
@@ -21,9 +22,9 @@ public class AddIfMinCommandProd implements StandardCommandProducer, ScanPropert
     }
 
     @Override
-    public Command createCommand(String login, String password) {
+    public Command createCommand(UserData userData) {
         if (scanner != null) {
-            return new AddIfMinCommand(objectCreator.create(scanner), login, password);
+            return new AddIfMinCommand(objectCreator.create(scanner), userData);
         } else {
             return null;
         }

@@ -1,8 +1,9 @@
 package client.commandProducers;
 
+
 import client.servises.IObjectCreator;
-import client.servises.ObjectCreator;
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.clientCommands.commandType.AddCommand;
 import library.clientCommands.commandType.RemoveLowerCommand;
 
@@ -22,9 +23,9 @@ public class AddCommandProd implements StandardCommandProducer, ScanProperties{
     }
 
     @Override
-    public Command createCommand(String login, String password) {
+    public Command createCommand(UserData userData) {
         if (scanner != null) {
-            return new AddCommand(objectCreator.create(scanner), login, password);
+            return new AddCommand(objectCreator.create(scanner), userData);
         } else {
             return null;
         }

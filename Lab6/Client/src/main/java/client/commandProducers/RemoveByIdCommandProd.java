@@ -2,6 +2,7 @@ package client.commandProducers;
 
 import client.servises.ValidateManager;
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.clientCommands.commandType.RemoveIdCommand;
 
 public class RemoveByIdCommandProd implements StandardCommandProducer, ArgumentProperties {
@@ -18,7 +19,7 @@ public class RemoveByIdCommandProd implements StandardCommandProducer, ArgumentP
     }
 
     @Override
-    public Command createCommand(String login, String password) {
-        return (id != null)?new RemoveIdCommand(id, login, password):null;
+    public Command createCommand(UserData userData) {
+        return (id != null)?new RemoveIdCommand(id, userData):null;
     }
 }

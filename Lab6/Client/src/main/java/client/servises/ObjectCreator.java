@@ -376,6 +376,7 @@ public class ObjectCreator implements IObjectCreator {
      * @return возвращает значение объекта
      */
     public Organization create(Scanner rd) {
+        String userName = null;
         Long id = null;
         String name = setName(rd);
         Coordinates coordinates = setCoordinates(rd);
@@ -384,7 +385,7 @@ public class ObjectCreator implements IObjectCreator {
         OrganizationType type = setOrganizationType(rd);
         Address officialAddress = setOfficialAddress(rd);
         Date creationDate = null;
-        return new Organization(id, name, coordinates, creationDate, employeesCount,
+        return new Organization(userName, id, name, coordinates, creationDate, employeesCount,
                 type, annualTurnover, officialAddress);
     }
 

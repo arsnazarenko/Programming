@@ -35,6 +35,7 @@ public class Validator implements IValidator {
         commandProducers.put(remove_lower, new RemoveLowerCommandProd(objectCreator));
         commandProducers.put(show, new ShowCommandProd());
         commandProducers.put(update_id, new UpdateIdCommandProd(validateManager, objectCreator));
+        commandProducers.put(reg, new RegCommandProd());
 
     }
 
@@ -56,7 +57,7 @@ public class Validator implements IValidator {
         }
         //создаем объект команды
         //в случае невалидных параметров возвращается null вместо объкта Command
-        return commandProducer.createCommand(commandData.getLogin(), commandData.getPassword());
+        return commandProducer.createCommand(commandData.getUserData());
     }
 
 

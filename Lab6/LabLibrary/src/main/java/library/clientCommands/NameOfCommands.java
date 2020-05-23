@@ -18,7 +18,8 @@ public enum NameOfCommands {
     remove_lower("remove_lower{element} - удалить из коллекции все элементы, меньшие чем заданный"),
     max_by_employees_count("max_by_employees_count - Вывести любой элемент их коллекции, значение поля employeesCount которого является максимальным"),
     filter_contains_name("filter_contains_name name - Вывести элементы, значения поля name которых содержит заданную подстроку"),
-    print_ascending("print_ascending - ывести элементы коллекции в порядке возрастания");
+    print_ascending("print_ascending - Вывести элементы коллекции в порядке возрастания"),
+    reg("регистрация пользователя");
 
     private String commandHelp;
 

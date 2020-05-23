@@ -2,6 +2,7 @@ package client.servises;
 
 
 
+import library.clientCommands.SpecialSignals;
 import library.сlassModel.Organization;
 
 import java.util.Deque;
@@ -24,6 +25,9 @@ public class AnswerHandler implements IAnswerHandler {
             System.out.println(answerObject);
         } else if (answerObject == null) {
             System.out.println("Объектов не найдено");
+        } else if(answerObject instanceof SpecialSignals) {
+            SpecialSignals specialSignals = (SpecialSignals) answerObject;
+            System.out.println(specialSignals.toString());
         }
     }
 }

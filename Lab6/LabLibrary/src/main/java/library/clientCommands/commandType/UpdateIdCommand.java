@@ -2,6 +2,7 @@ package library.clientCommands.commandType;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.сlassModel.Organization;
 
 import java.util.Objects;
@@ -10,8 +11,8 @@ public class UpdateIdCommand extends Command {
     private Organization organization;
     private Long id;
 
-    public UpdateIdCommand(Organization organization, Long id, String login, String password) {
-        super(login, password);
+    public UpdateIdCommand(Organization organization, Long id, UserData userData) {
+        super(userData);
         this.organization = organization;
         this.id = id;
     }

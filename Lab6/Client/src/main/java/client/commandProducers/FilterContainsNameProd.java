@@ -2,6 +2,7 @@ package client.commandProducers;
 
 import client.servises.ValidateManager;
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 import library.clientCommands.commandType.FilterContainsNameCommand;
 
 public class FilterContainsNameProd implements StandardCommandProducer, ArgumentProperties{
@@ -18,7 +19,7 @@ public class FilterContainsNameProd implements StandardCommandProducer, Argument
     }
 
     @Override
-    public Command createCommand(String login, String password) {
-        return name!= null?new FilterContainsNameCommand(name, login, password):null;
+    public Command createCommand(UserData userData) {
+        return name!= null?new FilterContainsNameCommand(name, userData):null;
     }
 }

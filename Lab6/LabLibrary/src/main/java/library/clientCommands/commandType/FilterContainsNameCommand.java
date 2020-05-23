@@ -2,14 +2,15 @@ package library.clientCommands.commandType;
 
 
 import library.clientCommands.Command;
+import library.clientCommands.UserData;
 
 import java.util.Objects;
 
 public class FilterContainsNameCommand extends Command {
     private String subString;
 
-    public FilterContainsNameCommand(String subString, String login, String password) {
-        super(login, password);
+    public FilterContainsNameCommand(String subString, UserData userData) {
+        super(userData);
         this.subString = subString;
     }
 

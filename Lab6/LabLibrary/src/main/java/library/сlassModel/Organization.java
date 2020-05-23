@@ -10,6 +10,13 @@ import java.util.Objects;
  * Основной класс, чьи объекты будут хранится в коллекции
  */
 public class Organization implements Comparable<Organization>, Serializable {
+
+    /**
+     * Логин пользователя, который добавил объект
+     * Поле не может быть null.
+     * Генерируется автоматически.
+     */
+    private String userLogin;
     /**
      * Уникальный индификатор.
      * Поле не может быть null. Значение больше 0.
@@ -59,7 +66,8 @@ public class Organization implements Comparable<Organization>, Serializable {
      */
     private Address officialAddress;
 
-    public Organization(Long id, String name, Coordinates coordinates, Date creationDate, Integer employeesCount, OrganizationType type, Double annualTurnover, Address officialAddress) {
+    public Organization(String userLogin, Long id, String name, Coordinates coordinates, Date creationDate, Integer employeesCount, OrganizationType type, Double annualTurnover, Address officialAddress) {
+        this.userLogin = userLogin;
         this.id = id;
         this.name = name;
         this.coordinates = coordinates;
@@ -71,6 +79,14 @@ public class Organization implements Comparable<Organization>, Serializable {
     }
 
     public Organization() {
+    }
+
+    public String getUserLogin() {
+        return userLogin;
+    }
+
+    public void setUserLogin(String userLogin) {
+        this.userLogin = userLogin;
     }
 
     public Long getId() {
@@ -105,70 +121,73 @@ public class Organization implements Comparable<Organization>, Serializable {
         return officialAddress;
     }
 
-    @XmlElement
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    @XmlElement
+
     public void setName(String name) {
         this.name = name;
     }
 
-    @XmlElement
+
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
 
-    @XmlElement
+
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
-    @XmlElement
+
     public void setEmployeesCount(Integer employeesCount) {
         this.employeesCount = employeesCount;
     }
 
-    @XmlElement
+
     public void setType(OrganizationType type) {
         this.type = type;
     }
 
-    @XmlElement
+
     public void setAnnualTurnover(Double annualTurnover) {
         this.annualTurnover = annualTurnover;
     }
 
-    @XmlElement
+
     public void setOfficialAddress(Address officialAddress) {
         this.officialAddress = officialAddress;
     }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
-        return Objects.equals(id, that.id) &&
+        return Objects.equals(userLogin, that.userLogin) &&
+                Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(coordinates, that.coordinates) &&
                 Objects.equals(creationDate, that.creationDate) &&
-                Objects.equals(annualTurnover, that.annualTurnover) &&
                 Objects.equals(employeesCount, that.employeesCount) &&
                 type == that.type &&
+                Objects.equals(annualTurnover, that.annualTurnover) &&
                 Objects.equals(officialAddress, that.officialAddress);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, coordinates, creationDate, annualTurnover, employeesCount, type, officialAddress);
+        return Objects.hash(userLogin, id, name, coordinates, creationDate, employeesCount, type, annualTurnover, officialAddress);
     }
 
     @Override
     public String toString() {
         return "Organization{" +
-                "id=" + id +
+                "userLogin='" + userLogin + '\'' +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", coordinates=" + coordinates +
                 ", creationDate=" + creationDate +
