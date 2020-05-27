@@ -5,12 +5,11 @@ import library.clientCommands.SpecialSignals;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.RemoveLowerCommand;
 import library.сlassModel.Organization;
-import org.apache.logging.log4j.core.util.JsonUtils;
 import server.business.CollectionManager;
 import server.business.dao.ObjectDAO;
 import server.business.dao.UserDAO;
 
-import java.util.Deque;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +17,9 @@ public class RemoveLowerCommandHandler implements ICommandHandler {
 
     private CollectionManager collectionManager;
     private UserDAO<UserData, String> usrDao;
-    private ObjectDAO<Organization, Long, String> orgDao;
+    private ObjectDAO<Organization, Long> orgDao;
 
-    public RemoveLowerCommandHandler(CollectionManager collectionManager, UserDAO<UserData, String> usrDao, ObjectDAO<Organization, Long, String> orgDao) {
+    public RemoveLowerCommandHandler(CollectionManager collectionManager, UserDAO<UserData, String> usrDao, ObjectDAO<Organization, Long> orgDao) {
 
         this.collectionManager = collectionManager;
         this.usrDao = usrDao;
@@ -29,12 +28,12 @@ public class RemoveLowerCommandHandler implements ICommandHandler {
 
     @Override
     public Object processCommand(Command command) {
-        System.out.println("выполнение");
-        if(authorization(command.getUserData(), usrDao) != 0) {
-            System.out.println("вход");
+        UserData userData = command.getUserData();
+        if(authorization(userData, usrDao) != 0) {
             RemoveLowerCommand removeLowerCommand = (RemoveLowerCommand) command;
             Organization organization = removeLowerCommand.getOrganization();
-            List<Long> ids = lower(organization);
+            organization.setCreationDate(new Date());
+            List<Long> ids = lower(organization, userData.getLogin());
             //если объекты меньше есть
             if(!ids.isEmpty()) {
                 //если удаление из базы прошло успешно, обновляем коллекцию
@@ -51,10 +50,8 @@ public class RemoveLowerCommandHandler implements ICommandHandler {
     }
 
 
-    private List<Long> lower(Organization organization) {
-        System.out.println("lower");
-        List<Long> orgId = collectionManager.getOrgCollection().stream().filter(o -> o.compareTo(organization) < 0).map(Organization::getId).collect(Collectors.toList());
-        System.out.println(orgId);
+    private List<Long> lower(Organization organization, String login) {
+        List<Long> orgId = collectionManager.getOrgCollection().stream().filter(o -> o.compareTo(organization) < 0 && o.getUserLogin().equals(login)).map(Organization::getId).collect(Collectors.toList());
         return orgId;
     }
 }

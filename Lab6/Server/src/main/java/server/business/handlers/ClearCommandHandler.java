@@ -6,22 +6,18 @@ import library.clientCommands.UserData;
 import library.сlassModel.Organization;
 import server.business.CollectionManager;
 import server.business.dao.ObjectDAO;
-import server.business.dao.OrganizationDAO;
 import server.business.dao.UserDAO;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ClearCommandHandler implements ICommandHandler {
 
     private CollectionManager collectionManager;
-    private ObjectDAO<Organization, Long, String> orgDao;
+    private ObjectDAO<Organization, Long> orgDao;
     private UserDAO<UserData, String> usrDao;
 
-    public ClearCommandHandler(CollectionManager collectionManager, ObjectDAO<Organization, Long, String> orgDao, UserDAO<UserData, String> usrDao) {
+    public ClearCommandHandler(CollectionManager collectionManager, ObjectDAO<Organization, Long> orgDao, UserDAO<UserData, String> usrDao) {
         this.collectionManager = collectionManager;
         this.orgDao = orgDao;
         this.usrDao = usrDao;

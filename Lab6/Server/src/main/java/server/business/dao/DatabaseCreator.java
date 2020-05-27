@@ -69,16 +69,16 @@ public class DatabaseCreator {
                 + "x BIGINT NOT NULL, "
                 + "y DOUBLE PRECISION NOT NULL, "
                 + "z DOUBLE PRECISION NOT NULL, "
-                + "name CHAR(50) NOT NULL )";
+                + "name VARCHAR NOT NULL )";
         stmt.executeUpdate(sql);
         stmt.close();
 
         stmt = connection.createStatement();
         sql = "CREATE TABLE IF NOT EXISTS Address("
                 + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_address') UNIQUE, "
-                + "street CHAR(50) NOT NULL, "
-                + "zipcode CHAR(50) NOT NULL, "
-                + "town BIGINT REFERENCES Locations (id) UNIQUE)  ";
+                + "street VARCHAR NOT NULL, "
+                + "zipcode VARCHAR NOT NULL, "
+                + "town BIGINT REFERENCES Locations (id) ON DELETE SET NULL UNIQUE)  ";
 
         stmt.executeUpdate(sql);
         stmt.close();
@@ -95,14 +95,14 @@ public class DatabaseCreator {
         stmt = connection.createStatement();
         sql = "CREATE TABLE IF NOT EXISTS Organizations("
                 + "id BIGINT PRIMARY KEY DEFAULT nextval('auto_id_organizations') UNIQUE, "
-                + "object_user BIGINT REFERENCES Users (id), "
-                + "name CHAR(50) NOT NULL, "
+                + "object_user BIGINT NOT NULL REFERENCES Users (id), "
+                + "name VARCHAR NOT NULL, "
                 + "coordinates BIGINT REFERENCES Coordinates (id) UNIQUE, "
                 + "creation_date TIMESTAMP NOT NULL, "
                 + "employees_count INT CHECK(employees_count > 0) NOT NULL, "
-                + "type CHAR (35)  NOT NULL, "
+                + "type VARCHAR  NOT NULL, "
                 + "annualTurnover DOUBLE PRECISION CHECK(annualTurnover > 0), "
-                + "officialAddress BIGINT references Address (id) UNIQUE)";
+                + "officialAddress BIGINT references Address (id) ON DELETE SET NULL UNIQUE)";
         stmt.executeUpdate(sql);
         stmt.close();
         connection.commit();

@@ -1,18 +1,15 @@
 package server.business.dao;
 
-import library.сlassModel.Address;
-import library.сlassModel.Coordinates;
-import library.сlassModel.Location;
-import library.сlassModel.Organization;
+import library.сlassModel.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
-public class OrganizationDAO implements ObjectDAO<Organization, Long, String> {
-    //для удобной проверки, совмещает все таблицы в одну (почти)
-    //select o.id, o.name, coordinates, creation_date, employees_count, type, annualturnover, street, zipcode, town, x, y, z, b.name from Organizations o left join (select a.id, street, zipcode, town, x, y, z, name from address a left join locations l on a.town = l.id) b on o.id = b.id
+public class OrganizationDAO implements ObjectDAO<Organization, Long> {
 
     private static final Logger logger = LogManager.getLogger(OrganizationDAO.class);
     private final Connection connection;
@@ -21,9 +18,52 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long, String> {
         this.connection = connection;
     }
 
+    public Deque<Organization> readAll() {
+        Deque<Organization> organizations = new ArrayDeque<>();
+        try(PreparedStatement ps = connection.prepareStatement(SQLOrganizations.SELECT_ALL.query)) {
+            try(ResultSet resultSet = ps.executeQuery()) {
+                while(resultSet.next()) {
+                    Organization organization = new Organization();
+                    organization.setId(resultSet.getLong("id"));
+                    organization.setUserLogin(resultSet.getString("login"));
+                    organization.setName(resultSet.getString("name"));
+                    organization.setCoordinates(new Coordinates(resultSet.getDouble("coordx"), resultSet.getFloat("coordy")));
+                    organization.setCreationDate(resultSet.getTimestamp("creation_date"));
+                    organization.setEmployeesCount(resultSet.getInt("employees_count"));
+                    organization.setType(OrganizationType.valueOf(resultSet.getString("type")));
+                    organization.setAnnualTurnover(resultSet.getDouble("annualturnover"));
+                    Address address = null;
+                    if(resultSet.getLong("officialaddress") != 0) {
+                        String street = resultSet.getString("addrstreet");
+                        String zipcode = resultSet.getString("addrzipcode");
+                        Location location = null;
+                        if (resultSet.getLong("locid") != 0) {
+                            Long x = resultSet.getLong("locx");
+                            Double y = resultSet.getDouble("locy");
+                            Double z = resultSet.getDouble("locz");
+                            String name = resultSet.getString("locname");
+                            location = new Location(x, y, z, name);
+                        }
+                        address = new Address(street, zipcode, location);
+                    }
+                    organization.setOfficialAddress(address);
+                    organizations.addLast(organization);
+                }
+
+
+
+            }
+            return organizations;
+        } catch (SQLException e) {
+            logger.error("SELECT operation is not complete");
+            return new ArrayDeque<>();
+        }
+    }
+
+
 
     @Override
-    public long create(final Organization organization, Long login) {
+    public Long create(final Organization organization, Long login) {
         long i = 0L;
         long j = 0L;
         long k = 0L;
@@ -83,6 +123,7 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long, String> {
                 ps.setTimestamp(4, new Timestamp(organization.getCreationDate().getTime()));
                 ps.setInt(5, organization.getEmployeesCount());
                 ps.setString(6, organization.getType().name());
+
                 if (organization.getAnnualTurnover() != null) {
                     ps.setDouble(7, organization.getAnnualTurnover());
                 } else {
@@ -116,18 +157,66 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long, String> {
         }
     }
 
-    @Override
-    public Organization read(Long id, String login) {
-        return null;
-    }
 
     @Override
-    public boolean update(Long id, String login) {
+    public boolean update(Long id, Organization org) {
+        Coordinates coordinates = org.getCoordinates();
+        Address address = org.getOfficialAddress();
+        Location location = (address != null)?address.getTown():null;
+        Long addressId = 0L;
+        Long locationId = 0L;
+        try{
+            /*
+            запрос обновляет все простые поля(name, date ...) , которые содержатся в объекте Организация
+            и еще и сразу обновляется объект coordinate, т к он обязан быть у любого объекта организации, все его поля не null,
+            поэтому мы просто можем изменить значения в таблице coordinates, а id не менять
+            также этот запрос возращает два значения? addressId и locationId
+             */
+            try(PreparedStatement ps = connection.prepareStatement(SQLOrganizations.UPDATE_ORGANIZATIONS.query)) {
+                ps.setString(1, org.getName());// name organizations
+                ps.setTimestamp(2, new Timestamp(org.getCreationDate().getTime())); // creationDate organizations
+                ps.setInt(3, org.getEmployeesCount()); //employeesCount organizations
+                ps.setString(4, org.getType().name()); //typeOrganizations
+                if(org.getAnnualTurnover() != null) { //annualTurnover organizations
+                    ps.setDouble(5, org.getAnnualTurnover());
+                } else {
+                    ps.setNull(5, Types.DOUBLE);
+                }
+                ps.setLong(6, id); //id organization
+                ps.setDouble(7, coordinates.getX()); //x coordinates
+                ps.setFloat(8, coordinates.getY());// y coordinates
+
+                try(ResultSet resultSet = ps.executeQuery()) {
+                    if(resultSet.next()) {
+                        addressId = resultSet.getLong("officialaddress");  // id address в табличке address, если нет - 0
+                        locationId = resultSet.getLong("town"); //id town в табличке locations, если нет - 0
+
+                    }
+                }
+
+            }
+            //если в объекте не было address(а значит и location), a address в новом есть
+            if(addressId == 0L && address != null) {
+                //мы должны добавить в табличку адрессов адресс, если есть и town то добавить town, его id записать в address
+                //затем записать в табличку организации ссылку на адрес
+
+            }
+            //если адрес был, заменяем его значения
+
+
+            //если адресс был а при изменении он в объекте налл, то просто удаляем в таблице адреса этот адрес,
+            // а ссылка в дресе поменяется на null автоматически(при создании таблицы такое поведение указано)
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
         return false;
     }
 
     @Override
-    public long delete(Long id) {
+    public Long delete(Long id) {
         long orgId = 0;//если он остался 0, то такого id нет, можно идти дальше
         try{
             orgId = deleteOrganization(id);
@@ -218,9 +307,11 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long, String> {
         DELETE_ORGANIZATIONS("DELETE FROM Organizations WHERE id = (?) RETURNING id, coordinates, officialAddress"),
         DELETE_LOCATIONS("DELETE FROM Locations WHERE id = (?)"),
         DELETE_ADDRESSES("DELETE FROM Address WHERE id = (?) RETURNING town"),
-        DELETE_COORDINATES("DELETE FROM Coordinates WHERE id = (?)");
+        DELETE_COORDINATES("DELETE FROM Coordinates WHERE id = (?)"),
+        SELECT_ALL("select o.id, object_user, name, coordinates, creation_date, employees_count, type, annualturnover, officialaddress, addrid, addrstreet, addrzipcode, locId, locx, locy, locz, locname, login, x as coordx, y as coordy from organizations as o left join (select address.id as addrid, address.street as addrstreet, address.zipcode as addrzipcode, l.id as locId,  l.x as locx, l.y as locy, l.z as locz, l.name as locname from address left join locations l on address.town = l.id) a on o.officialaddress = a.addrid left join users u on o.object_user = u.id left join coordinates c on o.coordinates = c.id"),
 
-        //UPDATE_OR
+
+        UPDATE_ORGANIZATIONS("with t as (update organizations set (name, creation_date, employees_count, type, annualturnover) = ((?), (?), (?), (?), (?)) where id = (?) returning coordinates, officialaddress) update coordinates set (x, y) = ((?), (?)) where id = (select coordinates from t) returning (select officialaddress from t), (select town from address where id = (select officialaddress from t))");
 
 
         String query;

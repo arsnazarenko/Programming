@@ -7,7 +7,6 @@ import client.servises.ICommandCreator;
 import library.clientCommands.Command;
 import library.clientCommands.SpecialSignals;
 import library.clientCommands.commandType.ExecuteScriptCommand;
-import library.clientCommands.commandType.ExitCommand;
 import library.serialization.SerializationManager;
 
 import java.io.*;
@@ -84,7 +83,6 @@ public class NonBlockingClient {
                     }
                     if (command != null) {
                         write(selectionKey, command);
-                        System.out.println(command.toString());
                         if (command.getClass() == ExecuteScriptCommand.class) {//иначе если это скрипт, создаем очередь команд
                             scriptCommandTmp = command;//заменяем старую очередь
                         }

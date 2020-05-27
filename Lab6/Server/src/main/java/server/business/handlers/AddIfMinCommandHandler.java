@@ -16,10 +16,10 @@ import java.util.Date;
 public class AddIfMinCommandHandler implements ICommandHandler {
 
     private CollectionManager collectionManager;
-    private ObjectDAO<Organization, Long, String> orgDao;
+    private ObjectDAO<Organization, Long> orgDao;
     private UserDAO<UserData, String> usrDao;
 
-    public AddIfMinCommandHandler(CollectionManager collectionManager, ObjectDAO<Organization, Long, String> orgDao, UserDAO<UserData, String> usrDao) {
+    public AddIfMinCommandHandler(CollectionManager collectionManager, ObjectDAO<Organization, Long> orgDao, UserDAO<UserData, String> usrDao) {
         this.collectionManager = collectionManager;
         this.orgDao = orgDao;
         this.usrDao = usrDao;

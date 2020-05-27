@@ -25,9 +25,10 @@ public class ServerStarter {
 
     public static void run(SocketAddress serverAddress) throws IOException, SQLException {
         DatabaseCreator.createTables();
-        ObjectDAO<Organization, Long, String> orgDao = new OrganizationDAO(DatabaseCreator.getConnection());
+        ObjectDAO<Organization, Long> orgDao = new OrganizationDAO(DatabaseCreator.getConnection());
         UserDAO<UserData, String> userDAO = new UserDaoImpl(DatabaseCreator.getConnection());
         CollectionManager collectionManager = new CollectionManager();
+        collectionManager.setOrgCollection(orgDao.readAll());
         IHandlersController handlersManager = new HandlersController(collectionManager, orgDao, userDAO);
         Scanner scanner = new Scanner(System.in);
 
@@ -57,6 +58,7 @@ public class ServerStarter {
                         service.stop();
                     }
                     DatabaseCreator.closeConnection();
+                    scanner.close();
                     break;
                 }
             }

@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 public class UpdateIdCommandHandler implements ICommandHandler {
     private CollectionManager collectionManager;
     private UserDAO<UserData, String> usrDao;
-    private ObjectDAO<Organization, Long, String> orgDao;
+    private ObjectDAO<Organization, Long> orgDao;
 
-    public UpdateIdCommandHandler(CollectionManager collectionManager, UserDAO<UserData, String> usrDao, ObjectDAO<Organization, Long, String> orgDao) {
+    public UpdateIdCommandHandler(CollectionManager collectionManager, UserDAO<UserData, String> usrDao, ObjectDAO<Organization, Long> orgDao) {
         this.collectionManager = collectionManager;
         this.usrDao = usrDao;
         this.orgDao = orgDao;
