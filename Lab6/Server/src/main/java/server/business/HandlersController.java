@@ -16,7 +16,7 @@ import java.util.Map;
 public class HandlersController implements IHandlersController {
     private Map<Class<?>, ICommandHandler> handlers;
 
-    public HandlersController(CollectionManager collectionManager, ObjectDAO<Organization, Long> orgDao, UserDAO<UserData, String> usrDao) {
+    public HandlersController(final CollectionManager collectionManager, ObjectDAO<Organization, Long> orgDao, UserDAO<UserData, String> usrDao) {
         this.handlers = new HashMap<Class<?>, ICommandHandler>() {{
             put(ExitCommand.class, new ExitCommandHandler(usrDao));
             put(AddCommand.class, new AddCommandHandler(collectionManager, orgDao, usrDao));

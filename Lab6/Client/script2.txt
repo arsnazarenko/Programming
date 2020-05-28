@@ -4,7 +4,6 @@ hello
 hello
 hello
 show
-execute_script script3.txt
 info
 show
 exit

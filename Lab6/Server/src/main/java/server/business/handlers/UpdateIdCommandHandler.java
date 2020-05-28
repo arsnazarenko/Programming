@@ -1,6 +1,8 @@
 package server.business.handlers;
 
+import com.sun.corba.se.spi.ior.ObjectKey;
 import library.clientCommands.Command;
+import library.clientCommands.SpecialSignals;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.UpdateIdCommand;
 import library.сlassModel.Organization;
@@ -9,6 +11,7 @@ import server.business.dao.ObjectDAO;
 import server.business.dao.UserDAO;
 
 import java.util.ArrayDeque;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 
@@ -24,26 +27,29 @@ public class UpdateIdCommandHandler implements ICommandHandler {
     }
 
     @Override
-    public String processCommand(Command command) {
-        UpdateIdCommand updateIdCommand = (UpdateIdCommand) command;
-        long id = updateIdCommand.getId();
-        StringBuilder stringBuilder = new StringBuilder("Элементов с таким ID нет");
-        synchronized (collectionManager) {
-            collectionManager.setOrgCollection(collectionManager.getOrgCollection().
-                    stream().
-                    map(o -> {
-                        if (o.getId().equals(id)) {
-                            Organization updateOrganization = updateIdCommand.getOrganization();
-                            updateOrganization.setCreationDate(o.getCreationDate());
-                            stringBuilder.delete(0, stringBuilder.length()).append("Объект обновлён!");
-                            return updateOrganization;
-                        } else {
-                            return o;
-                        }
-                    }).collect(Collectors.toCollection(ArrayDeque::new)));
+    public Object processCommand(Command command) {
+        UserData userData = command.getUserData();
+        if (authorization(userData, usrDao) != 0) {
+            UpdateIdCommand updateIdCommand = (UpdateIdCommand) command;
+            Long id = updateIdCommand.getId();
+            Organization organization = updateIdCommand.getOrganization();
+            organization.setCreationDate(new Date());
+            if(collectionManager.getOrgCollection().stream().anyMatch(o -> o.getId().equals(id)  && o.getUserLogin().equals(userData.getLogin()))) {
+                if(orgDao.update(id, organization)) {
+                    organization.setId(id);
+                    organization.setUserLogin(userData.getLogin());
+                    synchronized (collectionManager) {
+                        collectionManager.setOrgCollection(collectionManager.getOrgCollection().stream().
+                                map(o -> {if(o.getId().equals(id)) { return organization; } else { return o; } }).collect(Collectors.toCollection(ArrayDeque::new)));
+                        return "Объект обновлен";
+                    }
+
+                }
+                return "Объект не обновлен";
+            }
+            return "Объектов не найдено";
+
         }
-
-        return stringBuilder.toString();
-
+        return SpecialSignals.AUTHORIZATION_FALSE;
     }
 }

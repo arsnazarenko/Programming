@@ -1,28 +1,4 @@
 12123
-qwe
-qwe
-qwe
-qwe
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
-execute_script script2.txt
 qe
 add
 FromScript
@@ -32,7 +8,7 @@ FromScript
 2
 COMMERCIAL
 
-update_id 21
+update_id 1
 UPDATE
 22
 45
@@ -40,10 +16,20 @@ UPDATE
 5
 COMMERCIAL
 
+update_id 2
+UPDATE2
+222
+46
+26
+66
+GOVERNMENT
+
 info
 head
 show
 print_ascending
 max_by_employees_count
-filter_contains_name f
+filter_contains_name 2
+remove_by_id 3
+execute_script script2.txt
 exit
