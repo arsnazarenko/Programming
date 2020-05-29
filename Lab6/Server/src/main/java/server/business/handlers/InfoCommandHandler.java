@@ -19,11 +19,12 @@ public class InfoCommandHandler implements ICommandHandler {
 
     @Override
     public Object processCommand(Command command) {
-        if(authorization(command.getUserData(), usrDao) != 0L) {
-
-            return "Тип: " + collectionManager.getOrgCollection().getClass() +
-                    "\nКоличество элементов: " + collectionManager.getOrgCollection().size() +
-                    "\nДата инициализации: " + collectionManager.getCreationCollectionDate() + "\n";
+        if (authorization(command.getUserData(), usrDao) != 0L) {
+            synchronized (collectionManager) {
+                return "Тип: " + collectionManager.getOrgCollection().getClass() +
+                        "\nКоличество элементов: " + collectionManager.getOrgCollection().size() +
+                        "\nДата инициализации: " + collectionManager.getCreationCollectionDate() + "\n";
+            }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
         //информация о колллекции

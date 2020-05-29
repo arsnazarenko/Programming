@@ -14,7 +14,7 @@ import server.business.dao.UserDAO;
 import java.util.Date;
 
 public class AddCommandHandler implements ICommandHandler {
-    private CollectionManager collectionManager;
+    private final CollectionManager collectionManager;
     private ObjectDAO<Organization, Long> orgDao;
     private UserDAO<UserData, String> usrDao;
 

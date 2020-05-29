@@ -15,7 +15,7 @@ import java.util.Date;
 
 public class AddIfMinCommandHandler implements ICommandHandler {
 
-    private CollectionManager collectionManager;
+    private final CollectionManager collectionManager;
     private ObjectDAO<Organization, Long> orgDao;
     private UserDAO<UserData, String> usrDao;
 
@@ -36,19 +36,19 @@ public class AddIfMinCommandHandler implements ICommandHandler {
         //авторизация
         if (userId != 0L) {
             //проверка, минимальный ли объект для добавления
-            if (ifMin(organization) == true) {
-                //добавляем в базу, с нужным id юзера из таблицы и получаем id объекта из таблицы объектов
-                Long objectId = orgDao.create(organization, userId);
-                //если добавление успешно то не 0, добавляем в колллекцию
-                if (objectId != 0L) {
-                    //устанавливаем id
-                    organization.setUserLogin(userData.getLogin());
-                    organization.setId(objectId);
-                    synchronized (collectionManager) {
+            synchronized (collectionManager) {
+                if (ifMin(organization)) {
+                    //добавляем в базу, с нужным id юзера из таблицы и получаем id объекта из таблицы объектов
+                    Long objectId = orgDao.create(organization, userId);
+                    //если добавление успешно то не 0, добавляем в колллекцию
+                    if (objectId != 0L) {
+                        //устанавливаем id
+                        organization.setUserLogin(userData.getLogin());
+                        organization.setId(objectId);
                         collectionManager.getOrgCollection().addLast(organization);
                         return "Объект добавлен";
-                    }
 
+                    }
                 }
             }
             return "Объект не добавлен";

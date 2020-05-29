@@ -11,14 +11,15 @@ import java.util.Arrays;
 
 public interface ICommandHandler {
     Object processCommand(Command command);
+
     default Long authorization(UserData user, UserDAO<UserData, String> dao) {
         Pair<byte[], Long> userInfo = dao.read(user.getLogin());
         byte[] b2 = userInfo.getKey();
-        if(b2 == null) {
+        if (b2 == null) {
             return 0L;
         }
         byte[] b1 = PasswordHash.passwordHash(user.getPassword());
-        if(Arrays.equals(b2, b1)) {
+        if (Arrays.equals(b2, b1)) {
             return userInfo.getValue();
         }
         return 0L;

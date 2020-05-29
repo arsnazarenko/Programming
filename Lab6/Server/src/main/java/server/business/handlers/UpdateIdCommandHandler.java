@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 public class UpdateIdCommandHandler implements ICommandHandler {
-    private CollectionManager collectionManager;
+    private final CollectionManager collectionManager;
     private UserDAO<UserData, String> usrDao;
     private ObjectDAO<Organization, Long> orgDao;
 
@@ -34,18 +34,27 @@ public class UpdateIdCommandHandler implements ICommandHandler {
             Long id = updateIdCommand.getId();
             Organization organization = updateIdCommand.getOrganization();
             organization.setCreationDate(new Date());
-            if(collectionManager.getOrgCollection().stream().anyMatch(o -> o.getId().equals(id)  && o.getUserLogin().equals(userData.getLogin()))) {
-                if(orgDao.update(id, organization)) {
-                    organization.setId(id);
-                    organization.setUserLogin(userData.getLogin());
-                    synchronized (collectionManager) {
-                        collectionManager.setOrgCollection(collectionManager.getOrgCollection().stream().
-                                map(o -> {if(o.getId().equals(id)) { return organization; } else { return o; } }).collect(Collectors.toCollection(ArrayDeque::new)));
-                        return "Объект обновлен";
-                    }
+            synchronized (collectionManager) {
+                if (collectionManager.getOrgCollection().stream().
+                        anyMatch(o -> o.getId().equals(id) && o.getUserLogin().equals(userData.getLogin()))) {
+                    if (orgDao.update(id, organization)) {
+                        organization.setId(id);
+                        organization.setUserLogin(userData.getLogin());
 
+                        collectionManager.setOrgCollection(collectionManager.getOrgCollection().stream().
+                                map(o -> {
+                                    if (o.getId().equals(id)) {
+                                        return organization;
+                                    } else {
+                                        return o;
+                                    }
+                                }).
+                                collect(Collectors.toCollection(ArrayDeque::new)));
+                        return "Объект обновлен";
+
+                    }
+                    return "Объект не обновлен";
                 }
-                return "Объект не обновлен";
             }
             return "Объектов не найдено";
 

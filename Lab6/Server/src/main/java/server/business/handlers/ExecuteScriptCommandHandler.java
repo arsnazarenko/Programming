@@ -16,7 +16,7 @@ public class ExecuteScriptCommandHandler implements ICommandHandler {
     @Override
     public SpecialSignals processCommand(Command command) {
         //можно не кастовать, просто отправляем сообщение о том, что сервер получил команду запуска скрипта
-        if(authorization(command.getUserData(), usrDao) != 0L) {
+        if (authorization(command.getUserData(), usrDao) != 0L) {
             return SpecialSignals.SCRIPT_TRUE;
         }
         return SpecialSignals.AUTHORIZATION_FALSE;

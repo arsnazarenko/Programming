@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class ClearCommandHandler implements ICommandHandler {
 
-    private CollectionManager collectionManager;
+    private final CollectionManager collectionManager;
     private ObjectDAO<Organization, Long> orgDao;
     private UserDAO<UserData, String> usrDao;
 
@@ -27,14 +27,16 @@ public class ClearCommandHandler implements ICommandHandler {
     public Object processCommand(Command command) {
         UserData userData = command.getUserData();
         if (authorization(userData, usrDao) != 0L) {
-            List<Long> usersOrgId = collectionManager.getOrgCollection().stream().filter(o -> o.getUserLogin().equals(userData.getLogin())).map(Organization::getId).collect(Collectors.toList());
-            if (!usersOrgId.isEmpty()) {
-                //делаем изменения в базе, если они успешно сделаны, изменяем коллекцию
-                if(orgDao.deleteByKeys(usersOrgId)) {
-                    synchronized (collectionManager) {
+            synchronized (collectionManager) {
+                List<Long> usersOrgId = collectionManager.getOrgCollection().stream().filter(o -> o.getUserLogin().equals(userData.getLogin())).map(Organization::getId).collect(Collectors.toList());
+                if (!usersOrgId.isEmpty()) {
+                    //делаем изменения в базе, если они успешно сделаны, изменяем коллекцию
+                    if (orgDao.deleteByKeys(usersOrgId)) {
+
                         //удаляем в коллекции
                         collectionManager.getOrgCollection().removeIf(o -> usersOrgId.contains(o.getId()));
                         return "Объекты удалены";
+
                     }
                 }
             }

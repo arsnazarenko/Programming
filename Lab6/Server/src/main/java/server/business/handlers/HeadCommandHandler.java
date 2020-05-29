@@ -20,11 +20,12 @@ public class HeadCommandHandler implements ICommandHandler {
     @Override
     public Object processCommand(Command command) {
         if(authorization(command.getUserData(), usrDao) != 0L) {
-
-            return collectionManager.getOrgCollection().
-                    stream().
-                    findFirst().
-                    orElse(null);
+            synchronized (collectionManager) {
+                return collectionManager.getOrgCollection().
+                        stream().
+                        findFirst().
+                        orElse(null);
+            }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
     }

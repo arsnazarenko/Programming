@@ -24,8 +24,10 @@ public class ShowCommandHandler implements ICommandHandler {
 
     @Override
     public Object processCommand(Command command) {
-        if(authorization(command.getUserData(), usrDao) != 0L) {
-            return collectionManager.getOrgCollection().isEmpty() ? null : collectionManager.getOrgCollection();
+        if (authorization(command.getUserData(), usrDao) != 0L) {
+            synchronized (collectionManager) {
+                return collectionManager.getOrgCollection().isEmpty() ? null : collectionManager.getOrgCollection();
+            }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
 

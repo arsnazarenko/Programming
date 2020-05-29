@@ -5,27 +5,20 @@ import java.sql.*;
 
 public class DatabaseCreator {
     private static Connection connection;
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/studs",
-                    "s283333", "wts704");
-            connection.setAutoCommit(false);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
+    public static void init() throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+        connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/studs",
+                "s283333", "wts704");
+        connection.setAutoCommit(false);
+        createTables();
     }
 
     public static Connection getConnection() {
         return connection;
     }
 
-    public static void createTables() throws SQLException {
+    private static void createTables() throws SQLException {
         Statement stmt;
         String sql;
 
@@ -108,60 +101,11 @@ public class DatabaseCreator {
         connection.commit();
     }
 
-    public static void closeConnection(){
+    public static void closeConnection() {
         try {
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-    public static void testInsert() throws SQLException {
-        String sql ="INSERT INTO Locations (x, y, z, name) VALUES ((?), (?), (?), (?)) RETURNING id";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setLong(1, 1231231);
-        ps.setDouble(2, 5.55);
-        ps.setDouble(3, 6.66);
-        ps.setString(4, "locat");
-
-
-
-        ResultSet rs = ps.executeQuery();
-        long i = 0;
-        if (rs.next()) {
-            i = rs.getInt(1);
-        }
-        String sql2 = "INSERT INTO Address (street, zipcode, town) VALUES ((?), (?), (?)) RETURNING id";
-        ps = connection.prepareStatement(sql2);
-        ps.setString(1, "street");
-        ps.setString(2, "zipzip");
-        ps.setLong(3, i);
-        rs = ps.executeQuery();
-        i = 0;
-        if (rs.next()) {
-            i = rs.getLong(1);
-        }
-        String sql3 = "INSERT INTO Coordinates (x, y) VALUES ((?), (?)) RETURNING id";
-        ps = connection.prepareStatement(sql3);
-        ps.setDouble(1, 4.4);
-        ps.setDouble(2, 98.6);
-        rs = ps.executeQuery();
-        long j = 0;
-        if (rs.next()) {
-            j = rs.getLong(1);
-        }
-        String sql4 = "INSERT INTO Organizations (name, coordinates, creation_date, employees_count, type, annualTurnover, officialAddress) " +
-                "VALUES ((?), (?), (?), (?), (?), (?), (?)) RETURNING id";//address i
-        ps = connection.prepareStatement(sql4);
-        ps.setString(1, "name");
-        ps.setLong(2, j);
-        ps.setTimestamp(3, new Timestamp(new java.util.Date().getTime()));
-        ps.setInt(4, 123);
-        ps.setString(5, "COMMERCIAL");
-        ps.setNull(6, Types.DOUBLE);
-        ps.setLong(7, i);
-
-        ps.executeQuery();
-        connection.commit();
-        ps.close();
     }
 }

@@ -24,12 +24,14 @@ public class PrintAscendingCommandHandler implements ICommandHandler {
 
     @Override
     public Object processCommand(Command command) {
-        if(authorization(command.getUserData(), usrDao) != 0L) {
-            Deque<Organization> result = collectionManager.getOrgCollection().
-                    stream().
-                    sorted(Comparator.comparing(Organization::getCreationDate)).
-                    collect(Collectors.toCollection(ArrayDeque::new));
-            return result.isEmpty() ? null : result;
+        if (authorization(command.getUserData(), usrDao) != 0L) {
+            synchronized (collectionManager) {
+                Deque<Organization> result = collectionManager.getOrgCollection().
+                        stream().
+                        sorted(Comparator.comparing(Organization::getCreationDate)).
+                        collect(Collectors.toCollection(ArrayDeque::new));
+                return result.isEmpty() ? null : result;
+            }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
 

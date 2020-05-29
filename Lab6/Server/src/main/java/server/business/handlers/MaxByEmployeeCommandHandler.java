@@ -22,11 +22,13 @@ public class MaxByEmployeeCommandHandler implements ICommandHandler {
 
     @Override
     public Object processCommand(Command command) {
-        if(authorization(command.getUserData(), usrDao) != 0L) {
-            return collectionManager.getOrgCollection().
-                    stream().
-                    max(Comparator.comparing(Organization::getCreationDate)).
-                    orElse(null);
+        if (authorization(command.getUserData(), usrDao) != 0L) {
+            synchronized (collectionManager) {
+                return collectionManager.getOrgCollection().
+                        stream().
+                        max(Comparator.comparing(Organization::getCreationDate)).
+                        orElse(null);
+            }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
 

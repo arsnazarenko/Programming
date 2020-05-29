@@ -5,6 +5,7 @@ import library.сlassModel.Organization;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import org.postgresql.util.PSQLException;
 import server.business.*;
 import server.business.dao.*;
 import server.business.services.IService;
@@ -23,8 +24,8 @@ public class ServerStarter {
     private final static Logger logger = LogManager.getLogger(ServerStarter.class.getName());
     private static final ArrayList<SocketAddress> clients = new ArrayList<>();
 
-    public static void run(SocketAddress serverAddress) throws IOException, SQLException {
-        DatabaseCreator.createTables();
+    public static void run(SocketAddress serverAddress) throws IOException, SQLException, ClassNotFoundException {
+        DatabaseCreator.init();
         ObjectDAO<Organization, Long> orgDao = new OrganizationDAO(DatabaseCreator.getConnection());
         UserDAO<UserData, String> userDAO = new UserDaoImpl(DatabaseCreator.getConnection());
         CollectionManager collectionManager = new CollectionManager();
@@ -74,28 +75,27 @@ public class ServerStarter {
         }
 
     }
-        public static void main (String[] args) throws SQLException {
-            try {
-                String host = args[0].trim();
-                int port = Integer.parseInt(args[1].trim());
-                SocketAddress socketAddress = new InetSocketAddress(host, port);
-                run(socketAddress);
 
-            } catch (IndexOutOfBoundsException e) {
-                logger.error("NECESSARY TO SPECIFY THE PATH TO THE FILE");
-                e.printStackTrace();
-                logger.info("SAMPLE: java -jar Server.jar [host] [port] [file with objects]");
-            } catch (IOException e) {
-                logger.error("SERVER STARTING ERROR");
-                logger.info("SAMPLE: java -jar Server.jar [host] [port] [file with objects]");
-            } catch (NumberFormatException e) {
-                logger.error("INVALID PORT SPECIFIED");
-                logger.info("SAMPLE: java -jar Server.jar [host] [port] [file with objects]");
-            } catch (IllegalArgumentException e) {
-                logger.error("INVALID PARAMETERS");
-                logger.info("SAMPLE: java -jar Server.jar [host] [port] [file with objects]");
-            }
-
+    public static void main(String[] args) throws SQLException {
+        try {
+            String host = args[0].trim();
+            int port = Integer.parseInt(args[1].trim());
+            SocketAddress socketAddress = new InetSocketAddress(host, port);
+            run(socketAddress);
+        } catch (SQLException | ClassNotFoundException e) {
+            logger.error("Error connecting to database");
+            logger.info("Establish the correct database connection");
+        } catch (IOException e) {
+            logger.error("SERVER STARTING ERROR");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] ");
+        } catch (NumberFormatException e) {
+            logger.error("INVALID PORT SPECIFIED");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] ");
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            logger.error("INVALID PARAMETERS");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] ");
         }
 
     }
+
+}

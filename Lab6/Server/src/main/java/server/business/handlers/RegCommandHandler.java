@@ -5,7 +5,7 @@ import library.clientCommands.UserData;
 import server.business.dao.OrganizationDAO;
 import server.business.dao.UserDAO;
 
-public class RegCommandHandler implements ICommandHandler{
+public class RegCommandHandler implements ICommandHandler {
     private UserDAO<UserData, String> usrDao;
 
     public RegCommandHandler(UserDAO<UserData, String> usrDao) {
@@ -18,7 +18,7 @@ public class RegCommandHandler implements ICommandHandler{
         //иначе регистрируем пользователя
         UserData userData = command.getUserData();
         //если налл, то такого пользователя нет, регистрируемся
-        if(usrDao.read(userData.getLogin()).getValue() < 1) {
+        if (usrDao.read(userData.getLogin()).getValue() < 1) {
             usrDao.create(userData);
             return "Пользователь " + userData.getLogin() + " зарегестрирован";
         } else {

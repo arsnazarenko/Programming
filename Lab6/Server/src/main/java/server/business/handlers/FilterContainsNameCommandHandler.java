@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class FilterContainsNameCommandHandler implements ICommandHandler {
     private UserDAO<UserData, String> usrDao;
-    private CollectionManager collectionManager;
+    private final CollectionManager collectionManager;
 
     public FilterContainsNameCommandHandler(UserDAO<UserData, String> usrDao, CollectionManager collectionManager) {
         this.usrDao = usrDao;
@@ -24,15 +24,17 @@ public class FilterContainsNameCommandHandler implements ICommandHandler {
 
     @Override
     public Object processCommand(Command command) {
-        if(authorization(command.getUserData(), usrDao) != 0L) {
+        if (authorization(command.getUserData(), usrDao) != 0L) {
 
             FilterContainsNameCommand filterContainsNameCommand = (FilterContainsNameCommand) command;
             String subString = filterContainsNameCommand.getSubString();
-            Deque<Organization> result = collectionManager.getOrgCollection().
-                    stream().
-                    filter(o -> o.getName().contains(subString)).
-                    collect(Collectors.toCollection(ArrayDeque::new));
-            return result.isEmpty() ? null : result;
+            synchronized (collectionManager) {
+                Deque<Organization> result = collectionManager.getOrgCollection().
+                        stream().
+                        filter(o -> o.getName().contains(subString)).
+                        collect(Collectors.toCollection(ArrayDeque::new));
+                return result.isEmpty() ? null : result;
+            }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
 

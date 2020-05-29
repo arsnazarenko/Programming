@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class RemoveIdCommandHandler implements ICommandHandler {
 
-    private CollectionManager collectionManager;
+    private final CollectionManager collectionManager;
     private UserDAO<UserData, String> usrDao;
     private ObjectDAO<Organization, Long> orgDao;
 
@@ -31,17 +31,18 @@ public class RemoveIdCommandHandler implements ICommandHandler {
     @Override
     public Object processCommand(Command command) {
         UserData userData = command.getUserData();
-        if(authorization(userData, usrDao) != 0) {
+        if (authorization(userData, usrDao) != 0) {
             RemoveIdCommand removeIdCommand = (RemoveIdCommand) command;
             Long orgId = removeIdCommand.getId();
-            boolean result = byThisUser(orgId, userData.getLogin());
-            //если объекты меньше есть
-            if(result) {
-                //если удаление из базы прошло успешно, обновляем коллекцию
-                if(orgDao.delete(orgId) != 0) {
-                    synchronized (collectionManager) {
+            synchronized (collectionManager) {
+                boolean result = byThisUser(orgId, userData.getLogin());
+                //если объекты меньше есть
+                if (result) {
+                    //если удаление из базы прошло успешно, обновляем коллекцию
+                    if (orgDao.delete(orgId) != 0) {
                         collectionManager.getOrgCollection().removeIf(o -> o.getId().equals(orgId));
                         return "ОБъект удален";
+
                     }
                 }
             }

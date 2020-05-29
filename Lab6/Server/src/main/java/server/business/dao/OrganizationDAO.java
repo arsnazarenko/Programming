@@ -49,9 +49,6 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long> {
                     organization.setOfficialAddress(address);
                     organizations.addLast(organization);
                 }
-
-
-
             }
             return organizations;
         } catch (SQLException e) {
@@ -63,11 +60,9 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long> {
 
     public Long createOrganization(Organization organization, Long login) throws SQLException {
         long result = 0L;
-
         Address address = organization.getOfficialAddress();
         Location town = (address != null) ? address.getTown() : null;
         Coordinates coordinates = organization.getCoordinates();
-
         long i = 0L;
         long j = 0L;
         long k = 0L;
@@ -393,6 +388,8 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long> {
         DELETE_ADDRESSES("DELETE FROM Address WHERE id = (?) RETURNING town"),
         DELETE_ADDRESSES_WITHOUT_RET("DELETE FROM Address WHERE id = (?)"),
         DELETE_COORDINATES("DELETE FROM Coordinates WHERE id = (?)"),
+
+
         SELECT_ALL("select o.id, object_user, name, creation_date, employees_count, type, annualturnover, officialaddress, addrid, addrstreet, addrzipcode, locId, locx, locy, locz, locname, login, x as coordx, y as coordy from organizations as o left join (select address.id as addrid, address.street as addrstreet, address.zipcode as addrzipcode, l.id as locId,  l.x as locx, l.y as locy, l.z as locz, l.name as locname from address left join locations l on address.town = l.id) a on o.officialaddress = a.addrid left join users u on o.object_user = u.id left join coordinates c on o.coordinates = c.id"),
 
 
