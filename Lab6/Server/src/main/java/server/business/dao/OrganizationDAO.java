@@ -144,7 +144,6 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long> {
     @Override
     public Long create(final Organization organization, Long login) {
         long result = 0L;
-
         try {
             result = createOrganization(organization, login);
             return result;

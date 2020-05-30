@@ -1,17 +1,22 @@
 package server.business.dao;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 
 public class DatabaseCreator {
     private static Connection connection;
+    private static final Logger logger = LogManager.getLogger(DatabaseCreator.class.getName());
 
-    public static void init() throws ClassNotFoundException, SQLException {
+    public static void init(String host, String port, String dataBaseName, String user, String password) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
-        connection = DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/studs",
-                "s283333", "wts704");
+        connection = DriverManager.getConnection("jdbc:postgresql://" + host + ":" + port + "/" + dataBaseName,
+                user, password);
         connection.setAutoCommit(false);
         createTables();
+
     }
 
     public static Connection getConnection() {
@@ -99,6 +104,7 @@ public class DatabaseCreator {
         stmt.executeUpdate(sql);
         stmt.close();
         connection.commit();
+        logger.debug("tables created");
     }
 
     public static void closeConnection() {

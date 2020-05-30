@@ -2,12 +2,13 @@ package server.business.handlers;
 
 import library.clientCommands.Command;
 import library.clientCommands.UserData;
-import server.business.dao.OrganizationDAO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import server.business.dao.UserDAO;
 
 public class RegCommandHandler implements ICommandHandler {
     private UserDAO<UserData, String> usrDao;
-
+    private static final Logger logger = LogManager.getLogger(RegCommandHandler.class.getName());
     public RegCommandHandler(UserDAO<UserData, String> usrDao) {
         this.usrDao = usrDao;
     }
@@ -18,7 +19,7 @@ public class RegCommandHandler implements ICommandHandler {
         //иначе регистрируем пользователя
         UserData userData = command.getUserData();
         //если налл, то такого пользователя нет, регистрируемся
-        if (usrDao.read(userData.getLogin()).getValue() < 1) {
+        if (usrDao.read(userData.getLogin()).getValue() == 0L) {
             usrDao.create(userData);
             return "Пользователь " + userData.getLogin() + " зарегестрирован";
         } else {

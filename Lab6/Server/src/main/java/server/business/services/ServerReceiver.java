@@ -38,8 +38,8 @@ public class ServerReceiver implements Runnable, IService{
                 byte[] buffer = new byte[length];
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
                 serverSocket.receive(datagramPacket);
+                logger.debug("New packet");
                 SocketAddress remoteAddress = datagramPacket.getSocketAddress();
-                ServerStarter.clientRegister(remoteAddress);
                 byte[] bytes = datagramPacket.getData();
                 messageSystem.putInQueues(ServerReceiver.class, new LetterInfo(remoteAddress,
                         SerializationManager.objectDeserial(bytes)));

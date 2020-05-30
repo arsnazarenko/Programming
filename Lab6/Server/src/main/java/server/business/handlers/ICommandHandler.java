@@ -14,6 +14,7 @@ public interface ICommandHandler {
 
     default Long authorization(UserData user, UserDAO<UserData, String> dao) {
         Pair<byte[], Long> userInfo = dao.read(user.getLogin());
+
         byte[] b2 = userInfo.getKey();
         if (b2 == null) {
             return 0L;
