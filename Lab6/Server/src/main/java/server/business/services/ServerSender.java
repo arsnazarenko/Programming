@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.business.LetterInfo;
 import server.business.MessageSystem;
+import server.business.dao.Exception.MyUncaughtExceptionHandler;
 import server.business.tasks.SendTask;
 
 import java.net.DatagramSocket;
@@ -13,7 +14,8 @@ public class ServerSender implements Runnable, IService {
     private final DatagramSocket serverSocket;
     private final MessageSystem messageSystem;
 
-    private final ForkJoinPool senderPool = new ForkJoinPool();
+    private final ForkJoinPool senderPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(),
+            ForkJoinPool.defaultForkJoinWorkerThreadFactory, new MyUncaughtExceptionHandler(), false);
     private static final Logger logger = LogManager.getLogger(ServerSender.class);
     private Thread senderThread;
 
@@ -36,14 +38,15 @@ public class ServerSender implements Runnable, IService {
 
     @Override
     public void run() {
-        logger.info("sender is started");
+        logger.info("Sender is started");
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 LetterInfo response = messageSystem.getFromQueues(ServerSender.class);
-                senderPool.submit(new SendTask(serverSocket, response));
+                senderPool.execute(new SendTask(serverSocket, response));
+
             }
         } catch (InterruptedException e) {
-            logger.error("Handler is interrupted");
+            logger.error("Sender is interrupted");
         }
     }
 }

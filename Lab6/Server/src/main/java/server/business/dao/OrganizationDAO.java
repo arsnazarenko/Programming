@@ -4,6 +4,7 @@ import library.сlassModel.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 import java.sql.*;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -146,6 +147,7 @@ public class OrganizationDAO implements ObjectDAO<Organization, Long> {
         long result = 0L;
         try {
             result = createOrganization(organization, login);
+            connection.commit();
             return result;
         } catch (SQLException e) {
             logger.error("INSERT ERROR", e);

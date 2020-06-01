@@ -4,7 +4,11 @@ package server.business.dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class DatabaseCreator {
     private static Connection connection;
@@ -104,7 +108,7 @@ public class DatabaseCreator {
         stmt.executeUpdate(sql);
         stmt.close();
         connection.commit();
-        logger.debug("tables created");
+        logger.debug("Tables created");
     }
 
     public static void closeConnection() {

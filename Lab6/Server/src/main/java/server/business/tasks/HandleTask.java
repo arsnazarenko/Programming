@@ -28,7 +28,6 @@ public class HandleTask implements Runnable {
         Command receiveCommand = (Command) request.getTransferObject();
         SocketAddress remoteAddress = request.getRemoteAddress();
         long start = System.currentTimeMillis();
-        logger.debug("task in handler");
         Object response = handlersController.handling(receiveCommand);
         long time = System.currentTimeMillis() - start;
         logger.info("CLIENT AT " + remoteAddress + " SENT: " + receiveCommand.getClass().getSimpleName());

@@ -6,7 +6,7 @@ package library.clientCommands;
 public enum NameOfCommands {
     add("add{element} - Добавить новый элемент в коллекцию"),
     info("info - Вывести в стандартный поток вывода информацию о коллекции"),
-    help("help - Вывести справку по доступным командам"),
+    help("help - Вывести справку по доступным командам (доступна неавторизованному пользователю)"),
     exit("exit - Завершить порграмму без сохранения в файл"),
     show("show - Вывести в стандартный поток вывода все элементы коллекции в строковом представлении"),
     update_id("update_id{element} - Обновить значение элемента колллекции, id которого равен заданному"),
@@ -19,7 +19,7 @@ public enum NameOfCommands {
     max_by_employees_count("max_by_employees_count - Вывести любой элемент их коллекции, значение поля employeesCount которого является максимальным"),
     filter_contains_name("filter_contains_name name - Вывести элементы, значения поля name которых содержит заданную подстроку"),
     print_ascending("print_ascending - Вывести элементы коллекции в порядке возрастания"),
-    reg("регистрация пользователя");
+    reg("reg - регистрация пользователя");
 
     private String commandHelp;
 

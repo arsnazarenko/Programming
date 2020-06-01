@@ -19,7 +19,7 @@ public class RegCommandHandler implements ICommandHandler {
         //иначе регистрируем пользователя
         UserData userData = command.getUserData();
         //если налл, то такого пользователя нет, регистрируемся
-        if (usrDao.read(userData.getLogin()).getValue() == 0L) {
+        if (usrDao.read(userData.getLogin()).getUserId() == 0L) {
             usrDao.create(userData);
             return "Пользователь " + userData.getLogin() + " зарегестрирован";
         } else {

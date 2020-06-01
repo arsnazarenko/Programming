@@ -13,6 +13,7 @@ import server.business.services.ServerSender;
 
 import java.io.IOException;
 import java.net.*;
+
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -21,6 +22,7 @@ import java.util.concurrent.BlockingQueue;
 public class ServerStarter {
 
     private final static Logger logger = LogManager.getLogger(ServerStarter.class.getName());
+
     public static void run(SocketAddress serverAddress, String host, String port, String dataBaseName, String user, String password) throws IOException, SQLException, ClassNotFoundException {
         DatabaseCreator.init(host, port, dataBaseName, user, password);
         ObjectDAO<Organization, Long> orgDao = new OrganizationDAO(DatabaseCreator.getConnection());
@@ -38,7 +40,6 @@ public class ServerStarter {
         MessageSystem messageSystem = new MessageSystem(queues);
 
         logger.info("SERVER STARTED: " + serverAddress);
-        System.out.println(DatabaseCreator.getConnection().isValid(1));
         try (DatagramSocket serverSocket = new DatagramSocket(serverAddress)) {
 
             IService[] services = new IService[3];
@@ -63,6 +64,7 @@ public class ServerStarter {
             }
         }
     }
+
     public static void main(String[] args) {
         final String host;
         final int port;
@@ -72,39 +74,29 @@ public class ServerStarter {
         final String dbUser;
         final String dbPassword;
         try {
-            if(args.length == 5) {
-                host = "127.0.0.1";
-                dbHost = "127.0.0.1";
-                port = Integer.parseInt(args[0].trim());
-                dbPort = args[1].trim();
-                dataBaseName = args[2].trim();
-                dbUser = args[3].trim();
-                dbPassword = args[4].trim();
-            } else {
-                host = args[0].trim();
-                port = Integer.parseInt(args[1].trim());
-                dbHost = args[2].trim();
-                dbPort = args[3].trim();
-                dataBaseName = args[4].trim();
-                dbUser = args[5].trim();
-                dbPassword = args[6].trim();
-            }
+            host = args[0].trim();
+            port = Integer.parseInt(args[1].trim());
+            dbHost = args[2].trim();
+            dbPort = args[3].trim();
+            dataBaseName = args[4].trim();
+            dbUser = args[5].trim();
+            dbPassword = args[6].trim();
             SocketAddress socketAddress = new InetSocketAddress(host, port);
             run(socketAddress, dbHost, dbPort, dataBaseName, dbUser, dbPassword);
         } catch (SQLException e) {
             logger.error("Error connecting to database");
-            logger.info("Establish the correct database connection");
-        }catch(ClassNotFoundException e){
-            logger.error("Class load error");
+            logger.info("Establish the correct database connection\nSAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password]");
+        } catch (ClassNotFoundException e) {
+            logger.error("DB driver Class load error");
         } catch (IOException e) {
             logger.error("SERVER STARTING ERROR");
-            logger.info("SAMPLE: java -jar Server.jar [host] [port] ");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password] ");
         } catch (NumberFormatException e) {
             logger.error("INVALID PORT SPECIFIED");
-            logger.info("SAMPLE: java -jar Server.jar [host] [port] ");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password] ");
         } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
             logger.error("INVALID PARAMETERS");
-            logger.info("SAMPLE: java -jar Server.jar [host] [port] ");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password] ");
         }
 
     }

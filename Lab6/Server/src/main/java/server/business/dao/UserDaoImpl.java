@@ -1,14 +1,12 @@
 package server.business.dao;
-
-import javafx.util.Pair;
 import library.clientCommands.UserData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 public class UserDaoImpl implements UserDAO<UserData, String> {
     private Connection connection;
@@ -23,7 +21,6 @@ public class UserDaoImpl implements UserDAO<UserData, String> {
     @Override
     public void create(UserData user) {
         try{
-            logger.debug("isValid:" + connection.isValid(2));
             try(PreparedStatement ps = connection.prepareStatement(SQLUsers.INSERT_USERS.sql)) {
                 ps.setString(1, user.getLogin());
                 byte[] pass = PasswordHash.passwordHash(user.getPassword());
@@ -42,12 +39,10 @@ public class UserDaoImpl implements UserDAO<UserData, String> {
     }
 
     @Override
-    public Pair<byte[], Long> read(String login) {
+    public UserInfo read(String login) {
         byte[] bytes = null;
         long userId = 0;
         try{
-            logger.debug("before prepareStatement");
-            logger.debug("valid: " + connection.isValid(2));
             try(PreparedStatement ps = connection.prepareStatement(SQLUsers.SELECT_USERS.sql)) {
                 ps.setString(1, login);
                 try(ResultSet rs = ps.executeQuery()) {
@@ -57,11 +52,11 @@ public class UserDaoImpl implements UserDAO<UserData, String> {
                     }
                 }
             }
-            return new Pair<>(bytes, userId);
+            return new UserInfo(bytes, userId);
         } catch (SQLException e) {
             e.printStackTrace();
             logger.error("User read not completed");
-            return new Pair<>(bytes, userId);
+            return new UserInfo(bytes, userId);
         }
 
     }
@@ -75,4 +70,5 @@ public class UserDaoImpl implements UserDAO<UserData, String> {
             this.sql = sql;
         }
     }
+
 }

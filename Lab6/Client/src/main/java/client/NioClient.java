@@ -44,9 +44,5 @@ public class NioClient {
         } catch (IllegalArgumentException e) {
             System.out.println("НЕКОРРЕКТНЫЙ ВВОД\nSAMPLE: java -jar Client.jar [hostname] [port]");
         }
-
-
-
-
     }
 }

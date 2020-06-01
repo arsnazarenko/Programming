@@ -32,21 +32,20 @@ public class ServerReceiver implements Runnable, IService{
 
     @Override
     public void run() {
-        logger.info("receiver is started");
+        logger.info("Receiver is started");
         while(!Thread.currentThread().isInterrupted()) {
             try {
                 byte[] buffer = new byte[length];
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
                 serverSocket.receive(datagramPacket);
-                logger.debug("New packet");
                 SocketAddress remoteAddress = datagramPacket.getSocketAddress();
                 byte[] bytes = datagramPacket.getData();
                 messageSystem.putInQueues(ServerReceiver.class, new LetterInfo(remoteAddress,
                         SerializationManager.objectDeserial(bytes)));
             } catch (SocketException e) {
-                logger.error("SOCKET CLOSED\n" + e);
+                logger.error("SOCKET CLOSED\n");
             }catch (IOException e) {
-                logger.error("RECEIVING PACKAGE ERROR\n", e);
+                logger.error("RECEIVING PACKAGE ERROR\n");
             }
         }
     }
