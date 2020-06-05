@@ -19,7 +19,8 @@ public enum NameOfCommands {
     max_by_employees_count("max_by_employees_count - Вывести любой элемент их коллекции, значение поля employeesCount которого является максимальным"),
     filter_contains_name("filter_contains_name name - Вывести элементы, значения поля name которых содержит заданную подстроку"),
     print_ascending("print_ascending - Вывести элементы коллекции в порядке возрастания"),
-    reg("reg - регистрация пользователя");
+    reg("reg - регистрация пользователя"),
+    log("log - авторизация");
 
     private String commandHelp;
 

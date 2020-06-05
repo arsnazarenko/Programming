@@ -23,19 +23,20 @@ public class CommandCreator implements ICommandCreator{
     /**
      *
      * @param inputStream - stream, с помощью которого создаются команды
-     * @return объект команды
+     * @return объект команды для работы с колллекцией
      */
-    public Command createCommand(InputStream inputStream) {
+
+    public Command authorization(InputStream inputStream) {
+        Scanner scanner = new Scanner(inputStream, "UTF-8");
+        return reader.readAuthorizationCommand(scanner);
+    }
+
+    public Command createCommand(InputStream inputStream, UserData userData) {
         Scanner scanner = new Scanner(inputStream, "UTF-8");
         //получаем данные для авторизации или регистрации
         //получии команду
-
-        Command command = reader.read(scanner, authorizationParameters(scanner));
-        return command;
-
-
+        return reader.readWorkCommand(scanner, userData);
     }
-
     /**
      * Метод для создания очереди из команд для скрипта
      * @param inputStream - stream, с помощью которого создаются команды
@@ -48,23 +49,5 @@ public class CommandCreator implements ICommandCreator{
         return commandQueue;
 
     }
-    private UserData authorizationParameters(Scanner reader) {
-        String login;
-        String password;
-        while (true) {
-            System.out.print("Введите логин: ");
-            login = reader.nextLine();
-            System.out.print("Введите пароль: ");
-            password = reader.nextLine();
-            /*
-            здесь мы только проверяем на пустую строку или строку только из проелов, но если введен хотя бы один символ с пробелом,
-            пароль является допустимым и отправляется серверу
-            */
-            if(login.trim().equals("") || password.trim().equals("")) {
-                System.out.println("ПАРОЛЬ И ЛОГИН НЕ МОГУТ БЫТЬ ПУСТОЙ СТРОКОЙ");
-                continue;
-            }
-            return new UserData(login, password);
-        }
-    }
+
 }

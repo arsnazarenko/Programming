@@ -6,6 +6,7 @@ import client.servises.IAnswerHandler;
 import client.servises.ICommandCreator;
 import library.clientCommands.Command;
 import library.clientCommands.SpecialSignals;
+import library.clientCommands.UserData;
 import library.clientCommands.commandType.ExecuteScriptCommand;
 import library.serialization.SerializationManager;
 
@@ -21,10 +22,12 @@ import java.util.*;
  * Реализация неблокиующего клиента
  */
 public class NonBlockingClient {
+
     private ICommandCreator commandCreator;
     private ByteBuffer buffer;
     private SocketAddress address;
     private IAnswerHandler IAnswerHandler;
+
 
     public NonBlockingClient(ICommandCreator commandCreator, ByteBuffer buffer,
                              SocketAddress address, IAnswerHandler IAnswerHandler) {
@@ -40,6 +43,9 @@ public class NonBlockingClient {
      * @throws IOException - в случае ошибки подключения
      */
     public void process(DatagramChannel datagramChannel) throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        UserData userData = null;
+        boolean auth = false;
         Selector selector = Selector.open();
         Queue<Command> commandQueue = null;
         datagramChannel.register(selector, SelectionKey.OP_WRITE);
@@ -67,6 +73,10 @@ public class NonBlockingClient {
                             }
                         } else if(signal == SpecialSignals.SCRIPT_TRUE) {
                             commandQueue = queueUpdate(commandQueue, scriptCommandTmp);
+                        } else if(signal == SpecialSignals.AUTHORIZATION_FALSE || signal == SpecialSignals.REG_FALSE) {
+                            auth = false;
+                        } else {
+                            auth = true;
                         }
                     }
 
@@ -79,7 +89,12 @@ public class NonBlockingClient {
                             command = commandQueue.poll();      //иначе из очереди команд скрипта берем команду
                         }
                     } else {
-                        command = commandCreator.createCommand(System.in);  // иначе команда создаетя пользователем
+                        if(!auth) {
+                            command = commandCreator.authorization(System.in);
+                            userData = command.getUserData();
+                        } else {
+                            command = commandCreator.createCommand(System.in, userData);
+                        }
                     }
                     if (command != null) {
                         write(selectionKey, command);

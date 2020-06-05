@@ -3,7 +3,10 @@ package library.clientCommands;
 public enum SpecialSignals {
     EXIT_TRUE("Завершение"),
     AUTHORIZATION_FALSE("Вы не авторизованы"),
-    SCRIPT_TRUE("Выполнение скрипта");
+    SCRIPT_TRUE("Выполнение скрипта"),
+    AUTHORIZATION_TRUE("Пользователь авторизован"),
+    REG_TRUE("Пользователь зарегетстрирован"),
+    REG_FALSE("Пользователь с таким логином уже есть");
 
     private String msg;
 

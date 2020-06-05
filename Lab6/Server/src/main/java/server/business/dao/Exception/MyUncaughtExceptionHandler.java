@@ -9,7 +9,7 @@ public class MyUncaughtExceptionHandler implements Thread.UncaughtExceptionHandl
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        logger.error(e.fillInStackTrace() + "\n" + e.getCause());
+        e.printStackTrace();
     }
 
 }

@@ -1,10 +1,5 @@
 package client;
-
-
 import client.servises.*;
-
-import library.serialization.SerializationManager;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -26,7 +21,7 @@ public class NioClient {
             ICommandCreator commandCreator = new CommandCreator(reader);
             datagramChannel.connect(socketAddress);
             datagramChannel.configureBlocking(false);
-            NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(15 * 1024),
+            NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(256 * 1024),
                     socketAddress, IAnswerHandler);
 
             nonBlockingClient.process(datagramChannel);

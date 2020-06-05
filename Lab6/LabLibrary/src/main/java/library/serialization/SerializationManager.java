@@ -27,6 +27,7 @@ public class SerializationManager{
         ) {
             return ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
+            //e.printStackTrace();
             System.err.println("ОШИБКА СЕРИАЛИЗАЦИИ");
         }
         return null;

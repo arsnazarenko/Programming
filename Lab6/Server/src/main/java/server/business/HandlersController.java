@@ -34,6 +34,7 @@ public class HandlersController implements IHandlersController {
             put(ClearCommand.class, new ClearCommandHandler(collectionManager, orgDao, usrDao));
             put(ExecuteScriptCommand.class, new ExecuteScriptCommandHandler(usrDao));
             put(RegCommand.class, new RegCommandHandler(usrDao));
+            put(LogCommand.class, new LogCommandHandler(usrDao));
         }};
     }
 

@@ -1,9 +1,45 @@
-12123
-gawd
-hello
-hello
-hello
-show
-info
-show
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
+execute_script script3.txt
 exit

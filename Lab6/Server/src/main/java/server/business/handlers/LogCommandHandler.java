@@ -7,10 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.business.dao.UserDAO;
 
-public class RegCommandHandler implements ICommandHandler {
+public class LogCommandHandler implements ICommandHandler {
     private UserDAO<UserData, String> usrDao;
-    private static final Logger logger = LogManager.getLogger(RegCommandHandler.class.getName());
-    public RegCommandHandler(UserDAO<UserData, String> usrDao) {
+    private static final Logger logger = LogManager.getLogger(LogCommandHandler.class.getName());
+    public LogCommandHandler(UserDAO<UserData, String> usrDao) {
         this.usrDao = usrDao;
     }
 
@@ -20,11 +20,10 @@ public class RegCommandHandler implements ICommandHandler {
         //иначе регистрируем пользователя
         UserData userData = command.getUserData();
         //если налл, то такого пользователя нет, регистрируемся
-        if (usrDao.read(userData.getLogin()).getUserId() == 0L) {
-            usrDao.create(userData);
-            return SpecialSignals.REG_TRUE;
+        if (authorization(command.getUserData(), usrDao) != 0) {
+            return SpecialSignals.AUTHORIZATION_TRUE;
         } else {
-            return SpecialSignals.REG_FALSE;
+            return SpecialSignals.AUTHORIZATION_FALSE;
         }
     }
 }

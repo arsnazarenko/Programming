@@ -36,6 +36,7 @@ public class Validator implements IValidator {
         commandProducers.put(show, new ShowCommandProd());
         commandProducers.put(update_id, new UpdateIdCommandProd(validateManager, objectCreator));
         commandProducers.put(reg, new RegCommandProd());
+        commandProducers.put(log, new LogCommandProd());
 
     }
 

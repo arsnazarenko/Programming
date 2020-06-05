@@ -25,6 +25,7 @@ public class ServerHandler implements Runnable, IService{
 
     public void start() {
         handlerThread = new Thread(this, "handler_thread");
+        handlerThread.setDaemon(true);
         handlerThread.start();
     }
 

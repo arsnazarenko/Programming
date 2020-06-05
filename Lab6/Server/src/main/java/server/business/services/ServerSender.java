@@ -27,6 +27,7 @@ public class ServerSender implements Runnable, IService {
 
     public void start() {
         senderThread = new Thread(this, "sender_thread");
+        senderThread.setDaemon(true);
         senderThread.start();
     }
 

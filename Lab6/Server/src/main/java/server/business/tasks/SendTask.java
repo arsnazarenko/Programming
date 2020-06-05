@@ -1,5 +1,6 @@
 package server.business.tasks;
 
+import library.clientCommands.SpecialSignals;
 import library.serialization.SerializationManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,9 +11,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-public class SendTask implements Runnable{
+public class SendTask implements Runnable {
     private DatagramSocket datagramSocket;
     private LetterInfo response;
+    private final byte[] errorMessage = "Сообщение превысело допустимый формат".getBytes();
 
     final static Logger logger = LogManager.getLogger();
 
@@ -26,8 +28,14 @@ public class SendTask implements Runnable{
         try {
             datagramSocket.send(new DatagramPacket(bytes, bytes.length, response.getRemoteAddress()));
             logger.info("SERVER SENT ANSWER TO " + response.getRemoteAddress() + "\n");
+
         } catch (IOException e) {
-            logger.error("ADDRESS ERROR", e);
+            logger.error("MESSAGE ERROR", e);
+            try {
+                datagramSocket.send(new DatagramPacket(errorMessage, errorMessage.length, response.getRemoteAddress()));
+            } catch (IOException ex) {
+                //nop
+            }
         }
     }
 

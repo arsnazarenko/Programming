@@ -54,7 +54,7 @@ public class UserDaoImpl implements UserDAO<UserData, String> {
             }
             return new UserInfo(bytes, userId);
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             logger.error("User read not completed");
             return new UserInfo(bytes, userId);
         }

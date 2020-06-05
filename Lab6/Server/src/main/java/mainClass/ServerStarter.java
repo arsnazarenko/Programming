@@ -10,10 +10,7 @@ import server.business.services.IService;
 import server.business.services.ServerHandler;
 import server.business.services.ServerReceiver;
 import server.business.services.ServerSender;
-
-import java.io.IOException;
 import java.net.*;
-
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -23,46 +20,32 @@ public class ServerStarter {
 
     private final static Logger logger = LogManager.getLogger(ServerStarter.class.getName());
 
-    public static void run(SocketAddress serverAddress, String host, String port, String dataBaseName, String user, String password) throws IOException, SQLException, ClassNotFoundException {
+    public static void run(SocketAddress serverAddress, String host, String port,
+                           String dataBaseName, String user, String password) throws SQLException, ClassNotFoundException, SocketException {
+
         DatabaseCreator.init(host, port, dataBaseName, user, password);
         ObjectDAO<Organization, Long> orgDao = new OrganizationDAO(DatabaseCreator.getConnection());
         UserDAO<UserData, String> userDAO = new UserDaoImpl(DatabaseCreator.getConnection());
         CollectionManager collectionManager = new CollectionManager();
         collectionManager.setOrgCollection(orgDao.readAll());
         IHandlersController handlersManager = new HandlersController(collectionManager, orgDao, userDAO);
-        Scanner scanner = new Scanner(System.in);
-
         Map<Class<?>, BlockingQueue<LetterInfo>> queues = new HashMap<>();
         queues.put(ServerHandler.class, new ArrayBlockingQueue<>(15));
         queues.put(ServerSender.class, new ArrayBlockingQueue<>(15));
 
-
         MessageSystem messageSystem = new MessageSystem(queues);
 
-        logger.info("SERVER STARTED: " + serverAddress);
-        try (DatagramSocket serverSocket = new DatagramSocket(serverAddress)) {
+        IService[] services = new IService[3];
+        ServerReceiver receiver = new ServerReceiver(messageSystem, 256 * 1024, DatabaseCreator.getConnection(), serverAddress);
+        DatagramSocket serverSocket = receiver.openConnection(); // открываем соединение, при ошибке сервер закроется
+        services[0] = receiver;
+        services[1] = new ServerHandler(handlersManager, messageSystem);
+        services[2] = new ServerSender(serverSocket, messageSystem);
 
-            IService[] services = new IService[3];
-
-            services[0] = new ServerReceiver(messageSystem, serverSocket, 12 * 1024);
-            services[1] = new ServerHandler(handlersManager, messageSystem);
-            services[2] = new ServerSender(serverSocket, messageSystem);
-
-            for (IService service : services) {
-                service.start();
-            }
-
-            while (true) {
-                if (scanner.nextLine().equals("stop")) {
-                    for (IService service : services) {
-                        service.stop();
-                    }
-                    DatabaseCreator.closeConnection();
-                    scanner.close();
-                    break;
-                }
-            }
+        for (IService service : services) {
+            service.start();
         }
+
     }
 
     public static void main(String[] args) {
@@ -88,15 +71,16 @@ public class ServerStarter {
             logger.info("Establish the correct database connection\nSAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password]");
         } catch (ClassNotFoundException e) {
             logger.error("DB driver Class load error");
-        } catch (IOException e) {
-            logger.error("SERVER STARTING ERROR");
-            logger.info("SAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password] ");
         } catch (NumberFormatException e) {
             logger.error("INVALID PORT SPECIFIED");
             logger.info("SAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password] ");
         } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
             logger.error("INVALID PARAMETERS");
             logger.info("SAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password] ");
+        } catch (SocketException e) {
+            logger.error("SERVER STARTING ERROR");
+            logger.info("SAMPLE: java -jar Server.jar [host] [port] [DB host] [DB port] [DB name] [DB user] [DB password] ");
+
         }
 
     }
