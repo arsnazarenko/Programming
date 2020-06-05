@@ -5,9 +5,7 @@ import library.clientCommands.Command;
 import library.clientCommands.NameOfCommands;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.ExitCommand;
-import sun.security.util.Password;
-
-import javax.naming.Name;
+import java.io.Console;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,13 +14,14 @@ import java.util.stream.Collectors;
  */
 public class Reader implements IReader {
     private IValidator validator;
+    private final Console console = System.console();
+    private final Map<String, NameOfCommands> workCommandsMap = Arrays.stream(NameOfCommands.values()).filter(o -> o != NameOfCommands.log || o != NameOfCommands.reg).collect(Collectors.toMap(NameOfCommands::name, o -> o));
+    private final Map<String, NameOfCommands> authorizationCommandMap;
 
     public Reader(IValidator validator) {
         this.validator = validator;
-    }
 
-    private final Map<String, NameOfCommands> workCommandsMap = Arrays.stream(NameOfCommands.values()).filter(o -> o != NameOfCommands.log || o != NameOfCommands.reg).collect(Collectors.toMap(NameOfCommands::name, o -> o));
-    private final Map<String, NameOfCommands> authorizationCommandMap;
+    }
 
     {
         authorizationCommandMap = new HashMap<>();
@@ -67,6 +66,7 @@ public class Reader implements IReader {
      */
     public Command readAuthorizationCommand(Scanner reader) {
         String str;
+        UserData userData = null;
         NameOfCommands command = null;
         while (true) {
             System.out.print("Введите команду для авторизации на сервере\nКоманда: " );
@@ -76,7 +76,11 @@ public class Reader implements IReader {
                 break;
             }
         }
-        UserData userData = authorization(reader);
+        if (console != null) {
+            userData = authorizationWithConsole(reader);
+        } else {
+            userData = authorization(reader);
+        }
         return validator.buildCommand(new CommandData(command, "", userData), reader);
     }
 
@@ -99,6 +103,29 @@ public class Reader implements IReader {
         }
         return commandQueue;
     }
+
+    private UserData authorizationWithConsole(Scanner reader) {
+        String login;
+        String password;
+        while (true) {
+            System.out.print("Введите логин: ");
+            login = console.readLine();
+            System.out.print("Введите пароль: ");
+            char[] passwordChars = console.readPassword();
+            password = new String(passwordChars);
+            /*
+            здесь мы только проверяем на пустую строку или строку только из проелов, но если введен хотя бы один символ с пробелом,
+            пароль является допустимым и отправляется серверу
+            */
+            if(login.trim().equals("") || password.trim().equals("")) {
+                System.out.println("Пароль и логин не могут быть пустой строкой");
+                continue;
+            }
+            return new UserData(login, password);
+        }
+    }
+
+
     private UserData authorization(Scanner reader) {
         String login;
         String password;
