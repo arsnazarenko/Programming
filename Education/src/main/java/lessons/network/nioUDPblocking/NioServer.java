@@ -1,4 +1,4 @@
-package lessons.network.nioUDP;
+package lessons.network.nioUDPblocking;
 
 import lessons.serialization.SerializationManager;
 

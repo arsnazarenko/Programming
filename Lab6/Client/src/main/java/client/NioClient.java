@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 
 public class NioClient {
     public static void main(String[] args) {
+        NonBlockingClient2 nonBlockingClient2 = null;
         try(DatagramChannel datagramChannel = DatagramChannel.open()) {
             int port = Integer.parseInt(args[1]);
             SocketAddress socketAddress = new InetSocketAddress(args[0], port);
@@ -24,7 +25,10 @@ public class NioClient {
             NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(256 * 1024),
                     socketAddress, IAnswerHandler);
 
-            nonBlockingClient.process(datagramChannel);
+            //nonBlockingClient.process(datagramChannel);
+            nonBlockingClient2 = new NonBlockingClient2(commandCreator, ByteBuffer.allocate(256 * 1024),
+                    socketAddress, IAnswerHandler);
+            nonBlockingClient2.process(datagramChannel);
 
         } catch (IOException e) {
             System.out.println("ОШИБКА ПОДКЛЮЧЕНИЯ К СЕРВЕРУ");

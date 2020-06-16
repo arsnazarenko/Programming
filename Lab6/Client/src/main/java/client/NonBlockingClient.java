@@ -43,7 +43,6 @@ public class NonBlockingClient {
      * @throws IOException - в случае ошибки подключения
      */
     public void process(DatagramChannel datagramChannel) throws IOException {
-        Scanner scanner = new Scanner(System.in);
         UserData userData = null;
         boolean auth = false;
         Selector selector = Selector.open();
