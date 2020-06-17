@@ -22,10 +22,10 @@ public class NioClient {
             ICommandCreator commandCreator = new CommandCreator(reader);
             datagramChannel.connect(socketAddress);
             datagramChannel.configureBlocking(false);
-            NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(256 * 1024),
-                    socketAddress, IAnswerHandler);
-
-            //nonBlockingClient.process(datagramChannel);
+//            NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(256 * 1024),
+//                    socketAddress, IAnswerHandler);
+//
+//            nonBlockingClient.process(datagramChannel);
             nonBlockingClient2 = new NonBlockingClient2(commandCreator, ByteBuffer.allocate(256 * 1024),
                     socketAddress, IAnswerHandler);
             nonBlockingClient2.process(datagramChannel);

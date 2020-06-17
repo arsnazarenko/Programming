@@ -15,9 +15,9 @@ public class ExitCommandHandler implements ICommandHandler {
 
     @Override
 
-    public SpecialSignals processCommand(Command command) {
+    public Object processCommand(Command command) {
         if (authorization(command.getUserData(), usrDao) != 0L) {
-            return SpecialSignals.EXIT_TRUE;
+            return "Завершение";
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
     }

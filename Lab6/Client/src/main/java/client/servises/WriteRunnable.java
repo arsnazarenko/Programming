@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 public class WriteRunnable implements Runnable {
     private volatile UserData sessionUser;
     private final ICommandCreator commandCreator;
-    private final Queue<List<Command>> changeRequest;
+    private final Queue<Command> changeRequest;
     private final Selector selector;
+    private final Queue<Command> queue = new LinkedList<>();
 
 
-    public WriteRunnable(ICommandCreator commandCreator, Queue<List<Command>> changeRequest, Selector selector) {
+    public WriteRunnable(ICommandCreator commandCreator, Queue<Command> changeRequest, Selector selector) {
         this.commandCreator = commandCreator;
         this.changeRequest = changeRequest;
         this.selector = selector;
@@ -34,30 +35,43 @@ public class WriteRunnable implements Runnable {
     }
 
     public void process() {
-        while (true) {
-            Command command;
-            List<Command> newCommands = null;
+        while (!Thread.currentThread().isInterrupted()) {
+            Command command = null;
             if (sessionUser == null) {
                 command = commandCreator.authorization(System.in);
-                newCommands = new ArrayList<>(1);
-                newCommands.add(command);
             } else {
-                command = commandCreator.createCommand(System.in, sessionUser);
-                if (command instanceof ExecuteScriptCommand) {
-                    newCommands = recursiveCreatingScript(scriptRun(command));
-//                } else if (command instanceof ExitCommand) {
-//                    System.exit(0);
+                if (!queue.isEmpty()) {
+                    System.out.println(queue);
+                    command = queue.poll();
                 } else {
-                    newCommands = new ArrayList<>(1);
-                    newCommands.add(command);
+                    command = commandCreator.createCommand(System.in, sessionUser);
+                    if (command.getClass() == ExecuteScriptCommand.class) {
+                        queue.addAll(recursiveCreatingScript(scriptRun(command)));
+                    } else if (command.getClass() == ExitCommand.class) {
+                        System.exit(0);
+                    }
+                }
+
+            }
+            if (command != null) {
+                synchronized (changeRequest) {
+                    changeRequest.offer(command); // request to server
+                    selector.wakeup();  // selector wakeUp for writing
+                    try {
+                        changeRequest.wait(); //sleep until getting response
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
-            synchronized (changeRequest) {
-                if (newCommands != null)
-                    changeRequest.offer(newCommands);
-            }
-            selector.wakeup();
         }
+    }
+
+
+    public void stop() {
+        Thread.currentThread().interrupt();
     }
 
     private Queue<Command> scriptRun(Command command) {
@@ -87,10 +101,15 @@ public class WriteRunnable implements Runnable {
                 if (command.getClass() == ExecuteScriptCommand.class) {
                     Queue<Command> newCommandQueue = scriptRun(command);
                     newCommandQueue.addAll(commandQueue);
+                    commandQueue = newCommandQueue;
                 }
             }
         }
+
         return newCommands;
     }
 
+    public void setSessionUser(UserData sessionUser) {
+        this.sessionUser = sessionUser;
+    }
 }

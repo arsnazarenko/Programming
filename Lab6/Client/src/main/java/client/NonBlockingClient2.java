@@ -19,38 +19,36 @@ import java.nio.channels.Selector;
 import java.util.*;
 
 public class NonBlockingClient2 {
-    UserData sessionUser = null;
-    UserData user = null;
     private ICommandCreator commandCreator;
     private ByteBuffer buffer;
     private SocketAddress address;
-    private client.servises.IAnswerHandler IAnswerHandler;
-    private final Deque<List<Command>> changeRequest = new LinkedList<>();
+    private IAnswerHandler answerHandler;
+    private final Deque<Command> changeRequest = new ArrayDeque<>();
     private Thread writeUserThread;
+    private UserData sessionUser = null;
 
     public NonBlockingClient2(ICommandCreator commandCreator, ByteBuffer buffer,
-                             SocketAddress address, IAnswerHandler IAnswerHandler) {
+                              SocketAddress address, IAnswerHandler answerHandler) {
         this.commandCreator = commandCreator;
         this.buffer = buffer;
         this.address = address;
-        this.IAnswerHandler = IAnswerHandler;
+        this.answerHandler = answerHandler;
     }
 
     /**
-     *
      * @param datagramChannel - канал
      * @throws IOException - в случае ошибки подключения
      */
     public void process(DatagramChannel datagramChannel) throws IOException {
-
         Selector selector = Selector.open();
         datagramChannel.register(selector, SelectionKey.OP_READ);
-        writeUserThread = new Thread(new WriteRunnable(commandCreator, changeRequest, selector));
+        WriteRunnable writeRunnable = new WriteRunnable(commandCreator, changeRequest, selector);
+        writeUserThread = new Thread(writeRunnable);
         writeUserThread.setDaemon(true);
         writeUserThread.start();
         while (true) {
             synchronized (changeRequest) {
-                if(!changeRequest.isEmpty()) {
+                if (!changeRequest.isEmpty()) {
                     SelectionKey key = datagramChannel.keyFor(selector);
                     key.interestOps(SelectionKey.OP_WRITE);
                 }
@@ -65,16 +63,16 @@ public class NonBlockingClient2 {
                 }
                 if (selectionKey.isReadable()) {
                     Object response = read(selectionKey, buffer);
-                    IAnswerHandler.handling(response);
-                    if(response instanceof SpecialSignals) {
+                    answerHandler.handling(response); // getting response
+                    if (response instanceof SpecialSignals) {
                         SpecialSignals ss = (SpecialSignals) response;
                         if (ss == SpecialSignals.AUTHORIZATION_TRUE || ss == SpecialSignals.REG_TRUE) {
-                            sessionUser = user;
-                        } else if(ss == SpecialSignals.EXIT_TRUE) {
-                            System.exit(0);
+                            writeRunnable.setSessionUser(sessionUser);
                         }
                     }
-
+                    synchronized (changeRequest) {
+                        changeRequest.notify();
+                    }
                 } else if (selectionKey.isWritable()) {
                     write(selectionKey);
 
@@ -93,19 +91,19 @@ public class NonBlockingClient2 {
     }
 
     private void write(SelectionKey selectionKey) throws IOException {
+        Command command;
         synchronized (changeRequest) {
-            List<Command> commands = changeRequest.pollFirst();
-            for(Command c : commands) {
-                if (c.getClass() == LogCommand.class || c.getClass() == RegCommand.class) {
-                    user = c.getUserData();
-                }
-                ByteBuffer answer = ByteBuffer.wrap(SerializationManager.objectSerial(c));
-                DatagramChannel datagramChannel = (DatagramChannel) selectionKey.channel();
-                datagramChannel.send(answer, address);
-            }
-            selectionKey.interestOps(SelectionKey.OP_READ);
+            command = changeRequest.pollFirst();
         }
+        if (command.getClass() == LogCommand.class || command.getClass() == RegCommand.class) {
+            sessionUser = command.getUserData();
+        }
+        ByteBuffer answer = ByteBuffer.wrap(SerializationManager.objectSerial(command));
+        DatagramChannel datagramChannel = (DatagramChannel) selectionKey.channel();
+        datagramChannel.send(answer, address);
+        selectionKey.interestOps(SelectionKey.OP_READ);
 
     }
+
 
 }

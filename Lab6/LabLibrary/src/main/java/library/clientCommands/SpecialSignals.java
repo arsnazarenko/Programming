@@ -6,7 +6,8 @@ public enum SpecialSignals {
     SCRIPT_TRUE("Выполнение скрипта"),
     AUTHORIZATION_TRUE("Пользователь авторизован"),
     REG_TRUE("Пользователь зарегетстрирован"),
-    REG_FALSE("Пользователь с таким логином уже есть");
+    REG_FALSE("Пользователь с таким логином уже есть"),
+    SERVER_DIED("Ошибка работы сервера");
 
     private String msg;
 
