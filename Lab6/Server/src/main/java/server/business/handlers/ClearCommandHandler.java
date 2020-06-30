@@ -8,6 +8,8 @@ import server.business.CollectionManager;
 import server.business.dao.ObjectDAO;
 import server.business.dao.UserDAO;
 
+import java.util.AbstractMap;
+import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,12 +37,10 @@ public class ClearCommandHandler implements ICommandHandler {
 
                         //удаляем в коллекции
                         collectionManager.getOrgCollection().removeIf(o -> usersOrgId.contains(o.getId()));
-                        return "Объекты удалены";
-
                     }
                 }
             }
-            return "Объектов не найдено";
+            return collectionManager.getOrgCollection();
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
 

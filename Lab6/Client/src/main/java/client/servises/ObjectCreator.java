@@ -3,7 +3,6 @@ package client.servises;
 
 
 import library.сlassModel.*;
-
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
@@ -12,6 +11,12 @@ import java.util.Scanner;
  * Класс порождающий объект объект.
  */
 public class ObjectCreator implements IObjectCreator {
+
+    private ObjectDataValidator validator;
+
+    public ObjectCreator(ObjectDataValidator validator) {
+        this.validator = validator;
+    }
 
     /**
      * Метод для инициализации поля name {@link ObjectCreator#setName(Scanner)}
@@ -22,17 +27,16 @@ public class ObjectCreator implements IObjectCreator {
         while (true) {
             System.out.print("name: ");
             str = rd.nextLine();
-            if (str != null) {
-                if (!str.trim().equals("")) {
-
-                    System.out.println();
-                    return str;
-                }
+            if (validator.stringFieldValidate(str)) {
+                System.out.println();
+                return str;
             }
             System.out.println("Неверный формат");
         }
 
     }
+
+
 
     /**
      * Метод для инициализации поля coordinates {@link ObjectCreator#setCoordinates(Scanner)}
@@ -52,23 +56,17 @@ public class ObjectCreator implements IObjectCreator {
      */
     private double setX(Scanner rd) {
         Double res = null;
-        boolean flag;
         String line = null;
         while (true) {
-            flag = true;
             System.out.print("x: ");
-            try {
-                line = rd.nextLine();
+            line = rd.nextLine();
+            if(validator.coordsXValidate(line)) {
                 res = Double.parseDouble(line);
-            } catch (NumberFormatException e) {
-                flag = false;
-            }
-            if (flag == true && res > -98) {
-
                 System.out.println();
                 return res;
             }
             System.out.println("Неверный формат");
+
         }
 
     }
@@ -79,20 +77,12 @@ public class ObjectCreator implements IObjectCreator {
      */
     private float setY(Scanner rd) {
         Float res = null;
-        boolean flag;
         String line = null;
         while (true) {
-            flag = true;
             System.out.print("y: ");
-            try {
-                line = rd.nextLine();
+            line = rd.nextLine();
+            if(validator.coordsYValidate(line)) {
                 res = Float.parseFloat(line);
-            } catch (NumberFormatException e) {
-                flag = false;
-            }
-
-            if (flag && res > -148) {
-
                 System.out.println();
                 return res;
             }
@@ -106,26 +96,16 @@ public class ObjectCreator implements IObjectCreator {
      */
     private Double setAnnualTurnover(Scanner rd) {
         Double res = null;
-        boolean flag;
         String line = null;
         while (true) {
-            flag = true;
             System.out.print("annualTurnover: ");
-            try {
-                line = rd.nextLine();
-                res = Double.parseDouble(line);
-            } catch (NumberFormatException e) {
+            line = rd.nextLine();
+            if(validator.annualTurnoverValidate(line)) {
+                System.out.println();
                 if (line.equals("")) {
-                    System.out.println();
                     return res;
                 }
-                flag = false;
-            }
-
-            if (flag && res > 0) {
-
-                System.out.println();
-                return res;
+                return Double.parseDouble(line);
             }
             System.out.println("Неверный формат");
         }
@@ -137,18 +117,12 @@ public class ObjectCreator implements IObjectCreator {
      */
     private Integer setEmployeesCount(Scanner rd) {
         Integer res = null;
-        boolean flag;
         String line = null;
         while (true) {
-            flag = true;
             System.out.print("employeesCount: ");
-            try {
-                line = rd.nextLine();
+            line = rd.nextLine();
+            if(validator.employeesCountValidate(line)) {
                 res = Integer.parseInt(line);
-            } catch (NumberFormatException e) {
-                flag = false;
-            }
-            if (flag && res > 0) {
                 System.out.println();
                 return res;
             }
@@ -162,19 +136,12 @@ public class ObjectCreator implements IObjectCreator {
      */
     private OrganizationType setOrganizationType(Scanner rd) {
         OrganizationType res = null;
-        boolean flag;
         String line = null;
         while (true) {
-            flag = true;
             System.out.print("type " + Arrays.asList(OrganizationType.values()) + " : ");
-            try {
-                line = rd.nextLine();
+            line = rd.nextLine();
+            if(validator.organizationTypeValidate(line)) {
                 res = OrganizationType.valueOf(line);
-            } catch (IllegalArgumentException e) {
-                flag = false;
-            }
-
-            if (flag) {
                 System.out.println();
                 return res;
             }
@@ -209,19 +176,15 @@ public class ObjectCreator implements IObjectCreator {
      * @return возвращает значение типа String
      */
     private String setStreet(Scanner rd) {
-        String res = null;
+        String str = null;
         while (true) {
             System.out.print("street: ");
-            res = rd.nextLine();
-            if (res == null) {
-                return res;
-            } else if (res.equals("")) {
+            str = rd.nextLine();
+            if (validator.stringFieldValidate(str)) {
                 System.out.println();
-                return res;
-            } else {
-                System.out.println();
-                return res;
+                return str;
             }
+            System.out.println("Неверный формат");
         }
     }
 
@@ -230,20 +193,13 @@ public class ObjectCreator implements IObjectCreator {
      * @return возвращает значение типа String
      */
     private String setZipCode(Scanner rd) {
-        String res = null;
-        boolean flag;
+        String str = null;
         while (true) {
             System.out.print("zipCode: ");
-            res = rd.nextLine();
-            if (res == null) {
-                return res;
-            } else if (res.equals("")) {
+            str = rd.nextLine();
+            if (validator.zipCodeValidate(str)) {
                 System.out.println();
-                return res;
-            } else if (res.length() >= 7) {
-
-                System.out.println();
-                return res;
+                return str;
             }
             System.out.println("Неверный формат");
         }
@@ -278,19 +234,13 @@ public class ObjectCreator implements IObjectCreator {
      */
     private Long setLocationX(Scanner rd) {
         Long res = null;
-        boolean flag;
         String line = null;
         while (true) {
-            flag = true;
             System.out.print("x: ");
-            try {
-                line = rd.nextLine();
-                res = Long.parseLong(line);
-            } catch (NumberFormatException e) {
-                flag = false;
-            }
-            if (flag) {
+            line = rd.nextLine();
+            if(validator.locationXValidate(line)) {
                 System.out.println();
+                res = Long.parseLong(line);
                 return res;
             }
             System.out.println("Неверный формат");
@@ -303,18 +253,12 @@ public class ObjectCreator implements IObjectCreator {
      */
     private Double setLocationY(Scanner rd) {
         Double res = null;
-        boolean flag;
         String line = null;
         while (true) {
-            flag = true;
             System.out.print("y: ");
-            try {
-                line = rd.nextLine();
+            line = rd.nextLine();
+            if(validator.locationYValidate(line)) {
                 res = Double.parseDouble(line);
-            } catch (NumberFormatException e) {
-                flag = false;
-            }
-            if (flag) {
                 System.out.println();
                 return res;
             }
@@ -327,20 +271,13 @@ public class ObjectCreator implements IObjectCreator {
      * @return возвращает значени типа double
      */
     private double setLocationZ(Scanner rd) {
-        Double res = null;
-        boolean flag;
+        double res;
         String line = null;
         while (true) {
-            flag = true;
             System.out.print("z: ");
-            try {
-                line = rd.nextLine();
+            line = rd.nextLine();
+            if(validator.locationZValidate(line)) {
                 res = Double.parseDouble(line);
-            } catch (NumberFormatException e) {
-                flag = false;
-            }
-
-            if (flag) {
                 System.out.println();
                 return res;
             }
@@ -359,11 +296,9 @@ public class ObjectCreator implements IObjectCreator {
             flag = true;
             System.out.print("name: ");
             str = rd.nextLine();
-            if (str != null) {
-                if (!str.trim().equals("")) {
-                    System.out.println();
-                    return str;
-                }
+            if (validator.stringFieldValidate(str)) {
+                System.out.println();
+                return str;
             }
             System.out.println("Неверный формат");
         }
@@ -388,6 +323,9 @@ public class ObjectCreator implements IObjectCreator {
         return new Organization(userName, id, name, coordinates, creationDate, employeesCount,
                 type, annualTurnover, officialAddress);
     }
+
+
+
 
 
 }

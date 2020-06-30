@@ -30,44 +30,54 @@ public class WriteRunnable implements Runnable {
 
     @Override
     public void run() {
-        process();
-
+        try {
+            process();
+        } catch (NoSuchElementException e) {
+            System.out.println("ЭКСТРЕННОЕ ЗАВЕРШЕНИЕ");
+            System.exit(0);
+        }
     }
 
+
     public void process() {
-        while (!Thread.currentThread().isInterrupted()) {
-            Command command = null;
-            if (sessionUser == null) {
-                command = commandCreator.authorization(System.in);
-            } else {
-                if (!queue.isEmpty()) {
-                    System.out.println(queue);
-                    command = queue.poll();
-                } else {
-                    command = commandCreator.createCommand(System.in, sessionUser);
-                    if (command.getClass() == ExecuteScriptCommand.class) {
-                        queue.addAll(recursiveCreatingScript(scriptRun(command)));
-                    } else if (command.getClass() == ExitCommand.class) {
-                        System.exit(0);
-                    }
-                }
+        System.out.println(
+        "Добро пожаловать!\n\n"  +
+                "Используйте команды log или reg для входа\nПри успешной авторизации введите help для справки по командам\n\n");
+        while (sessionUser == null) {
+            Command command;
+            command = commandCreator.authorization(System.in);
+            changeRequest.offer(command);// request to server
+            synchronized (changeRequest) {
+                selector.wakeup();//selector wakeUp for writing
+                try {
 
-            }
-            if (command != null) {
-                synchronized (changeRequest) {
-                    changeRequest.offer(command); // request to server
-                    selector.wakeup();  // selector wakeUp for writing
-                    try {
-                        changeRequest.wait(); //sleep until getting response
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-
+                    changeRequest.wait();   //sleep until getting response about login
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
+        while (!Thread.currentThread().isInterrupted()) {
+            Command command = null;
+            if (!queue.isEmpty()) {
+                command = queue.poll();
+            } else {
+                command = commandCreator.createCommand(System.in, sessionUser);
+                if (command.getClass() == ExecuteScriptCommand.class) {
+                    queue.addAll(recursiveCreatingScript(scriptRun(command)));
+                } else if (command.getClass() == ExitCommand.class) {
+                    System.exit(0);
+                }
+            }
+        if (command != null) {
+            synchronized (changeRequest) {
+                changeRequest.offer(command); // request to server
+                selector.wakeup();
+            }
+        }
     }
+
+}
 
 
     public void stop() {

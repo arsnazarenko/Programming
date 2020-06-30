@@ -1,21 +1,21 @@
 package client.commandProducers;
 
-import client.servises.ValidateManager;
+import client.servises.ArgumentValidateManager;
 import library.clientCommands.Command;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.FilterContainsNameCommand;
 
 public class FilterContainsNameProd implements StandardCommandProducer, ArgumentProperties{
     private String name = null;
-    private ValidateManager validateManager;
+    private ArgumentValidateManager argumentValidateManager;
 
-    public FilterContainsNameProd(ValidateManager validateManager) {
-        this.validateManager = validateManager;
+    public FilterContainsNameProd(ArgumentValidateManager argumentValidateManager) {
+        this.argumentValidateManager = argumentValidateManager;
     }
 
     @Override
     public void setArgument(String parameter) {
-        this.name = validateManager.nameValid(parameter);
+        this.name = argumentValidateManager.subStringIsValid(parameter);
     }
 
     @Override

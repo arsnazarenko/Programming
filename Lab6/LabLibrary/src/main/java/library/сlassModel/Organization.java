@@ -1,6 +1,5 @@
 package library.сlassModel;
 
-import javax.xml.bind.annotation.XmlElement;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;

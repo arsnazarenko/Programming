@@ -10,30 +10,29 @@ import java.util.NoSuchElementException;
 
 public class NioClient {
     public static void main(String[] args) {
-        NonBlockingClient2 nonBlockingClient2 = null;
         try(DatagramChannel datagramChannel = DatagramChannel.open()) {
+            NonBlockingClient2 nonBlockingClient2 = null;
             int port = Integer.parseInt(args[1]);
             SocketAddress socketAddress = new InetSocketAddress(args[0], port);
-            IObjectCreator objectCreator = new ObjectCreator();
-            ValidateManager validateManager = new ValidateManager();
-            IValidator validator = new Validator(objectCreator, validateManager);
+            ObjectDataValidator objectDataValidator = new ObjectDataValidator();
+            IObjectCreator objectCreator = new ObjectCreator(objectDataValidator);
+            ArgumentValidateManager argumentValidateManager = new ArgumentValidateManager();
+            ICommandProducerManager validator = new CommandProduceManager(objectCreator, argumentValidateManager);
             IReader reader = new Reader(validator);
-            IAnswerHandler IAnswerHandler = new AnswerHandler();
+            IAnswerHandler answerHandler = new AnswerHandler();
             ICommandCreator commandCreator = new CommandCreator(reader);
             datagramChannel.connect(socketAddress);
             datagramChannel.configureBlocking(false);
-//            NonBlockingClient nonBlockingClient = new NonBlockingClient(commandCreator, ByteBuffer.allocate(256 * 1024),
-//                    socketAddress, IAnswerHandler);
-//
-//            nonBlockingClient.process(datagramChannel);
             nonBlockingClient2 = new NonBlockingClient2(commandCreator, ByteBuffer.allocate(256 * 1024),
-                    socketAddress, IAnswerHandler);
+                    socketAddress, answerHandler);
             nonBlockingClient2.process(datagramChannel);
 
         } catch (IOException e) {
             System.out.println("ОШИБКА ПОДКЛЮЧЕНИЯ К СЕРВЕРУ");
+            System.exit(0);
         } catch (NoSuchElementException e) {
             System.out.println("ЭКСТРЕННОЕ ЗАВЕРШЕНИЕ");
+            System.exit(0);
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("УКАЖИТЕ ХОСТ И ПОРТ СЕРВЕРА\nSAMPLE: java -jar Client.jar [hostname] [port]");
         } catch (NumberFormatException e) {

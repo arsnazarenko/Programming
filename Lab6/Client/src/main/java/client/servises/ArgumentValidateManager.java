@@ -1,6 +1,6 @@
 package client.servises;
 
-public class ValidateManager {
+public class ArgumentValidateManager {
 
     public Long idValid(String param) {
         Long result = null;
@@ -12,7 +12,7 @@ public class ValidateManager {
         return result;
     }
 
-    public String nameValid(String param) {
+    public String subStringIsValid(String param) {
         String result = null;
         if (param.trim().equals("")) {
             System.out.println("НЕВЕРНАЯ ПОДСТРОКА");

@@ -10,8 +10,10 @@ import server.business.CollectionManager;
 import server.business.dao.ObjectDAO;
 import server.business.dao.UserDAO;
 
+import java.util.AbstractMap;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Deque;
 
 public class AddIfMinCommandHandler implements ICommandHandler {
 
@@ -46,12 +48,11 @@ public class AddIfMinCommandHandler implements ICommandHandler {
                         organization.setUserLogin(userData.getLogin());
                         organization.setId(objectId);
                         collectionManager.getOrgCollection().addLast(organization);
-                        return "Объект добавлен";
 
                     }
                 }
             }
-            return "Объект не добавлен";
+            return collectionManager.getOrgCollection();
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
 

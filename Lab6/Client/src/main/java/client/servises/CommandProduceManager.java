@@ -14,27 +14,27 @@ import static library.clientCommands.NameOfCommands.*;
 /**
  * Класс, отвечающий за валидацию данных и создания объекта команды для запроса серверу
  *
- * @see Validator
+ * @see CommandProduceManager
  */
-public class Validator implements IValidator {
+public class CommandProduceManager implements ICommandProducerManager {
     private Map<NameOfCommands, StandardCommandProducer> commandProducers = new EnumMap<>(NameOfCommands.class);
 
-    public Validator(IObjectCreator objectCreator, ValidateManager validateManager) {
+    public CommandProduceManager(IObjectCreator objectCreator, ArgumentValidateManager argumentValidateManager) {
         commandProducers.put(add, new AddCommandProd(objectCreator));
         commandProducers.put(add_if_min, new AddIfMinCommandProd(objectCreator));
         commandProducers.put(clear, new ClearCommandProd());
         commandProducers.put(execute_script, new ExecuteScriptCommandProd());
         commandProducers.put(exit, new ExitCommandProd());
-        commandProducers.put(filter_contains_name, new FilterContainsNameProd(validateManager));
+        commandProducers.put(filter_contains_name, new FilterContainsNameProd(argumentValidateManager));
         commandProducers.put(head, new HeadCommandProd());
         commandProducers.put(help, new HelpCommandProd());
         commandProducers.put(info, new InfoCommandProd());
         commandProducers.put(max_by_employees_count, new MaxByEmployeesCommandProd());
         commandProducers.put(print_ascending, new PrintAscendingCommandProd());
-        commandProducers.put(remove_by_id, new RemoveByIdCommandProd(validateManager));
+        commandProducers.put(remove_by_id, new RemoveByIdCommandProd(argumentValidateManager));
         commandProducers.put(remove_lower, new RemoveLowerCommandProd(objectCreator));
         commandProducers.put(show, new ShowCommandProd());
-        commandProducers.put(update_id, new UpdateIdCommandProd(validateManager, objectCreator));
+        commandProducers.put(update_id, new UpdateIdCommandProd(argumentValidateManager, objectCreator));
         commandProducers.put(reg, new RegCommandProd());
         commandProducers.put(log, new LogCommandProd());
 

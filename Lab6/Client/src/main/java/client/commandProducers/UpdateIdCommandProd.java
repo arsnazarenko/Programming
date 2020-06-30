@@ -1,8 +1,7 @@
 package client.commandProducers;
 
 import client.servises.IObjectCreator;
-import client.servises.ObjectCreator;
-import client.servises.ValidateManager;
+import client.servises.ArgumentValidateManager;
 import library.clientCommands.Command;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.UpdateIdCommand;
@@ -10,19 +9,19 @@ import library.clientCommands.commandType.UpdateIdCommand;
 import java.util.Scanner;
 
 public class UpdateIdCommandProd implements ScanProperties, ArgumentProperties {
-    private ValidateManager validateManager;
+    private ArgumentValidateManager argumentValidateManager;
     private IObjectCreator objectCreator;
     private Long id = null;
     private Scanner scanner;
 
-    public UpdateIdCommandProd(ValidateManager validateManager, IObjectCreator objectCreator) {
-        this.validateManager = validateManager;
+    public UpdateIdCommandProd(ArgumentValidateManager argumentValidateManager, IObjectCreator objectCreator) {
+        this.argumentValidateManager = argumentValidateManager;
         this.objectCreator = objectCreator;
     }
 
     @Override
     public void setArgument(String parameter) {
-        this.id = validateManager.idValid(parameter);
+        this.id = argumentValidateManager.idValid(parameter);
     }
 
     @Override

@@ -1,21 +1,21 @@
 package client.commandProducers;
 
-import client.servises.ValidateManager;
+import client.servises.ArgumentValidateManager;
 import library.clientCommands.Command;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.RemoveIdCommand;
 
 public class RemoveByIdCommandProd implements StandardCommandProducer, ArgumentProperties {
-    private ValidateManager validateManager;
+    private ArgumentValidateManager argumentValidateManager;
     private Long id = null;
 
-    public RemoveByIdCommandProd(ValidateManager validateManager) {
-        this.validateManager = validateManager;
+    public RemoveByIdCommandProd(ArgumentValidateManager argumentValidateManager) {
+        this.argumentValidateManager = argumentValidateManager;
     }
 
     @Override
     public void setArgument(String parameter) {
-        this.id = validateManager.idValid(parameter);
+        this.id = argumentValidateManager.idValid(parameter);
     }
 
     @Override

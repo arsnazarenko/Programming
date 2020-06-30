@@ -50,13 +50,13 @@ public class ServerReceiver implements Runnable, IService {
                 byte[] buffer = new byte[length];
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, buffer.length);
                 datagramSocket.receive(datagramPacket);
-                if (!connection.isValid(0)) {
-                    //отослать сигнал завершения клиенту
+                if (!connection.isValid(1)) {
+                    //отослать сигнал неисправости клиенту
                     messageSystem.putInQueues(ServerHandler.class, new LetterInfo(datagramPacket.getSocketAddress(), SpecialSignals.SERVER_DIED));
                     logger.info("NO CONNECTION WITH DATABASE");
-                    System.exit(0);
                 } else {
                     SocketAddress remoteAddress = datagramPacket.getSocketAddress();
+                    messageSystem.addNewClient(remoteAddress);
                     byte[] bytes = datagramPacket.getData();
                     messageSystem.putInQueues(ServerReceiver.class, new LetterInfo(remoteAddress,
                             SerializationManager.objectDeserial(bytes)));

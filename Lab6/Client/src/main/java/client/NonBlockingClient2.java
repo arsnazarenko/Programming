@@ -3,13 +3,18 @@ package client;
 import client.servises.IAnswerHandler;
 import client.servises.ICommandCreator;
 import client.servises.WriteRunnable;
+import frontend.mvc.ObjectsMapController;
+import frontend.mvc.ObjectsMapModel;
+import frontend.mvc.ObjectsMapView;
 import library.clientCommands.Command;
 import library.clientCommands.SpecialSignals;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.LogCommand;
 import library.clientCommands.commandType.RegCommand;
 import library.serialization.SerializationManager;
+import library.сlassModel.Organization;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -17,6 +22,7 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NonBlockingClient2 {
     private ICommandCreator commandCreator;
@@ -26,6 +32,7 @@ public class NonBlockingClient2 {
     private final Deque<Command> changeRequest = new ArrayDeque<>();
     private Thread writeUserThread;
     private UserData sessionUser = null;
+    private ObjectsMapController controller;
 
     public NonBlockingClient2(ICommandCreator commandCreator, ByteBuffer buffer,
                               SocketAddress address, IAnswerHandler answerHandler) {
@@ -40,11 +47,14 @@ public class NonBlockingClient2 {
      * @throws IOException - в случае ошибки подключения
      */
     public void process(DatagramChannel datagramChannel) throws IOException {
+        ObjectsMapModel model = new ObjectsMapModel(new ArrayDeque<>());
+
+        SwingUtilities.invokeLater(() -> this.controller = new ObjectsMapController
+                (new ObjectsMapView(model.getOrganizationsCoordinateInfo(), model.getCellSize(), model.getCellCount()), model));
         Selector selector = Selector.open();
         datagramChannel.register(selector, SelectionKey.OP_READ);
         WriteRunnable writeRunnable = new WriteRunnable(commandCreator, changeRequest, selector);
         writeUserThread = new Thread(writeRunnable);
-        writeUserThread.setDaemon(true);
         writeUserThread.start();
         while (true) {
             synchronized (changeRequest) {
@@ -63,16 +73,8 @@ public class NonBlockingClient2 {
                 }
                 if (selectionKey.isReadable()) {
                     Object response = read(selectionKey, buffer);
-                    answerHandler.handling(response); // getting response
-                    if (response instanceof SpecialSignals) {
-                        SpecialSignals ss = (SpecialSignals) response;
-                        if (ss == SpecialSignals.AUTHORIZATION_TRUE || ss == SpecialSignals.REG_TRUE) {
-                            writeRunnable.setSessionUser(sessionUser);
-                        }
-                    }
-                    synchronized (changeRequest) {
-                        changeRequest.notify();
-                    }
+                    answerHandler.writeToConsole(response); // getting response
+                    responseHandle(writeRunnable, response);
                 } else if (selectionKey.isWritable()) {
                     write(selectionKey);
 
@@ -80,6 +82,26 @@ public class NonBlockingClient2 {
             }
         }
 
+    }
+
+    private void responseHandle(WriteRunnable writeRunnable, Object response) {
+        if (response instanceof SpecialSignals) {
+            SpecialSignals ss = (SpecialSignals) response;
+            if (ss == SpecialSignals.AUTHORIZATION_TRUE || ss == SpecialSignals.REG_TRUE) {
+                writeRunnable.setSessionUser(sessionUser);
+                synchronized (changeRequest) {
+                    changeRequest.notify();
+                }
+            } else if(ss == SpecialSignals.AUTHORIZATION_FALSE || ss == SpecialSignals.REG_FALSE) {
+                synchronized (changeRequest) {
+                    changeRequest.notify();
+                }
+            }
+        } else if (response.getClass() == ArrayDeque.class) {
+                Deque<Organization> mapObjects = ((Deque<?>) response).stream().map(o -> (Organization) o).collect(Collectors.toCollection(ArrayDeque::new));
+                SwingUtilities.invokeLater(() -> controller.updateObjectsMapView(mapObjects));
+
+        }
     }
 
 

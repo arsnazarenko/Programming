@@ -1,5 +1,9 @@
 package library.clientCommands;
 
+import library.сlassModel.Organization;
+
+import java.util.Deque;
+
 public enum SpecialSignals {
     EXIT_TRUE("Завершение"),
     AUTHORIZATION_FALSE("Вы не авторизованы"),

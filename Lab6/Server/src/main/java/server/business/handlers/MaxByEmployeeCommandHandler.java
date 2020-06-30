@@ -23,12 +23,17 @@ public class MaxByEmployeeCommandHandler implements ICommandHandler {
     @Override
     public Object processCommand(Command command) {
         if (authorization(command.getUserData(), usrDao) != 0L) {
+            Organization organization = null;
             synchronized (collectionManager) {
-                return collectionManager.getOrgCollection().
+                organization = collectionManager.getOrgCollection().
                         stream().
                         max(Comparator.comparing(Organization::getCreationDate)).
                         orElse(null);
             }
+            if(organization != null) {
+                return organization;
+            }
+            return "Объектов не найдено";
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
 

@@ -3,15 +3,5 @@ head
 show
 print_ascending
 execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
-execute_script script3.txt
+
 exit

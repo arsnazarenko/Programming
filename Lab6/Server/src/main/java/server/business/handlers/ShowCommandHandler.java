@@ -26,10 +26,9 @@ public class ShowCommandHandler implements ICommandHandler {
     public Object processCommand(Command command) {
         if (authorization(command.getUserData(), usrDao) != 0L) {
             synchronized (collectionManager) {
-                return collectionManager.getOrgCollection().isEmpty() ? null : collectionManager.getOrgCollection();
+                return collectionManager.getOrgCollection();
             }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
-
     }
 }

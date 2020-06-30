@@ -1,6 +1,6 @@
 package library.сlassModel;
 
-import javax.xml.bind.annotation.XmlElement;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -41,24 +41,23 @@ public class Location implements Serializable {
     public Location() {
     }
 
-    ;
 
-    @XmlElement
+
     public void setX(Long x) {
         this.x = x;
     }
 
-    @XmlElement
+
     public void setY(Double y) {
         this.y = y;
     }
 
-    @XmlElement
+
     public void setZ(double z) {
         this.z = z;
     }
 
-    @XmlElement
+
     public void setName(String name) {
         this.name = name;
     }

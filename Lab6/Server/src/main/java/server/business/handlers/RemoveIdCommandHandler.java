@@ -10,10 +10,7 @@ import server.business.CollectionManager;
 import server.business.dao.ObjectDAO;
 import server.business.dao.UserDAO;
 
-import java.util.ArrayDeque;
-import java.util.Date;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RemoveIdCommandHandler implements ICommandHandler {
@@ -41,12 +38,10 @@ public class RemoveIdCommandHandler implements ICommandHandler {
                     //если удаление из базы прошло успешно, обновляем коллекцию
                     if (orgDao.delete(orgId) != 0) {
                         collectionManager.getOrgCollection().removeIf(o -> o.getId().equals(orgId));
-                        return "ОБъект удален";
-
                     }
                 }
             }
-            return "Объект не удален";
+            return collectionManager.getOrgCollection();
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
     }

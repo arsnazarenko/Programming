@@ -1,5 +1,5 @@
 package client.servises;
 
 public interface IAnswerHandler {
-    void handling(Object answerObject);
+    void writeToConsole(Object answerObject);
 }

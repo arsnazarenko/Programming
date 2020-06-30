@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
  * Класс для чтения команд из консли/файла и создания их объектов
  */
 public class Reader implements IReader {
-    private IValidator validator;
+    private ICommandProducerManager validator;
     private final Console console = System.console();
     private final Map<String, NameOfCommands> workCommandsMap = Arrays.stream(NameOfCommands.values()).filter(o -> o != NameOfCommands.log || o != NameOfCommands.reg).collect(Collectors.toMap(NameOfCommands::name, o -> o));
     private final Map<String, NameOfCommands> authorizationCommandMap;
 
-    public Reader(IValidator validator) {
+    public Reader(ICommandProducerManager validator) {
         this.validator = validator;
 
     }
@@ -42,7 +42,7 @@ public class Reader implements IReader {
         String parameter = "";
         NameOfCommands command = null;
         while (true) {
-            System.out.print("Введите команду: ");
+            //System.out.print("Введите команду: ");
             str = reader.nextLine();
             if (str.contains(" ")) {
                 parameter = str.substring(str.indexOf(" ") + 1);
@@ -69,7 +69,7 @@ public class Reader implements IReader {
         UserData userData = null;
         NameOfCommands command = null;
         while (true) {
-            System.out.print("Введите команду для авторизации на сервере\nКоманда: " );
+            System.out.print("Введите команду для авторизации\nКоманда: " );
             str = reader.nextLine().trim();
             command = authorizationCommandMap.get(str);
             if (command != null) {
@@ -146,11 +146,11 @@ public class Reader implements IReader {
         }
     }
 
-    public IValidator getValidator() {
+    public ICommandProducerManager getValidator() {
         return validator;
     }
 
-    public void setValidator(IValidator validator) {
+    public void setValidator(ICommandProducerManager validator) {
         this.validator = validator;
     }
 

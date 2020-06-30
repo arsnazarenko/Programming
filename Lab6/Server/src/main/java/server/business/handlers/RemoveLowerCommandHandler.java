@@ -9,7 +9,9 @@ import server.business.CollectionManager;
 import server.business.dao.ObjectDAO;
 import server.business.dao.UserDAO;
 
+import java.util.AbstractMap;
 import java.util.Date;
+import java.util.Deque;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,11 +42,10 @@ public class RemoveLowerCommandHandler implements ICommandHandler {
                     //если удаление из базы прошло успешно, обновляем коллекцию
                     if (orgDao.deleteByKeys(ids)) {
                         collectionManager.getOrgCollection().removeIf(o -> ids.contains(o.getId()));
-                        return "ОБъекты удалены";
                     }
                 }
             }
-            return "Объекты не удалены";
+            return collectionManager.getOrgCollection();
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
     }

@@ -26,11 +26,12 @@ public class PrintAscendingCommandHandler implements ICommandHandler {
     public Object processCommand(Command command) {
         if (authorization(command.getUserData(), usrDao) != 0L) {
             synchronized (collectionManager) {
-                Deque<Organization> result = collectionManager.getOrgCollection().
+                StringBuilder sb = new StringBuilder();
+                collectionManager.getOrgCollection().
                         stream().
                         sorted(Comparator.comparing(Organization::getCreationDate)).
-                        collect(Collectors.toCollection(ArrayDeque::new));
-                return result.isEmpty() ? null : result;
+                        forEach(o -> sb.append(" " + o + "\n"));
+                return sb.toString().equals("") ? "Объектов не найдено" : sb.toString();
             }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;

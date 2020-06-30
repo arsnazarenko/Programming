@@ -33,7 +33,7 @@ public class FilterContainsNameCommandHandler implements ICommandHandler {
                         stream().
                         filter(o -> o.getName().contains(subString)).
                         collect(Collectors.toCollection(ArrayDeque::new));
-                return result.isEmpty() ? null : result;
+                return result;
             }
         }
         return SpecialSignals.AUTHORIZATION_FALSE;

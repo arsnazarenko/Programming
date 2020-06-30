@@ -9,8 +9,10 @@ import server.business.CollectionManager;
 import server.business.dao.ObjectDAO;
 import server.business.dao.UserDAO;
 
+import java.util.AbstractMap;
 import java.util.ArrayDeque;
 import java.util.Date;
+import java.util.Deque;
 import java.util.stream.Collectors;
 
 
@@ -49,13 +51,11 @@ public class UpdateIdCommandHandler implements ICommandHandler {
                                     }
                                 }).
                                 collect(Collectors.toCollection(ArrayDeque::new)));
-                        return "Объект обновлен";
 
                     }
-                    return "Объект не обновлен";
                 }
             }
-            return "Объектов не найдено";
+            return collectionManager.getOrgCollection();
 
         }
         return SpecialSignals.AUTHORIZATION_FALSE;
