@@ -51,7 +51,6 @@ public class UpdateIdCommandHandler implements ICommandHandler {
                                     }
                                 }).
                                 collect(Collectors.toCollection(ArrayDeque::new)));
-
                     }
                 }
             }

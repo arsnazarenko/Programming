@@ -61,7 +61,7 @@ public class NonBlockingClient {
                 }
                 if (selectionKey.isReadable()) {
                     Object response = read(selectionKey, buffer);
-                    IAnswerHandler.writeToConsole(response);
+                    IAnswerHandler.answerHandle(response);
                     if(response instanceof SpecialSignals) {
                         SpecialSignals signal = (SpecialSignals) response;
                         if(signal == SpecialSignals.EXIT_TRUE) {

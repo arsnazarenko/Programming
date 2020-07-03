@@ -13,20 +13,19 @@ import java.nio.channels.Selector;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class WriteRunnable implements Runnable {
+public class ServerWriter implements Runnable {
     private volatile UserData sessionUser;
     private final ICommandCreator commandCreator;
-    private final Queue<Command> changeRequest;
+    private final MessageService messageService;
     private final Selector selector;
     private final Queue<Command> queue = new LinkedList<>();
 
 
-    public WriteRunnable(ICommandCreator commandCreator, Queue<Command> changeRequest, Selector selector) {
+    public ServerWriter(ICommandCreator commandCreator, MessageService messageService, Selector selector) {
         this.commandCreator = commandCreator;
-        this.changeRequest = changeRequest;
+        this.messageService = messageService;
         this.selector = selector;
     }
-
 
     @Override
     public void run() {
@@ -41,17 +40,16 @@ public class WriteRunnable implements Runnable {
 
     public void process() {
         System.out.println(
-        "Добро пожаловать!\n\n"  +
-                "Используйте команды log или reg для входа\nПри успешной авторизации введите help для справки по командам\n\n");
+                "Добро пожаловать!\n\n" +
+                        "Используйте команды log или reg для входа\nПри успешной авторизации введите help для справки по командам\n\n");
         while (sessionUser == null) {
             Command command;
             command = commandCreator.authorization(System.in);
-            changeRequest.offer(command);// request to server
-            synchronized (changeRequest) {
-                selector.wakeup();//selector wakeUp for writing
-                try {
 
-                    changeRequest.wait();   //sleep until getting response about login
+            messageService.putInRequestQueue(command);// request to server
+            synchronized (messageService) {
+                try {
+                    messageService.wait();   //sleep until getting response about login
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -69,15 +67,12 @@ public class WriteRunnable implements Runnable {
                     System.exit(0);
                 }
             }
-        if (command != null) {
-            synchronized (changeRequest) {
-                changeRequest.offer(command); // request to server
-                selector.wakeup();
+            if (command != null) {
+                messageService.putInRequestQueue(command);
             }
         }
-    }
 
-}
+    }
 
 
     public void stop() {

@@ -15,7 +15,7 @@ public class AnswerHandler implements IAnswerHandler {
      * @param answerObject - объект ответа от сервера
      */
     @Override
-    public void writeToConsole(Object answerObject) {
+    public void answerHandle(Object answerObject) {
         if(answerObject instanceof Deque) {
             Deque<?> organizationDeque = (Deque<?>) answerObject;
             if (organizationDeque.isEmpty()) {

@@ -1,11 +1,15 @@
 package client;
 
-import client.servises.IAnswerHandler;
-import client.servises.ICommandCreator;
-import client.servises.WriteRunnable;
+import client.servises.*;
 import frontend.mvc.ObjectsMapController;
 import frontend.mvc.ObjectsMapModel;
 import frontend.mvc.ObjectsMapView;
+import graphicsInterface.ClientManager;
+import graphicsInterface.ErrorConstants;
+import graphicsInterface.GuiAnswerHandler;
+import graphicsInterface.Menu;
+import graphicsInterface.controllers.Controllers;
+import graphicsInterface.loginForm.LogInWindow;
 import library.clientCommands.Command;
 import library.clientCommands.SpecialSignals;
 import library.clientCommands.UserData;
@@ -29,10 +33,9 @@ public class NonBlockingClient2 {
     private ByteBuffer buffer;
     private SocketAddress address;
     private IAnswerHandler answerHandler;
-    private final Deque<Command> changeRequest = new ArrayDeque<>();
-    private Thread writeUserThread;
-    private UserData sessionUser = null;
-    private ObjectsMapController controller;
+    private MessageService messageService;
+    private Controllers controllers;
+    private GuiAnswerHandler handler;
 
     public NonBlockingClient2(ICommandCreator commandCreator, ByteBuffer buffer,
                               SocketAddress address, IAnswerHandler answerHandler) {
@@ -42,26 +45,46 @@ public class NonBlockingClient2 {
         this.answerHandler = answerHandler;
     }
 
+
+
     /**
      * @param datagramChannel - канал
      * @throws IOException - в случае ошибки подключения
      */
     public void process(DatagramChannel datagramChannel) throws IOException {
-        ObjectsMapModel model = new ObjectsMapModel(new ArrayDeque<>());
-
-        SwingUtilities.invokeLater(() -> this.controller = new ObjectsMapController
-                (new ObjectsMapView(model.getOrganizationsCoordinateInfo(), model.getCellSize(), model.getCellCount()), model));
+//        ObjectsMapModel model = new ObjectsMapModel(new ArrayDeque<>());
+//        SwingUtilities.invokeLater(() -> this.controller = new ObjectsMapController
+//                (new ObjectsMapView(model.getOrganizationsCoordinateInfo(), model.getCellSize(), model.getCellCount()), model));
         Selector selector = Selector.open();
+        messageService = new MessageService(selector);
+        ArgumentValidateManager argumentValidator = new ArgumentValidateManager();
+        ClientManager clientManager = new ClientManager(messageService, argumentValidator);
+        final Locale DEFAULT_LOCALE = new Locale("ru");
+        final String FONT = "Century Gothic";
+        handler = new GuiAnswerHandler(controllers);
+        ErrorConstants errorConstants = new ErrorConstants(DEFAULT_LOCALE);
+        SwingUtilities.invokeLater(() -> {
+
+            Menu menu = new Menu(DEFAULT_LOCALE, FONT);
+            LogInWindow logInWindow = new LogInWindow(FONT,DEFAULT_LOCALE);
+            Controllers controllers = new Controllers(logInWindow,clientManager,menu, errorConstants,DEFAULT_LOCALE);
+            synchronized (handler) {
+                handler.setControllers(controllers);
+            }
+            controllers.setLogListeners();
+            controllers.setMenuListeners();
+            controllers.setWindowListener();
+            logInWindow.setJMenuBar(menu);
+            logInWindow.setVisible(true);
+        });
         datagramChannel.register(selector, SelectionKey.OP_READ);
-        WriteRunnable writeRunnable = new WriteRunnable(commandCreator, changeRequest, selector);
-        writeUserThread = new Thread(writeRunnable);
-        writeUserThread.start();
+        //ServerWriter serverWriter = new ServerWriter(commandCreator, messageService, selector);
+        //writeUserThread = new Thread(serverWriter);
+        //writeUserThread.start();
         while (true) {
-            synchronized (changeRequest) {
-                if (!changeRequest.isEmpty()) {
-                    SelectionKey key = datagramChannel.keyFor(selector);
-                    key.interestOps(SelectionKey.OP_WRITE);
-                }
+            if (!messageService.isEmpty()) {
+                SelectionKey key = datagramChannel.keyFor(selector);
+                key.interestOps(SelectionKey.OP_WRITE);
             }
             selector.select();  //блокирующий
             Iterator<SelectionKey> selectionKeyIterator = selector.selectedKeys().iterator();
@@ -73,8 +96,8 @@ public class NonBlockingClient2 {
                 }
                 if (selectionKey.isReadable()) {
                     Object response = read(selectionKey, buffer);
-                    answerHandler.writeToConsole(response); // getting response
-                    responseHandle(writeRunnable, response);
+                    handler.answerHandle(response); // getting response
+                    //responseHandle(serverWriter, response);
                 } else if (selectionKey.isWritable()) {
                     write(selectionKey);
 
@@ -84,25 +107,24 @@ public class NonBlockingClient2 {
 
     }
 
-    private void responseHandle(WriteRunnable writeRunnable, Object response) {
-        if (response instanceof SpecialSignals) {
-            SpecialSignals ss = (SpecialSignals) response;
-            if (ss == SpecialSignals.AUTHORIZATION_TRUE || ss == SpecialSignals.REG_TRUE) {
-                writeRunnable.setSessionUser(sessionUser);
-                synchronized (changeRequest) {
-                    changeRequest.notify();
-                }
-            } else if(ss == SpecialSignals.AUTHORIZATION_FALSE || ss == SpecialSignals.REG_FALSE) {
-                synchronized (changeRequest) {
-                    changeRequest.notify();
-                }
-            }
-        } else if (response.getClass() == ArrayDeque.class) {
-                Deque<Organization> mapObjects = ((Deque<?>) response).stream().map(o -> (Organization) o).collect(Collectors.toCollection(ArrayDeque::new));
-                SwingUtilities.invokeLater(() -> controller.updateObjectsMapView(mapObjects));
-
-        }
-    }
+//    private void responseHandle(ServerWriter serverWriter, Object response) {
+//        if (response instanceof SpecialSignals) {
+//            SpecialSignals ss = (SpecialSignals) response;
+//            if (ss == SpecialSignals.AUTHORIZATION_TRUE || ss == SpecialSignals.REG_TRUE) {
+//                serverWriter.setSessionUser(sessionUser);
+//                synchronized (messageService) {
+//                    messageService.notify();
+//                }
+//            } else if (ss == SpecialSignals.AUTHORIZATION_FALSE || ss == SpecialSignals.REG_FALSE) {
+//                synchronized (messageService) {
+//                    messageService.notify();
+//                }
+//            }
+//        } else if (response.getClass() == ArrayDeque.class) {
+//            Deque<Organization> mapObjects = ((Deque<?>) response).stream().map(o -> (Organization) o).collect(Collectors.toCollection(ArrayDeque::new));
+//            SwingUtilities.invokeLater(() -> controller.updateObjectsMapView(mapObjects));
+//        }
+//    }
 
 
     private Object read(SelectionKey selectionKey, ByteBuffer buffer) throws IOException {    //пробрасываем исключения и обрабатываем их в NioClient
@@ -114,18 +136,17 @@ public class NonBlockingClient2 {
 
     private void write(SelectionKey selectionKey) throws IOException {
         Command command;
-        synchronized (changeRequest) {
-            command = changeRequest.pollFirst();
-        }
-        if (command.getClass() == LogCommand.class || command.getClass() == RegCommand.class) {
-            sessionUser = command.getUserData();
-        }
+        command = messageService.getFromRequestQueue();
+//        if (command.getClass() == LogCommand.class || command.getClass() == RegCommand.class) {
+//            sessionUser = command.getUserData();
+//        }
         ByteBuffer answer = ByteBuffer.wrap(SerializationManager.objectSerial(command));
         DatagramChannel datagramChannel = (DatagramChannel) selectionKey.channel();
         datagramChannel.send(answer, address);
         selectionKey.interestOps(SelectionKey.OP_READ);
-
     }
 
-
+    public void setControllers(Controllers controllers) {
+        this.controllers = controllers;
+    }
 }
