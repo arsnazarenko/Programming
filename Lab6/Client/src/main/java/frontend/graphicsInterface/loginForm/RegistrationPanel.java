@@ -1,7 +1,9 @@
-package graphicsInterface.loginForm;
+package frontend.graphicsInterface.loginForm;
 
 
-import graphicsInterface.LocaleActionListener;
+
+
+import frontend.graphicsInterface.LocaleActionListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,14 +35,6 @@ public class RegistrationPanel implements LocaleActionListener {
 
     private void addPanel() {
         mainPanel.getPanelTitle().add(labelModel.labelTitle);
-        mainPanel.getPanelField().add(labelModel.labelErrorLogin,
-                new GridBagConstraints(0, 6, 1, 1, 0, 0,
-                        GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(1, 1, 1, 1),
-                        0, 0));
-        mainPanel.getPanelField().add(labelModel.labelErrorPassword,
-                new GridBagConstraints(0, 6, 1, 1, 0, 0,
-                        GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(1, 1, 1, 1),
-                        0, 0));
 
         mainPanel.getPanelField().add(labelModel.labelRestatePassword, new GridBagConstraints(0, 4, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(1, 1, 1, 1),
@@ -54,8 +48,6 @@ public class RegistrationPanel implements LocaleActionListener {
         ResourceBundle bundle = ResourceBundle.getBundle("translate",locale);
         labelModel.labelTitle.setText(bundle.getString("registration"));
         labelModel.labelRestatePassword.setText(bundle.getString("confirmation_password"));
-        labelModel.labelErrorLogin.setText(bundle.getString("mg_error_2"));
-        labelModel.labelErrorPassword.setText(bundle.getString("mg_error_3"));
     }
 
 
@@ -81,8 +73,6 @@ public class RegistrationPanel implements LocaleActionListener {
     public class JLabelModel {
         private JLabel labelTitle;
         private JLabel labelRestatePassword;
-        private JLabel labelErrorLogin;
-        private JLabel labelErrorPassword;
 
         {
             labelTitle = new JLabel();
@@ -94,73 +84,26 @@ public class RegistrationPanel implements LocaleActionListener {
             labelRestatePassword.setFont(new Font(font, Font.PLAIN, 15));
             labelRestatePassword.setForeground(color);
             labelRestatePassword.setVisible(false);
-
-            labelErrorLogin = new JLabel();
-            labelErrorLogin.setFont(new Font(font, Font.PLAIN, 10));
-            labelErrorLogin.setForeground(Color.RED);
-            labelErrorLogin.setVisible(false);
-
-            labelErrorPassword = new JLabel();
-            labelErrorPassword.setFont(new Font(font, Font.PLAIN, 10));
-            labelErrorPassword.setForeground(Color.RED);
-            labelErrorPassword.setVisible(false);
         }
 
         public JLabel getLabelTitle() {
             return labelTitle;
         }
 
-        public void setLabelTitle(JLabel labelTitle) {
-            this.labelTitle = labelTitle;
-        }
-
         public JLabel getLabelRestatePassword() {
             return labelRestatePassword;
         }
 
-        public void setLabelRestatePassword(JLabel labelRestatePassword) {
-            this.labelRestatePassword = labelRestatePassword;
-        }
-
-        public JLabel getLabelErrorLogin() {
-            return labelErrorLogin;
-        }
-
-        public void setLabelErrorLogin(JLabel labelErrorLogin) {
-            this.labelErrorLogin = labelErrorLogin;
-        }
-
-        public JLabel getLabelErrorPassword() {
-            return labelErrorPassword;
-        }
-
-        public void setLabelErrorPassword(JLabel labelErrorPassword) {
-            this.labelErrorPassword = labelErrorPassword;
-        }
     }
 
     public JTextFieldModel getFieldModel() {
         return fieldModel;
     }
 
-    public void setFieldModel(JTextFieldModel fieldModel) {
-        this.fieldModel = fieldModel;
-    }
 
     public JLabelModel getLabelModel() {
         return labelModel;
     }
 
-    public void setLabelModel(JLabelModel labelModel) {
-        this.labelModel = labelModel;
-    }
-
-    public LogInWindow.MainPanel getMainPanel() {
-        return mainPanel;
-    }
-
-    public void setMainPanel(LogInWindow.MainPanel mainPanel) {
-        this.mainPanel = mainPanel;
-    }
 
 }

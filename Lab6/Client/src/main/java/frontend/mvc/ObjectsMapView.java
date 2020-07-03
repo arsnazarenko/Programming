@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ObjectsMapView extends JFrame {
+public class ObjectsMapView extends JPanel {
     private DrawPanel drawPanel;
     private JTextArea objectsInfo;
     private JPanel southPanel;
@@ -20,7 +20,7 @@ public class ObjectsMapView extends JFrame {
     private JPanel buttonPanel;
 
     public ObjectsMapView(Map<Organization, Map.Entry<Integer, Point>> orgCoordInfo, int cellSize, int cellCount) {
-        super("Organizations Map");
+//        super("Organizations Map");
         init(orgCoordInfo, cellSize, cellCount);
     }
 
@@ -61,15 +61,20 @@ public class ObjectsMapView extends JFrame {
         buttonPanel.add(clearButton);
         southPanel.add(buttonPanel, BorderLayout.WEST);
 
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(southPanel, BorderLayout.SOUTH);
-        getContentPane().add(scrollPane, BorderLayout.CENTER);
+//        getContentPane().setLayout(new BorderLayout());
+//        getContentPane().add(southPanel, BorderLayout.SOUTH);
+//        getContentPane().add(scrollPane, BorderLayout.CENTER);
+
+        setLayout(new BorderLayout());
+        add(southPanel, BorderLayout.SOUTH);
+        add(scrollPane, BorderLayout.CENTER);
+
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(1000, 700);
+        setSize(900, 900);
         int x = (int) ((dimension.getWidth() - getWidth()) / 2);
         int y = (int) ((dimension.getHeight() - getHeight()) / 2);
         setLocation(x, y);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
 
     }

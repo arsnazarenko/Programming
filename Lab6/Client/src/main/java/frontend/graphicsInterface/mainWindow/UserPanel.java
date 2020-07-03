@@ -1,7 +1,9 @@
-package graphicsInterface.mainWindow;
+package frontend.graphicsInterface.mainWindow;
 
-import graphicsInterface.ErrorConstants;
-import graphicsInterface.LocaleActionListener;
+
+
+import frontend.graphicsInterface.LocaleActionListener;
+import frontend.graphicsInterface.controllers.Controllers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,16 +17,16 @@ public class UserPanel extends JPanel implements LocaleActionListener {
     private String login;
     private String FONT;
 
-    public UserPanel(Locale locale, String login, String FONT, ErrorConstants errorConstants) {
+    public UserPanel(String login, String FONT) {
         this.login = login;
         this.FONT = FONT;
 
-        imagePanel = new ImagePanel(errorConstants);
+        imagePanel = new ImagePanel();
         label = new JLabel();
         label.setFont(new Font(FONT, Font.BOLD, 12));
 
         createComboBox();
-        localeChange(locale);
+        localeChange(Controllers.getLocale());
         createPanel();
     }
 
@@ -61,28 +63,11 @@ public class UserPanel extends JPanel implements LocaleActionListener {
         label.setText(bundle.getString("user") + ": " + login);
     }
 
-    public ImagePanel getImagePanel() {
-        return imagePanel;
-    }
-
-    public void setImagePanel(ImagePanel imagePanel) {
-        this.imagePanel = imagePanel;
-    }
-
     public JComboBox<String> getListImages() {
         return listImages;
-    }
-
-    public void setListImages(JComboBox<String> listImages) {
-        this.listImages = listImages;
     }
 
     public JLabel getLabel() {
         return label;
     }
-
-    public void setLabel(JLabel label) {
-        this.label = label;
-    }
-
 }

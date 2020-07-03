@@ -1,6 +1,7 @@
-package graphicsInterface.mainWindow;
+package frontend.graphicsInterface.mainWindow;
 
-import graphicsInterface.ErrorConstants;
+
+import frontend.graphicsInterface.controllers.Controllers;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 public class ImagePanel extends JPanel {
 
@@ -19,7 +21,7 @@ public class ImagePanel extends JPanel {
     private BufferedImage curr_cat;
 
 
-    public ImagePanel(ErrorConstants errorConstants) {
+    public ImagePanel() {
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(150, 150));
 
@@ -31,8 +33,8 @@ public class ImagePanel extends JPanel {
             normal_cat = ImageIO.read(new File("src/main/resources/image/normal_cat.png"));
             curr_cat = normal_cat;
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null,errorConstants.getError_7(), errorConstants.getTitle(), JOptionPane.ERROR_MESSAGE);
-            System.out.println("Ошибка загрузки изображения");
+            ResourceBundle bundle = ResourceBundle.getBundle("translate", Controllers.getLocale());
+            JOptionPane.showMessageDialog(null,bundle.getString("error_7"),bundle.getString("error_title"),JOptionPane.ERROR_MESSAGE);
         }
     }
 

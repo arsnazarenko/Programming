@@ -1,11 +1,17 @@
-package graphicsInterface.mainWindow;
+package frontend.graphicsInterface.mainWindow;
 
-import graphicsInterface.LocaleActionListener;
-import graphicsInterface.mainWindow.commands.CommandPanel;
-import graphicsInterface.mainWindow.table.TablePanel;
+
+
+import frontend.graphicsInterface.LocaleActionListener;
+import frontend.graphicsInterface.controllers.Controllers;
+import frontend.graphicsInterface.mainWindow.commands.CommandPanel;
+import frontend.graphicsInterface.mainWindow.table.TablePanel;
+import frontend.mvc.ObjectsMapModel;
+import frontend.mvc.ObjectsMapView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayDeque;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -15,19 +21,18 @@ public class MainWindow extends JFrame implements LocaleActionListener {
     private CommandPanel commandPanel;
     private TablePanel tablePanel;
     private UserPanel userPanel;
+    private ObjectsMapView mapView;
 
     public MainWindow(String FONT, CommandPanel commandPanel,
-                      TablePanel tablePanel, UserPanel userPanel, Locale locale) {
+                      TablePanel tablePanel, UserPanel userPanel) {
         super("Table of the Organizations");
         this.FONT = FONT;
         this.commandPanel = commandPanel;
         this.tablePanel = tablePanel;
         this.userPanel = userPanel;
-
         createTabbedPane();
         createFrame();
-
-        localeChange(locale);
+        localeChange(Controllers.getLocale());
 
     }
 
@@ -48,7 +53,8 @@ public class MainWindow extends JFrame implements LocaleActionListener {
     private void createTabbedPane(){
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab(null,tablePanel);
-        tabbedPane.addTab(null,new JPanel());
+        ObjectsMapModel model = new ObjectsMapModel(new ArrayDeque<>());
+        tabbedPane.addTab(null, new ObjectsMapView(model.getOrganizationsCoordinateInfo(), model.getCellSize(), model.getCellCount()));
         tabbedPane.setBackground(Color.WHITE);
         tabbedPane.setFont(new Font(FONT, Font.PLAIN, 12));}
 
@@ -58,36 +64,15 @@ public class MainWindow extends JFrame implements LocaleActionListener {
         tabbedPane.setTitleAt(0,bundle.getString("table"));
         tabbedPane.setTitleAt(1,bundle.getString("map"));
     }
-
-    public JTabbedPane getTabbedPane() {
-        return tabbedPane;
-    }
-
-    public void setTabbedPane(JTabbedPane tabbedPane) {
-        this.tabbedPane = tabbedPane;
-    }
-
     public CommandPanel getCommandPanel() {
         return commandPanel;
-    }
-
-    public void setCommandPanel(CommandPanel commandPanel) {
-        this.commandPanel = commandPanel;
     }
 
     public TablePanel getTablePanel() {
         return tablePanel;
     }
 
-    public void setTablePanel(TablePanel tablePanel) {
-        this.tablePanel = tablePanel;
-    }
-
     public UserPanel getUserPanel() {
         return userPanel;
-    }
-
-    public void setUserPanel(UserPanel userPanel) {
-        this.userPanel = userPanel;
     }
 }

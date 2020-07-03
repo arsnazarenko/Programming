@@ -1,6 +1,8 @@
-package graphicsInterface.mainWindow.commands;
+package frontend.graphicsInterface.mainWindow.commands;
 
-import graphicsInterface.LocaleActionListener;
+
+import frontend.graphicsInterface.LocaleActionListener;
+import frontend.graphicsInterface.controllers.Controllers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,7 @@ public class CommandPanel extends JPanel implements LocaleActionListener {
     private Buttons buttons;
     private JLabel titleLabel;
 
-    public CommandPanel(String FONT, Locale locale) {
+    public CommandPanel(String FONT) {
         this.FONT = FONT;
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE);
@@ -20,7 +22,7 @@ public class CommandPanel extends JPanel implements LocaleActionListener {
         buttons = new Buttons();
         titleLabel = new JLabel();
         setPosition();
-        localeChange(locale);
+        localeChange(Controllers.getLocale());
 
     }
 
@@ -91,6 +93,7 @@ public class CommandPanel extends JPanel implements LocaleActionListener {
         buttons.getPrintAscendButton().setToolTipText(bundle.getString("print_ascending_command"));
     }
 
+
     public class Buttons {
         private JButton showButton;
         private JButton addButton;
@@ -107,8 +110,6 @@ public class CommandPanel extends JPanel implements LocaleActionListener {
         private JButton printAscendButton;
 
         {
-
-
             showButton = new JButton("show");
             showButton.setBackground(Color.LIGHT_GRAY);
             showButton.setFocusPainted(false);
@@ -181,120 +182,56 @@ public class CommandPanel extends JPanel implements LocaleActionListener {
             return showButton;
         }
 
-        public void setShowButton(JButton showButton) {
-            this.showButton = showButton;
-        }
-
         public JButton getAddButton() {
             return addButton;
-        }
-
-        public void setAddButton(JButton addButton) {
-            this.addButton = addButton;
         }
 
         public JButton getAddIfMinButton() {
             return addIfMinButton;
         }
 
-        public void setAddIfMinButton(JButton addIfMinButton) {
-            this.addIfMinButton = addIfMinButton;
-        }
-
         public JButton getClearButton() {
             return clearButton;
-        }
-
-        public void setClearButton(JButton clearButton) {
-            this.clearButton = clearButton;
         }
 
         public JButton getRemoveIdButton() {
             return removeIdButton;
         }
 
-        public void setRemoveIdButton(JButton removeIdButton) {
-            this.removeIdButton = removeIdButton;
-        }
-
         public JButton getRemoveLowerButton() {
             return removeLowerButton;
-        }
-
-        public void setRemoveLowerButton(JButton removeLowerButton) {
-            this.removeLowerButton = removeLowerButton;
         }
 
         public JButton getInfoButton() {
             return infoButton;
         }
 
-        public void setInfoButton(JButton infoButton) {
-            this.infoButton = infoButton;
-        }
-
         public JButton getUpdateIdButton() {
             return updateIdButton;
-        }
-
-        public void setUpdateIdButton(JButton updateIdButton) {
-            this.updateIdButton = updateIdButton;
         }
 
         public JButton getExecuteScriptButton() {
             return executeScriptButton;
         }
 
-        public void setExecuteScriptButton(JButton executeScriptButton) {
-            this.executeScriptButton = executeScriptButton;
-        }
-
         public JButton getFilterNameButton() {
             return filterNameButton;
-        }
-
-        public void setFilterNameButton(JButton filterNameButton) {
-            this.filterNameButton = filterNameButton;
         }
 
         public JButton getHeadButton() {
             return headButton;
         }
 
-        public void setHeadButton(JButton headButton) {
-            this.headButton = headButton;
-        }
-
         public JButton getMaxEmplButton() {
             return maxEmplButton;
-        }
-
-        public void setMaxEmplButton(JButton maxEmplButton) {
-            this.maxEmplButton = maxEmplButton;
         }
 
         public JButton getPrintAscendButton() {
             return printAscendButton;
         }
-
-        public void setPrintAscendButton(JButton printAscendButton) {
-            this.printAscendButton = printAscendButton;
-        }
     }
 
     public Buttons getButtons() {
         return buttons;
-    }
-
-    public void setButtons(Buttons buttons) {
-        this.buttons = buttons;
-    }
-
-    public JLabel getTitleLabel() {
-        return titleLabel;
-    }
-
-    public void setTitleLabel(JLabel titleLabel) {
-        this.titleLabel = titleLabel;
     }
 }

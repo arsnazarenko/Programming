@@ -39,7 +39,7 @@ public class HandleTask implements Runnable {
         long time = System.currentTimeMillis() - start;
         logger.info("CLIENT AT " + remoteAddress + " SENT: " + receiveCommand.getClass().getSimpleName());
         logger.debug("COMMAND EXECUTION TIME: " + time + " millis");
-        if(messageSystem.getCommandsForAll().contains(receiveCommand)) {
+        if(messageSystem.getCommandsForAll().contains(receiveCommand.getClass())) {
             Set<SocketAddress> clients = messageSystem.getClients();
             for (SocketAddress client: clients) {
                 messageSystem.putInQueues(ServerHandler.class, new LetterInfo(client, response));

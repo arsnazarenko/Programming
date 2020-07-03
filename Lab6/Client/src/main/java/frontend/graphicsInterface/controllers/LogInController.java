@@ -1,20 +1,22 @@
-package graphicsInterface.controllers;
+package frontend.graphicsInterface.controllers;
 
-import graphicsInterface.ClientManager;
-import graphicsInterface.ErrorConstants;
-import graphicsInterface.loginForm.AuthorizationPanel;
-import graphicsInterface.loginForm.LogInWindow;
-import graphicsInterface.loginForm.RegistrationPanel;
-import graphicsInterface.mainWindow.MainWindow;
-import graphicsInterface.mainWindow.UserPanel;
-import graphicsInterface.mainWindow.commands.CommandPanel;
-import graphicsInterface.mainWindow.table.TablePanel;
+
+import frontend.ClientManager;
+import frontend.graphicsInterface.Collection;
+import frontend.graphicsInterface.loginForm.AuthorizationPanel;
+import frontend.graphicsInterface.loginForm.LogInWindow;
+import frontend.graphicsInterface.loginForm.RegistrationPanel;
+import frontend.graphicsInterface.mainWindow.MainWindow;
+import frontend.graphicsInterface.mainWindow.UserPanel;
+import frontend.graphicsInterface.mainWindow.commands.CommandPanel;
+import frontend.graphicsInterface.mainWindow.table.TablePanel;
 import library.clientCommands.SpecialSignals;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.LogCommand;
 import library.clientCommands.commandType.RegCommand;
 
-import java.util.Locale;
+import javax.swing.*;
+import java.util.ResourceBundle;
 
 public class LogInController {
     private LogInWindow logInWindow;
@@ -23,10 +25,7 @@ public class LogInController {
     private RegistrationPanel registrationPanel;
     private LogInWindow.Buttons buttons;
 
-    private UserData sessionUserData;
-
-    private ErrorConstants errorConstants;
-    private Locale locale;
+    private UserData sessionUser;
 
 
     public LogInController(LogInWindow logInWindow, ClientManager clientManager) {
@@ -47,72 +46,73 @@ public class LogInController {
         registrationPanel.getFieldModel().getPasswordRestateField().setVisible(flag);
         buttons.getButtonSignIn().setVisible(flag);
         buttons.getButtonReg().setVisible(flag);
-
-        registrationPanel.getLabelModel().getLabelErrorLogin().setVisible(false);
-        registrationPanel.getLabelModel().getLabelErrorPassword().setVisible(false);
-        authorizationPanel.getLabelModel().getLabelError().setVisible(false);
     }
 
-    public void addLogButtonListener(Locale locale, ErrorConstants errorConstants) {
+    public void addLogButtonListener() {
+
         String login = authorizationPanel.getFieldModel().getLoginField().getText();
         String password = new String(authorizationPanel.getFieldModel().getPasswordField().getPassword());
         UserData userData = new UserData(login, password);
-        sessionUserData = userData;
-        this.locale = locale;
-        this.errorConstants = errorConstants;
+        sessionUser = userData;
         clientManager.executeCommand(new LogCommand(userData));
-
     }
-
-    public MainWindow logResponseHandle(SpecialSignals signals) {
-        boolean res = clientManager.handlerAuth(signals);
-        System.out.println(res);
+    public MainWindow logResponseHandle(SpecialSignals signal) {
+        ResourceBundle bundle = ResourceBundle.getBundle("translate", Controllers.getLocale());
+        boolean res = clientManager.handlerAuth(signal);
         if (res) {
             logInWindow.dispose();
-            return createMain(sessionUserData,locale, errorConstants);
+            return createMain(sessionUser);
         } else {
-            authorizationPanel.getLabelModel().getLabelError().setVisible(true);
+            Object o [] = {bundle.getString("ok")};
+            JOptionPane.showOptionDialog(logInWindow,
+                    bundle.getString("mg_error_1"), null, JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, o, o[0]);
         }
         return null;
     }
 
-    public void addRegButtonListener(Locale locale, ErrorConstants errorConstants) {
+
+
+    public void addRegButtonListener() {
+        ResourceBundle bundle = ResourceBundle.getBundle("translate",Controllers.getLocale());
+        Object o [] = {bundle.getString("ok")};
+
         String login = authorizationPanel.getFieldModel().getLoginField().getText();
         String password = new String(authorizationPanel.getFieldModel().getPasswordField().getPassword());
         String restatePassword = new String(registrationPanel.getFieldModel().getPasswordRestateField().getPassword());
         if (password.equals(restatePassword)) {
             UserData userData = new UserData(login, password);
-            sessionUserData = userData;
-            this.locale = locale;
-            this.errorConstants = errorConstants;
+            sessionUser = userData;
             clientManager.executeCommand(new RegCommand(userData));
 
         } else {
-            registrationPanel.getLabelModel().getLabelErrorLogin().setVisible(false);
-            registrationPanel.getLabelModel().getLabelErrorPassword().setVisible(true);
+            JOptionPane.showOptionDialog(logInWindow,
+                    bundle.getString("mg_error_3"), null, JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, o, o[0]);
         }
     }
 
-    public MainWindow regResponseHandle(SpecialSignals signals) {
-        boolean res = clientManager.handlerAuth(signals);
+    public MainWindow regResponseHandle(SpecialSignals signal) {
+        ResourceBundle bundle = ResourceBundle.getBundle("translate",Controllers.getLocale());
+        Object o [] = {bundle.getString("ok")};
+        boolean res = clientManager.handlerAuth(signal);
         if (res) {
             logInWindow.dispose();
-            return createMain(sessionUserData,locale, errorConstants);
+            return createMain(sessionUser);
         } else {
-            registrationPanel.getLabelModel().getLabelErrorPassword().setVisible(false);
-            authorizationPanel.getLabelModel().getLabelError().setVisible(true);
+            JOptionPane.showOptionDialog(logInWindow,
+                    bundle.getString("mg_error_2"), null, JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, o, o[0]);
         }
         return null;
-
-
     }
 
-    private MainWindow createMain(UserData userData, Locale locale, ErrorConstants errorConstants){
+    private MainWindow createMain(UserData userData) {
         clientManager.setUserData(userData);
         String FONT = logInWindow.getFONT();
-        TablePanel tablePanel = new TablePanel(FONT,locale, errorConstants);
-        UserPanel userPanel = new UserPanel(locale,userData.getLogin(),FONT,errorConstants);
-        CommandPanel commandPanel = new CommandPanel(FONT,locale);
-        return new MainWindow(FONT,commandPanel,tablePanel,userPanel,locale);
+        TablePanel tablePanel = new TablePanel(FONT,new Collection());
+        UserPanel userPanel = new UserPanel(userData.getLogin(),FONT);
+        CommandPanel commandPanel = new CommandPanel(FONT);
+        return new MainWindow(FONT,commandPanel,tablePanel,userPanel);
     }
 }

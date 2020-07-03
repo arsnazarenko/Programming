@@ -1,4 +1,4 @@
-package graphicsInterface;
+package frontend.graphicsInterface;
 
 import javax.swing.*;
 import java.awt.*;

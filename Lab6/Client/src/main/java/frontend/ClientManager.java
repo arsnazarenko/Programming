@@ -1,19 +1,10 @@
-package graphicsInterface;
+package frontend;
 import client.servises.ArgumentValidateManager;
 import client.servises.MessageService;
-import graphicsInterface.ErrorConstants;
-import graphicsInterface.mainWindow.table.TableModel;
 import library.clientCommands.Command;
 import library.clientCommands.SpecialSignals;
 import library.clientCommands.UserData;
-import library.clientCommands.commandType.ShowCommand;
-import library.сlassModel.Organization;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.Locale;
-import java.util.Map;
 
 public class ClientManager {
     private MessageService messageService;
@@ -52,9 +43,5 @@ public class ClientManager {
 
     public ArgumentValidateManager getArgumentValidator() {
         return argumentValidator;
-    }
-
-    public void setArgumentValidator(ArgumentValidateManager argumentValidator) {
-        this.argumentValidator = argumentValidator;
     }
 }

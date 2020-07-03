@@ -1,4 +1,4 @@
-package graphicsInterface;
+package frontend.graphicsInterface;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

@@ -1,4 +1,5 @@
-package graphicsInterface.mainWindow.table;
+package frontend.graphicsInterface.mainWindow.table;
+
 
 
 import javax.swing.*;

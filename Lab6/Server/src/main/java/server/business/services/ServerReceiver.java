@@ -57,6 +57,7 @@ public class ServerReceiver implements Runnable, IService {
                 } else {
                     SocketAddress remoteAddress = datagramPacket.getSocketAddress();
                     messageSystem.addNewClient(remoteAddress);
+                    System.out.println(messageSystem.getClients());
                     byte[] bytes = datagramPacket.getData();
                     messageSystem.putInQueues(ServerReceiver.class, new LetterInfo(remoteAddress,
                             SerializationManager.objectDeserial(bytes)));

@@ -1,27 +1,39 @@
 package frontend.mvc;
 
 import client.servises.ObjectDataValidator;
+import frontend.ClientManager;
+import library.clientCommands.Command;
+import library.clientCommands.UserData;
+import library.clientCommands.commandType.AddCommand;
+import library.clientCommands.commandType.UpdateIdCommand;
 import library.сlassModel.Organization;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.InvocationTargetException;
 
 public class OrganizationController {
 
     private OrganizationView view;
     private ObjectCreatorUI objectCreator;
+    private ClientManager clientManager;
+
+    private Class<?> commandClass;
+    private Long idForUpdate;
 
     private boolean addressEnabled = false;
     private boolean townEnabled = false;
 
-    public OrganizationController(OrganizationView view, ObjectCreatorUI objectCreator) {
+    public OrganizationController(OrganizationView view, ObjectCreatorUI objectCreator, ClientManager clientManager) {
+        this.clientManager = clientManager;
         this.view = view;
         this.objectCreator = objectCreator;
         this.objectCreator.setView(view);
         initController();
     }
 
-    public void setVisibleOrganizationCreator() {
+    public void runCreation(Class<?> commandClass) {
+        this.commandClass = commandClass;
         view.getFrame().setVisible(true);
     }
 
@@ -58,14 +70,30 @@ public class OrganizationController {
             objectCreator.getValidateResults().forEach(s -> sb.append(s + "\n"));
             JOptionPane.showMessageDialog(null, sb.toString(), "IncorrectFieldsInput", JOptionPane.ERROR_MESSAGE);
         } else {
-            System.out.println(organization);
-            //model.setOrganization(organization)
-            //model.submitForWriting()
+            Command command = createCommand(commandClass, organization);
+            if (command != null)
+            clientManager.executeCommand(command);
+            this.commandClass = null;
+            this.idForUpdate = null;
             clear();
             unsetVisibleOrganizationCreator();
         }
 
     }
+
+    private Command createCommand(Class<?> commandClass, Organization organization) {
+
+        try {
+            if(commandClass == UpdateIdCommand.class) {
+                return (Command) commandClass.getDeclaredConstructor(Organization.class, Long.class, UserData.class).newInstance(organization, idForUpdate , clientManager.getUserData());
+            }
+            return (Command) commandClass.getDeclaredConstructor(Organization.class, UserData.class).newInstance(organization, clientManager.getUserData());
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     private void townManage() {
         if(!townEnabled) {
@@ -98,10 +126,13 @@ public class OrganizationController {
 
     }
 
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new OrganizationController(new OrganizationView(), new ObjectCreatorUI(new ObjectDataValidator())));
+    public void setIdForUpdate(Long idForUpdate) {
+        this.idForUpdate = idForUpdate;
     }
+
+    //    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new OrganizationController(new OrganizationView(), new ObjectCreatorUI(new ObjectDataValidator())));
+//    }
 
 
 }

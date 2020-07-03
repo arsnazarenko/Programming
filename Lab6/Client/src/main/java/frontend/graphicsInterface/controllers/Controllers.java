@@ -1,16 +1,18 @@
-package graphicsInterface.controllers;
+package frontend.graphicsInterface.controllers;
 
 
-import frontend.mvc.ObjectsMapController;
-import graphicsInterface.ClientManager;
-import graphicsInterface.ErrorConstants;
-import graphicsInterface.LocaleActionListener;
-import graphicsInterface.Menu;
-import graphicsInterface.loginForm.LogInWindow;
-import graphicsInterface.mainWindow.MainWindow;
-import graphicsInterface.mainWindow.commands.CommandPanel;
-import graphicsInterface.mainWindow.table.TablePanel;
+
+import client.servises.ObjectDataValidator;
+import frontend.ClientManager;
+import frontend.graphicsInterface.LocaleActionListener;
+import frontend.graphicsInterface.Menu;
+import frontend.graphicsInterface.loginForm.LogInWindow;
+import frontend.graphicsInterface.mainWindow.MainWindow;
+import frontend.graphicsInterface.mainWindow.commands.CommandPanel;
+import frontend.graphicsInterface.mainWindow.table.TablePanel;
+import frontend.mvc.*;
 import library.clientCommands.SpecialSignals;
+
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -22,24 +24,28 @@ import java.util.Locale;
 public class Controllers {
     private LogInWindow logInWindow;
     private MainWindow mainWindow;
-    private ClientManager clientManager;
     private Menu menu;
-    private Locale locale;
+    private static Locale locale;
+
+    public static Locale getLocale() {
+        return locale;
+    }
 
     private LogInController logInController;
     private CommandsController commandsController;
     private WindowController windowController;
-    private ErrorConstants errorConstants;
     private List<LocaleActionListener> listeners = new ArrayList<>();
+    private OrganizationController organizationCreateController;
+    private ObjectsMapController mapController;
 
-    public Controllers(LogInWindow logInWindow, ClientManager clientManager, Menu menu, ErrorConstants errorConstants, Locale locale) {
+    public Controllers(LogInWindow logInWindow, ClientManager clientManager, Menu menu, Locale locale) {
         this.logInWindow = logInWindow;
-        this.clientManager = clientManager;
         this.menu = menu;
-        this.errorConstants = errorConstants;
         this.locale = locale;
+        organizationCreateController = new OrganizationController(new OrganizationView(), new ObjectCreatorUI(new ObjectDataValidator()), clientManager);
+        mapController = new ObjectsMapController()
         logInController = new LogInController(logInWindow,clientManager);
-        commandsController = new CommandsController(clientManager, errorConstants,locale);
+        commandsController = new CommandsController(clientManager, locale, organizationCreateController);
         windowController = new WindowController(locale);
         listeners.add(windowController);
         listeners.add(commandsController);
@@ -47,19 +53,19 @@ public class Controllers {
         listeners.add(logInWindow);
         listeners.add(logInWindow.getAuthorizationPanel());
         listeners.add(logInWindow.getRegistrationPanel());
-        listeners.add(errorConstants);
     }
 
     public void setLogListeners(){
         LogInWindow.Buttons buttons = logInWindow.getButtons();
         buttons.getButtonLog().addActionListener(a -> {
-            logInController.addLogButtonListener(locale, errorConstants);
+            logInController.addLogButtonListener();
 
         });
         buttons.getButtonSignUp().addActionListener(a -> logInController.addSignButtonListener(true));
         buttons.getButtonSignIn().addActionListener(a -> logInController.addSignButtonListener(false));
         buttons.getButtonReg().addActionListener(a-> {
-            logInController.addRegButtonListener(locale, errorConstants);
+            logInController.addRegButtonListener();
+
         });
     }
 
@@ -70,10 +76,10 @@ public class Controllers {
 
     public void regResponseHandle(SpecialSignals signal) {
         mainWindow = logInController.regResponseHandle(signal);
-        if(mainWindow!= null) setMainWindow();
+        if (mainWindow!=null)  setMainWindow();
     }
 
-    public void commandsResponseHandle(Object response) {
+    public void commandResponseHandle(Object response) {
         commandsController.handle(response);
     }
 
@@ -105,12 +111,17 @@ public class Controllers {
         buttons.getPrintAscendButton().addActionListener(a-> commandsController.print());
         buttons.getRemoveIdButton().addActionListener(a-> commandsController.removeId(commandsController.validateId()));
         buttons.getInfoButton().addActionListener(a-> commandsController.info());
+        buttons.getAddButton().addActionListener(a-> commandsController.add());
+        buttons.getAddIfMinButton().addActionListener(a-> commandsController.addIfMin());
+        buttons.getRemoveLowerButton().addActionListener(a -> commandsController.removeLower());
+        buttons.getUpdateIdButton().addActionListener(a -> commandsController.updateId(commandsController.validateId()));
+        buttons.getExecuteScriptButton().addActionListener(a -> commandsController.executeScript());
     }
 
     private void setTableListeners(){
         TablePanel.ButtonsPanel buttonsPanel = mainWindow.getTablePanel().getButtonsPanel();
         JTable table = mainWindow.getTablePanel().getTable();
-        buttonsPanel.getRemoveButton().addActionListener(a-> commandsController.removeId((Long)table.getValueAt(table.getSelectedRow(),0)));
+        buttonsPanel.getRemoveButton().addActionListener(a-> commandsController.removeId(Long.parseLong((String)table.getValueAt(table.getSelectedRow(),0))));
 
     }
 

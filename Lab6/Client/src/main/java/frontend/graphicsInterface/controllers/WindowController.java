@@ -1,6 +1,8 @@
-package graphicsInterface.controllers;
+package frontend.graphicsInterface.controllers;
 
-import graphicsInterface.LocaleActionListener;
+
+
+import frontend.graphicsInterface.LocaleActionListener;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;

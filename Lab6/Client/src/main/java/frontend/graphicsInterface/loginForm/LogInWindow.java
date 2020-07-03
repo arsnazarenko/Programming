@@ -1,6 +1,8 @@
-package graphicsInterface.loginForm;
+package frontend.graphicsInterface.loginForm;
 
-import graphicsInterface.LocaleActionListener;
+
+
+import frontend.graphicsInterface.LocaleActionListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,29 +84,12 @@ public class LogInWindow extends JFrame implements LocaleActionListener {
             getContentPane().add(this);
         }
 
-
         public JPanel getPanelTitle() {
             return panelTitle;
         }
 
-        public void setPanelTitle(JPanel panelTitle) {
-            this.panelTitle = panelTitle;
-        }
-
-        public JPanel getPanelButton() {
-            return panelButton;
-        }
-
-        public void setPanelButton(JPanel panelButton) {
-            this.panelButton = panelButton;
-        }
-
         public JPanel getPanelField() {
             return panelField;
-        }
-
-        public void setPanelField(JPanel panelField) {
-            this.panelField = panelField;
         }
     }
 
@@ -176,56 +161,28 @@ public class LogInWindow extends JFrame implements LocaleActionListener {
             return buttonSignIn;
         }
 
-        public void setButtonSignIn(JButton buttonSignIn) {
-            this.buttonSignIn = buttonSignIn;
-        }
-
         public JButton getButtonSignUp() {
             return buttonSignUp;
-        }
-
-        public void setButtonSignUp(JButton buttonSignUp) {
-            this.buttonSignUp = buttonSignUp;
         }
 
         public JButton getButtonLog() {
             return buttonLog;
         }
 
-        public void setButtonLog(JButton buttonLog) {
-            this.buttonLog = buttonLog;
-        }
-
         public JButton getButtonReg() {
             return buttonReg;
         }
 
-        public void setButtonReg(JButton buttonReg) {
-            this.buttonReg = buttonReg;
-        }
     }
 
-
-    public MainPanel getMainPanel() {
-        return mainPanel;
-    }
-
-    public void setMainPanel(MainPanel mainPanel) {
-        this.mainPanel = mainPanel;
-    }
 
     public Buttons getButtons() {
         return buttons;
     }
 
-    public void setButtons(Buttons buttons) {
-        this.buttons = buttons;
-    }
-
     public AuthorizationPanel getAuthorizationPanel() {
         return authorizationPanel;
     }
-
 
     public RegistrationPanel getRegistrationPanel() {
         return registrationPanel;

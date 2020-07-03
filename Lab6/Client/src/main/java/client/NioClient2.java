@@ -1,5 +1,8 @@
 package client;
+
+import client.GuiClient;
 import client.servises.*;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -8,10 +11,10 @@ import java.nio.channels.DatagramChannel;
 import java.nio.channels.UnresolvedAddressException;
 import java.util.NoSuchElementException;
 
-public class NioClient {
+public class NioClient2 {
     public static void main(String[] args) {
         try(DatagramChannel datagramChannel = DatagramChannel.open()) {
-            ConsoleClient consoleClient = null;
+            //ConsoleClient consoleClient = null;
             int port = Integer.parseInt(args[1]);
             SocketAddress socketAddress = new InetSocketAddress(args[0], port);
             ObjectDataValidator objectDataValidator = new ObjectDataValidator();
@@ -23,11 +26,11 @@ public class NioClient {
             ICommandCreator commandCreator = new CommandCreator(reader);
             datagramChannel.connect(socketAddress);
             datagramChannel.configureBlocking(false);
-            consoleClient = new ConsoleClient(commandCreator, ByteBuffer.allocate(256 * 1024),
-                    socketAddress, answerHandler);
-            consoleClient.process(datagramChannel);
-//            GuiClient client = new GuiClient(ByteBuffer.allocate(256 * 1024), socketAddress);
-//            client.process(datagramChannel);
+//            consoleClient = new ConsoleClient(commandCreator, ByteBuffer.allocate(256 * 1024),
+//                    socketAddress, answerHandler);
+//            consoleClient.process(datagramChannel);
+            GuiClient client = new GuiClient(ByteBuffer.allocate(256 * 1024), socketAddress);
+            client.process(datagramChannel);
 
         } catch (IOException e) {
             System.out.println("ОШИБКА ПОДКЛЮЧЕНИЯ К СЕРВЕРУ");

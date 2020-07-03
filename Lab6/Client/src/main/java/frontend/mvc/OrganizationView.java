@@ -58,7 +58,7 @@ public class OrganizationView {
         frame.getContentPane().setLayout(new BorderLayout());
         frame.setSize(500, 500);
         frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        frame.setVisible(false);
 
 
         name = new JLabel("Name ");
