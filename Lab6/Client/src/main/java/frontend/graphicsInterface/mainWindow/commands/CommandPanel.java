@@ -18,7 +18,7 @@ public class CommandPanel extends JPanel implements LocaleActionListener {
         this.FONT = FONT;
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(180, getHeight()));
+        //setPreferredSize(new Dimension(180, getHeight()));
         buttons = new Buttons();
         titleLabel = new JLabel();
         setPosition();

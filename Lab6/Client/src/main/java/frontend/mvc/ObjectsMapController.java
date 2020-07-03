@@ -62,17 +62,18 @@ public class ObjectsMapController {
             int cellSize = model.getCellSize(); //получаем данные для рисования
             int cellCount = model.getCellCount();
 
-            Container contentPane = view.getContentPane();
-            contentPane.remove(sp); //удаляем с панели старый объект
+            view.remove(sp); //удаляем с панели старый объект
 
             view.setDrawPanel(new DrawPanel(model.getOrganizationsCoordinateInfo(), cellSize, cellCount)); //установили новый эелмент для рисования
             initDrawPane();
             sp.setViewportView(view.getDrawPanel()); //обновляем этот рисунок в перемещаемом окошке
-            contentPane.add(sp);
-            contentPane.revalidate();
-            contentPane.repaint();
+            view.add(sp, BorderLayout.CENTER);
+            view.revalidate();
+            view.repaint();
         }
     }
 
-
+    public ObjectsMapView getView() {
+        return view;
+    }
 }

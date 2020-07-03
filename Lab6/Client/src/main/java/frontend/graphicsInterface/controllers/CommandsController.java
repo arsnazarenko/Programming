@@ -3,6 +3,7 @@ package frontend.graphicsInterface.controllers;
 import frontend.ClientManager;
 import frontend.graphicsInterface.LocaleActionListener;
 import frontend.graphicsInterface.mainWindow.MainWindow;
+import frontend.mvc.ObjectsMapController;
 import frontend.mvc.OrganizationController;
 import library.clientCommands.SpecialSignals;
 import library.clientCommands.commandType.*;
@@ -18,12 +19,13 @@ public class CommandsController implements LocaleActionListener {
     private String idMassage;
     private String strMassage;
     private OrganizationController organizationCreator;
+    private ObjectsMapController mapController;
 
 
-
-    public CommandsController(ClientManager clientManager, Locale locale, OrganizationController organizationCreator) {
+    public CommandsController(ClientManager clientManager, Locale locale, OrganizationController organizationCreator, ObjectsMapController mapController) {
         this.clientManager = clientManager;
         this.organizationCreator = organizationCreator;
+        this.mapController = mapController;
         localeChange(locale);
     }
 
@@ -68,6 +70,7 @@ public class CommandsController implements LocaleActionListener {
         ResourceBundle bundle = ResourceBundle.getBundle("translate",Controllers.getLocale());
         if (answerObject instanceof Deque) {
             Deque<Organization> organizations = ((Deque<?>) answerObject).stream().map(o -> (Organization) o).collect(Collectors.toCollection(ArrayDeque::new));
+            mapController.updateObjectsMapView(organizations);
             mainWindow.getTablePanel().getCollection().setCollection(new ArrayList<>(organizations));
             mainWindow.getTablePanel().updateData();
         } else if(answerObject instanceof Organization){

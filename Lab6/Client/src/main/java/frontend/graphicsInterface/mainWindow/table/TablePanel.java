@@ -35,8 +35,6 @@ public class TablePanel extends JPanel implements LocaleActionListener {
         table = new JTable(tableModel);
         filterPanel = new FilterPanel();
         localeChange(Controllers.getLocale());
-
-
         createTable();
         createPanel();
 
@@ -54,10 +52,10 @@ public class TablePanel extends JPanel implements LocaleActionListener {
 
         //Запрещает перетаскивать колонки
         table.getTableHeader().setReorderingAllowed(false);
-        //Раскрашивание объектов
-        //  for (int i = 0; i < table.getColumnCount(); i++) {
-        //      table.getColumnModel().getColumn(i).setCellRenderer(render);
-        // }
+//        Раскрашивание объектов
+          for (int i = 0; i < table.getColumnCount(); i++) {
+              table.getColumnModel().getColumn(i).setCellRenderer(new Renderer());
+         }
 
 
         scrollPane = new JScrollPane(table);

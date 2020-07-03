@@ -10,6 +10,7 @@ import frontend.graphicsInterface.mainWindow.MainWindow;
 import frontend.graphicsInterface.mainWindow.UserPanel;
 import frontend.graphicsInterface.mainWindow.commands.CommandPanel;
 import frontend.graphicsInterface.mainWindow.table.TablePanel;
+import frontend.mvc.ObjectsMapView;
 import library.clientCommands.SpecialSignals;
 import library.clientCommands.UserData;
 import library.clientCommands.commandType.LogCommand;
@@ -24,13 +25,14 @@ public class LogInController {
     private AuthorizationPanel authorizationPanel;
     private RegistrationPanel registrationPanel;
     private LogInWindow.Buttons buttons;
-
+    private ObjectsMapView mapView;
     private UserData sessionUser;
 
 
-    public LogInController(LogInWindow logInWindow, ClientManager clientManager) {
+    public LogInController(LogInWindow logInWindow, ClientManager clientManager, ObjectsMapView mapView) {
         this.logInWindow = logInWindow;
         this.clientManager = clientManager;
+        this.mapView = mapView;
         authorizationPanel = logInWindow.getAuthorizationPanel();
         registrationPanel = logInWindow.getRegistrationPanel();
         buttons = logInWindow.getButtons();
@@ -113,6 +115,6 @@ public class LogInController {
         TablePanel tablePanel = new TablePanel(FONT,new Collection());
         UserPanel userPanel = new UserPanel(userData.getLogin(),FONT);
         CommandPanel commandPanel = new CommandPanel(FONT);
-        return new MainWindow(FONT,commandPanel,tablePanel,userPanel);
+        return new MainWindow(FONT,commandPanel,tablePanel,userPanel, mapView);
     }
 }

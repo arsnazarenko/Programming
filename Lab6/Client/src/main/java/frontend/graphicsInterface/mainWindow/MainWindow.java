@@ -24,12 +24,12 @@ public class MainWindow extends JFrame implements LocaleActionListener {
     private ObjectsMapView mapView;
 
     public MainWindow(String FONT, CommandPanel commandPanel,
-                      TablePanel tablePanel, UserPanel userPanel) {
-        super("Table of the Organizations");
+                      TablePanel tablePanel, UserPanel userPanel, ObjectsMapView mapView) {
         this.FONT = FONT;
         this.commandPanel = commandPanel;
         this.tablePanel = tablePanel;
         this.userPanel = userPanel;
+        this.mapView = mapView;
         createTabbedPane();
         createFrame();
         localeChange(Controllers.getLocale());
@@ -43,9 +43,14 @@ public class MainWindow extends JFrame implements LocaleActionListener {
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setBackground(Color.WHITE);
 
-        JPanel westPanel = new JPanel(new BorderLayout());
-        westPanel.add(userPanel,BorderLayout.NORTH);
-        westPanel.add(commandPanel,BorderLayout.CENTER);
+        JPanel westPanel = new JPanel(new GridBagLayout());
+        westPanel.setBackground(Color.WHITE);
+        westPanel.add(userPanel, new GridBagConstraints(0, 0, 1, 1, 0, 0,
+                GridBagConstraints.NORTH, GridBagConstraints.CENTER, new Insets(0, 1, 5, 1),
+                0, 0));
+        westPanel.add(commandPanel, new GridBagConstraints(0, 1, 1, 1, 0, 0,
+                GridBagConstraints.CENTER, GridBagConstraints.CENTER, new Insets(5, 1, 1, 1),
+                0, 0));
         add(westPanel,BorderLayout.WEST);
         add(tabbedPane,BorderLayout.CENTER);
     }
@@ -54,7 +59,7 @@ public class MainWindow extends JFrame implements LocaleActionListener {
         tabbedPane = new JTabbedPane();
         tabbedPane.addTab(null,tablePanel);
         ObjectsMapModel model = new ObjectsMapModel(new ArrayDeque<>());
-        tabbedPane.addTab(null, new ObjectsMapView(model.getOrganizationsCoordinateInfo(), model.getCellSize(), model.getCellCount()));
+        tabbedPane.addTab(null, mapView);
         tabbedPane.setBackground(Color.WHITE);
         tabbedPane.setFont(new Font(FONT, Font.PLAIN, 12));}
 

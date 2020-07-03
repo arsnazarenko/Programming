@@ -16,15 +16,18 @@ public class UserPanel extends JPanel implements LocaleActionListener {
     private JLabel label;
     private String login;
     private String FONT;
+    private JLabel loginLabel;
 
     public UserPanel(String login, String FONT) {
         this.login = login;
         this.FONT = FONT;
 
         imagePanel = new ImagePanel();
+
         label = new JLabel();
         label.setFont(new Font(FONT, Font.BOLD, 12));
-
+        loginLabel = new JLabel();
+        loginLabel.setFont(new Font(FONT, Font.BOLD, 12));
         createComboBox();
         localeChange(Controllers.getLocale());
         createPanel();
@@ -39,14 +42,16 @@ public class UserPanel extends JPanel implements LocaleActionListener {
     private void createPanel(){
         setLayout(new GridBagLayout());
         setBackground(Color.WHITE);
-
         add(label,  new GridBagConstraints(0, 0, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.CENTER,
                 new Insets(1, 1, 1, 1), 0, 0));
-        add(imagePanel,  new GridBagConstraints(0, 1, 1, 1, 0, 0,
+        add(loginLabel,  new GridBagConstraints(0, 1, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.CENTER,
                 new Insets(1, 1, 1, 1), 0, 0));
-        add(listImages,  new GridBagConstraints(0, 2, 1, 1, 0, 0,
+        add(imagePanel,  new GridBagConstraints(0, 2, 1, 1, 0, 0,
+                GridBagConstraints.CENTER, GridBagConstraints.CENTER,
+                new Insets(1, 1, 1, 1), 0, 0));
+        add(listImages,  new GridBagConstraints(0, 3, 1, 1, 0, 0,
                 GridBagConstraints.CENTER, GridBagConstraints.CENTER,
                 new Insets(1, 1, 1, 1), 0, 0));
     }
@@ -60,7 +65,8 @@ public class UserPanel extends JPanel implements LocaleActionListener {
 
         listImages.setModel(model);
         listImages.setToolTipText(bundle.getString("avatar"));
-        label.setText(bundle.getString("user") + ": " + login);
+        label.setText(bundle.getString("user") + ":" );
+        loginLabel.setText(login);
     }
 
     public JComboBox<String> getListImages() {

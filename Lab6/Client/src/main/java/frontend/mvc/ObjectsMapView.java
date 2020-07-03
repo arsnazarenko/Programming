@@ -68,7 +68,6 @@ public class ObjectsMapView extends JPanel {
         setLayout(new BorderLayout());
         add(southPanel, BorderLayout.SOUTH);
         add(scrollPane, BorderLayout.CENTER);
-
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(900, 900);
         int x = (int) ((dimension.getWidth() - getWidth()) / 2);

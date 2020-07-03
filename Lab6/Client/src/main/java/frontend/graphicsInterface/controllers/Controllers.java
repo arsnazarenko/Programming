@@ -17,6 +17,7 @@ import library.clientCommands.SpecialSignals;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -43,9 +44,10 @@ public class Controllers {
         this.menu = menu;
         this.locale = locale;
         organizationCreateController = new OrganizationController(new OrganizationView(), new ObjectCreatorUI(new ObjectDataValidator()), clientManager);
-        mapController = new ObjectsMapController()
-        logInController = new LogInController(logInWindow,clientManager);
-        commandsController = new CommandsController(clientManager, locale, organizationCreateController);
+        ObjectsMapModel mapModel = new ObjectsMapModel(new ArrayDeque<>());
+        mapController = new ObjectsMapController(new ObjectsMapView(mapModel.getOrganizationsCoordinateInfo(), mapModel.getCellSize(), mapModel.getCellCount()), mapModel);
+        logInController = new LogInController(logInWindow,clientManager, mapController.getView());
+        commandsController = new CommandsController(clientManager, locale, organizationCreateController, mapController);
         windowController = new WindowController(locale);
         listeners.add(windowController);
         listeners.add(commandsController);

@@ -2,27 +2,26 @@ package frontend.graphicsInterface.mainWindow.table;
 
 
 
+import frontend.mvc.ColorGenerator;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.util.Map;
+
 
 public class Renderer extends DefaultTableCellRenderer {
 
-   // public Renderer(ClientManager clientManager) {
-        //this.clientManager = clientManager;
-   // }
+    public Renderer() {
+    }
 
-   // @Override
-   // public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-      //  Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-       // Map<String,int[]> map = clientManager.setUpTableColor();
-      //  for (int i = 0; i < table.getRowCount(); i++) {
-          //  if(map.containsKey(table.getValueAt(row,1))) {
-            //    int [] color = map.get(table.getValueAt(row,1));
-               // setBackground(new Color(color[0],color[1],color[2]));
-          //  }
-      //  }
-      //  return cell;
-  //  }
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        cell.setBackground(ColorGenerator.generate(( (String) table.getValueAt(row, 1))));
+//        for (int i = 0; i < table.getRowCount(); i++) {
+//            String login = (String) table.getValueAt(i, 1);
+//            setBackground(ColorGenerator.generate(login));
+//        }
+        return cell;
+    }
 }

@@ -30,8 +30,8 @@ public class ServerStarter {
         collectionManager.setOrgCollection(orgDao.readAll());
         IHandlersController handlersManager = new HandlersController(collectionManager, orgDao, userDAO);
         Map<Class<?>, BlockingQueue<LetterInfo>> queues = new HashMap<>();
-        queues.put(ServerHandler.class, new ArrayBlockingQueue<>(15));
-        queues.put(ServerSender.class, new ArrayBlockingQueue<>(15));
+        queues.put(ServerHandler.class, new ArrayBlockingQueue<>(35));
+        queues.put(ServerSender.class, new ArrayBlockingQueue<>(35));
 
         MessageSystem messageSystem = new MessageSystem(queues);
 
