@@ -1,17 +1,12 @@
 package lessons.threads.LockCondition;
-
 import lessons.threads.waitNotify.MyBlockingQueue;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Vector;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 public class LockBlockingQueue<E> implements MyBlockingQueue<E> {
     private Queue<E> queue;
@@ -27,7 +22,20 @@ public class LockBlockingQueue<E> implements MyBlockingQueue<E> {
     }
 
     public void put(E e) throws InterruptedException {
-        lock.lock();
+
+        /*
+        Здесь важно знать механизм прерывания потока: после вызова метода interrupt он лишь выставляет некий флаг у потока,
+         если этот флаг не проверить, что потока сам и не прервется. НО! если прерывание было вызвано в момент, когда поток
+        был в некоторых состояниях: wait(), sleep(), или если вдруг был вызван метод lock(), но в этот момент поток был заблокирован,
+        то бросается исключение
+        Если поток стоит в ожидании на блокировку (методом lockInterruptibly()) или он уже захватил блокировку, и его прерывают,
+         то выбрасывается исключение и обработав его, можно завершить поток
+         с обычным lock такое не пройдет
+        лучше использовать lock.lockInterruptibly() - он при прерывании потока кинет эксепшн и не
+         станет захватывать блокировку, unlock делать не надо
+         */
+        lock.lockInterruptibly();
+
         try {
             while (queue.size() == max) {
                 notFull.await();
@@ -42,7 +50,7 @@ public class LockBlockingQueue<E> implements MyBlockingQueue<E> {
     }
 
     public E take() throws InterruptedException {
-        lock.lock();
+        lock.lockInterruptibly();
         try {
             while (queue.size() == 0) {
                 notEmpty.await();

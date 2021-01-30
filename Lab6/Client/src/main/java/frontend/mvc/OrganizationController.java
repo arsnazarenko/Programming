@@ -1,10 +1,8 @@
 package frontend.mvc;
 
-import client.servises.ObjectDataValidator;
 import frontend.ClientManager;
 import library.clientCommands.Command;
 import library.clientCommands.UserData;
-import library.clientCommands.commandType.AddCommand;
 import library.clientCommands.commandType.UpdateIdCommand;
 import library.сlassModel.Organization;
 import javax.swing.*;

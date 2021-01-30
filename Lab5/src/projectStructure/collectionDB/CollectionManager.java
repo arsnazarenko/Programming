@@ -14,6 +14,8 @@ import java.util.Objects;
  */
 @XmlRootElement(name = "Organizations")
 public class CollectionManager {
+    public static int OBJECT_COUNTER = 0;
+
     /**
      * Сама коллекция
      */

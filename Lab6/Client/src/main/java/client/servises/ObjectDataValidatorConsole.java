@@ -1,7 +1,7 @@
 package client.servises;
 
 import library.сlassModel.OrganizationType;
-public class ObjectDataValidator {
+public class ObjectDataValidatorConsole {
 
 
     public boolean stringFieldValidate(String str) {

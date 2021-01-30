@@ -32,15 +32,18 @@ public class Receiver implements IReceiver {
      * @see Receiver#load(String)
      */
     public void load(String path) {
+
         CollectionManager tmpCol = fileIO.fromXmlToObject(path);
-        tmpCol.getOrgCollection().forEach(o1 -> {
-            collectionManager.getOrgCollection().addFirst(o1);
-            long counter = o1.getId();
-            if (counter > ObjectCreator.objectCounter) {
-                ObjectCreator.objectCounter = counter + 1;
-            }
-        });
-        System.out.println("ОБЪЕКТЫ ЗАГУЖЕНЫ");
+        if (!tmpCol.getOrgCollection().isEmpty()) {
+            tmpCol.getOrgCollection().forEach(o1 -> {
+                collectionManager.getOrgCollection().addFirst(o1);
+                long counter = o1.getId();
+                if (counter > ObjectCreator.objectCounter) {
+                    ObjectCreator.objectCounter = counter + 1;
+                }
+            });
+            System.out.println("ОБЪЕКТЫ ЗАГУЖЕНЫ");
+        }
     }
     /**
      * Метод запуска скрипта
@@ -249,6 +252,5 @@ public class Receiver implements IReceiver {
     public void printAscending() {
         List<Organization> forSort = new ArrayList<>(collectionManager.getOrgCollection());
         Collections.sort(forSort);
-        forSort.forEach(System.out::println);
     }
 }

@@ -2,6 +2,7 @@ package projectStructure.сommands;
 
 import com.sun.xml.internal.ws.util.Pool;
 import projectStructure.collectionDB.CollectionManager;
+import projectStructure.сlassModel.Organization;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -43,12 +44,15 @@ public class JaxbWorker implements IFileWorker {
             JAXBContext jaxbContext = JAXBContext.newInstance(CollectionManager.class);
             Unmarshaller un = jaxbContext.createUnmarshaller();
             file = new File(filePath);
-            return (CollectionManager) un.unmarshal(file);
+            if (file.length() != 0) {
+                return (CollectionManager) un.unmarshal(file);
+            } else {
+                return new CollectionManager();
+            }
         } catch (JAXBException e) {
             System.out.println("Ошибка!");
-        } finally {
         }
-        return null;
+        return new CollectionManager();
     }
 
 

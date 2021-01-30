@@ -43,7 +43,7 @@ public class Main {
          * WAIT, NOTIFY
          * @see lessons.threads.waitNotify.Account
          * @see WaitBlockingQueue - простая реализация блок. очереди через wait() notifyAll()
-         * @see @https://www.javacodemonk.com/how-will-you-implement-a-blocking-queue-in-java-044ee033
+         * @see lessons.threads.LockCondition.LockBlockingQueue
          * - Улучшенная версия Queue с использованием Интерфейсов:
          * {@link java.util.concurrent.locks.Lock} and {@link java.util.concurrent.locks.Condition},
          * чтобы улучшить производительность многопоточности.
@@ -60,23 +60,38 @@ public class Main {
          * @see lessons.threads.semaphore.SemaphoreTest
          *
          *
+         * JOIN
+         * @https://javadevblog.com/primer-ispol-zovaniya-java-thread-join.html
+         *
          *
          */
 
         //Взаимодействие двух потоков
-        Thread t1 = new MyThread("isParallel");
+        Thread t1 = new MyThread("isParallel1");
+        Thread t2 = new MyThread("isParallel2");
+        Thread t3 = new MyThread("isParallel3");
         //Метод старт нельзя запустить более одного раза!!!!!!!!!!
-        t1.start();
+        Thread[] ts = new Thread[3];
+        ts[0] = t1;
+        ts[1] = t2;
+        ts[2] = t3;
+
+        for (Thread t : ts) {
+            t.start();
+        }
+
 
         /*
         Метод join() блокирует внешние потоки до завершения работы потока, у которого вызван этот метод
         Удобно, когда один поток создает данные, с которыми будет работать другой поток
          */
-        try {
-            t1.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            for (Thread t : ts) {
+//                t.join();
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         //параллелно с нашим потоком в потоке Main тоже будем ситтать
         System.out.println("Thread Main: started");
         try{

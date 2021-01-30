@@ -296,6 +296,10 @@ public class Collections {
         //vector.forEach(i -> {if (i % 2 == 1 && i % 5 == 0) System.out.println(i);});
 
 
+        System.out.println("    asdasda            sdads    ".trim() + "YYY");
+        System.out.println("    asdasd             asdads    " + "YYY");
+
+
 
     }
 

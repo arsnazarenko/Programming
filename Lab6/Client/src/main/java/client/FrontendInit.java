@@ -1,19 +1,13 @@
 package client;
 
-import client.commandProducers.ClearCommandProd;
 import client.servises.ArgumentValidateManager;
 import client.servises.MessageService;
-import client.servises.ObjectDataValidator;
 import frontend.ClientManager;
 import frontend.graphicsInterface.Menu;
 import frontend.graphicsInterface.controllers.Controllers;
 import frontend.graphicsInterface.loginForm.LogInWindow;
-import frontend.mvc.ObjectCreatorUI;
-import frontend.mvc.OrganizationController;
-import frontend.mvc.OrganizationView;
 
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 public class FrontendInit {
     private ClientManager clientManager;

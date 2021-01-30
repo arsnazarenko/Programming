@@ -1,6 +1,5 @@
 package client;
 
-import client.GuiClient;
 import client.servises.*;
 
 import java.io.IOException;
@@ -17,8 +16,8 @@ public class NioClient2 {
             //ConsoleClient consoleClient = null;
             int port = Integer.parseInt(args[1]);
             SocketAddress socketAddress = new InetSocketAddress(args[0], port);
-            ObjectDataValidator objectDataValidator = new ObjectDataValidator();
-            IObjectCreator objectCreator = new ObjectCreator(objectDataValidator);
+            ObjectDataValidatorConsole objectDataValidatorConsole = new ObjectDataValidatorConsole();
+            IObjectCreator objectCreator = new ObjectCreator(objectDataValidatorConsole);
             ArgumentValidateManager argumentValidateManager = new ArgumentValidateManager();
             ICommandProducerManager validator = new CommandProduceManager(objectCreator, argumentValidateManager);
             IReader reader = new Reader(validator);

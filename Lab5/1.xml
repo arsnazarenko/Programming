@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Organizations>
+    <creationCollectionDate>2020-09-27T17:05:42.679+03:00</creationCollectionDate>
+    <Organization>
+        <coordinates>
+            <x>2.0</x>
+            <y>2.0</y>
+        </coordinates>
+        <creationDate>2020-09-27T17:05:55.078+03:00</creationDate>
+        <employeesCount>2</employeesCount>
+        <id>1</id>
+        <name>123123</name>
+        <type>COMMERCIAL</type>
+    </Organization>
+</Organizations>

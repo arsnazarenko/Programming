@@ -1,6 +1,6 @@
 package frontend.mvc;
 
-import client.servises.ObjectDataValidator;
+import client.servises.ObjectDataValidatorConsole;
 import library.сlassModel.*;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -9,11 +9,11 @@ import java.util.List;
 
 public class ObjectCreatorUI {
     private List<String> validateResults;
-    private ObjectDataValidator validator;
+    private ObjectDataValidatorConsole validator;
     private OrganizationView view;
 
 
-    public ObjectCreatorUI(ObjectDataValidator validator) {
+    public ObjectCreatorUI(ObjectDataValidatorConsole validator) {
         this.validator = validator;
     }
 

@@ -1,5 +1,6 @@
 package server.business.services;
 
+import library.clientCommands.InfoCollection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.business.LetterInfo;
@@ -35,6 +36,7 @@ public class ServerSender implements Runnable, IService {
         senderPool.shutdown();
         senderThread.interrupt();
         logger.info("Sender is interrupted");
+
     }
 
     @Override

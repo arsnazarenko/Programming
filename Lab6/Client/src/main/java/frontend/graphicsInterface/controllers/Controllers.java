@@ -2,7 +2,7 @@ package frontend.graphicsInterface.controllers;
 
 
 
-import client.servises.ObjectDataValidator;
+import client.servises.ObjectDataValidatorConsole;
 import frontend.ClientManager;
 import frontend.graphicsInterface.LocaleActionListener;
 import frontend.graphicsInterface.Menu;
@@ -43,7 +43,7 @@ public class Controllers {
         this.logInWindow = logInWindow;
         this.menu = menu;
         this.locale = locale;
-        organizationCreateController = new OrganizationController(new OrganizationView(), new ObjectCreatorUI(new ObjectDataValidator()), clientManager);
+        organizationCreateController = new OrganizationController(new OrganizationView(), new ObjectCreatorUI(new ObjectDataValidatorConsole()), clientManager);
         ObjectsMapModel mapModel = new ObjectsMapModel(new ArrayDeque<>());
         mapController = new ObjectsMapController(new ObjectsMapView(mapModel.getOrganizationsCoordinateInfo(), mapModel.getCellSize(), mapModel.getCellCount()), mapModel);
         logInController = new LogInController(logInWindow,clientManager, mapController.getView());

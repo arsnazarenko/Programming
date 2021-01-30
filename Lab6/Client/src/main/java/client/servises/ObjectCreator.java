@@ -12,9 +12,9 @@ import java.util.Scanner;
  */
 public class ObjectCreator implements IObjectCreator {
 
-    private ObjectDataValidator validator;
+    private ObjectDataValidatorConsole validator;
 
-    public ObjectCreator(ObjectDataValidator validator) {
+    public ObjectCreator(ObjectDataValidatorConsole validator) {
         this.validator = validator;
     }
 

@@ -3,6 +3,8 @@ package lessons.threads.waitNotify;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class WaitBlockingQueue<E> implements MyBlockingQueue<E>{
     /**
