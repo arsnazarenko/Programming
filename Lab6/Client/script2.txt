@@ -1,7 +1,0 @@
-help
-head
-show
-print_ascending
-execute_script script3.txt
-
-exit
