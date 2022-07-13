@@ -1,8 +1,5 @@
 package lessons.multithreading;
 
-import lessons.multithreading.queues.LockBlockingQueue;
-import lessons.multithreading.queues.WaitBlockingQueue;
-
 import java.util.concurrent.TimeUnit;
 
 public class Main {
@@ -44,12 +41,10 @@ public class Main {
          * WAIT, NOTIFY, LOCKS
          * @see lessons.multithreading.waitNotify.Account
          *
-         * @see WaitBlockingQueue - простая реализация блок. очереди через wait() notifyAll()
-         * @see LockBlockingQueue
-         * - Улучшенная версия Queue с использованием Интерфейсов:
-         * {@link java.util.concurrent.locks.Lock} and {@link java.util.concurrent.locks.Condition},
-         * чтобы улучшить производительность многопоточности.
-         *
+         * @see lessons.multithreading.queue.BlockingQueue некорректно рабочая реализация блок. очереди через wait() notifyAll()
+         * @see lessons.multithreading.queue.LockBlockingQueue - рабочая версия BlockingQueue с использованием инструментов:
+         * {@link java.util.concurrent.locks.Lock} and {@link java.util.concurrent.locks.Condition}
+         * @see lessons.multithreading.queue.Main - демонстрация работы
          *
          * SYNCHRONIZED
          * @see lessons.multithreading.counter.CounterTest
@@ -108,13 +103,9 @@ public class Main {
          */
 
         /*
-        метод setDaemon() - сделает поток - демоном. Такой поток будет завершаться тогда, не останется ни одного потока не демона
+        метод setDaemon() - сделает поток - демоном. Такой поток будет завершаться тогда, когда не останется ни одного потока не демона
         Этот же поток не учитывается. Стандартно программа живет до момента, пока существует хотя бы олин поток
          */
-
-
-        //Методы для прерывания потока:
-
     }
 
 }
