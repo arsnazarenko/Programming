@@ -26,12 +26,6 @@ public class LockBlockingQueue<T> implements IBlockingQueue<T> {
     private final Condition notFull = lock.newCondition();
     private final Condition notEmpty = lock.newCondition();
 
-    int prodWaitCounter = 0;
-    int consWaitCounter = 0;
-
-    int produced = 0;
-    int consumed = 0;
-
     public LockBlockingQueue(final int capacity) {
         this.queue = new ArrayDeque<>();
         this.capacity = capacity;
@@ -43,18 +37,11 @@ public class LockBlockingQueue<T> implements IBlockingQueue<T> {
         lock.lockInterruptibly();
         try {
             while (size == 0) {
-                ++consWaitCounter;
-                System.out.println("CONSUMER " + Thread.currentThread().getId() + " wait, cons-waiters: " + consWaitCounter);
                 notEmpty.await();
-                --consWaitCounter;
-                System.out.println("CONSUMER " + Thread.currentThread().getId() + " wake up, cons-waiters: " + consWaitCounter);
             }
             T value = queue.poll();
             size--;
-            ++consumed;
-            System.out.println("CONSUMER " + Thread.currentThread().getId() + " signal, cons: " + consumed);
             notFull.signal();
-            System.out.println("CONSUMER " + Thread.currentThread().getId() + " unlock");
             return value;
         } finally {
             lock.unlock();
@@ -65,20 +52,12 @@ public class LockBlockingQueue<T> implements IBlockingQueue<T> {
     public void push(T v) throws InterruptedException {
         lock.lockInterruptibly();
         try {
-            System.out.println("PRODUCER " + Thread.currentThread().getId() + " lock");
             while (size == capacity) {
-                ++prodWaitCounter;
-                System.out.println("PRODUCER " + Thread.currentThread().getId() + " wait, prod-waiters: " + prodWaitCounter);
                 notFull.await();
-                --prodWaitCounter;
-                System.out.println("PRODUCER " + Thread.currentThread().getId() + " wake up, prod-waiters: " + prodWaitCounter);
             }
             queue.add(v);
             size++;
-            ++produced;
-            System.out.println("PRODUCER " + Thread.currentThread().getId() + " signal, prod: " + produced);
             notEmpty.signal();
-            System.out.println("PRODUCER " + Thread.currentThread().getId() + " unlock");
         } finally {
             lock.unlock();
         }

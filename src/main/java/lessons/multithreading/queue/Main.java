@@ -11,11 +11,14 @@ public class Main {
     public static void main(String[] args) {
         IBlockingQueue<Integer> bq = new BlockingQueue<>(20);
         List<Runnable> producers = new ArrayList<>();
-        for (long i = 0; i < 50; ++i) {
+        for (long i = 1; i <= 100; ++i) {
+            final long thread_id = i;
             producers.add(() -> {
-                Stream.iterate(0, s -> ++s).limit(200).forEach(v -> {
+                Thread.currentThread().setName("Producer thread №" + thread_id);
+                Stream.iterate(1, s -> ++s).limit(100).forEach(v -> {
                     try {
                         bq.push(v);
+                        System.out.println(Thread.currentThread().getName() + " push " + v);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -25,26 +28,25 @@ public class Main {
 
 
         List<Runnable> consumers = new ArrayList<>();
-        for (long i = 0; i < 200; ++i) {
+        for (long i = 1; i <= 500; ++i) {
+            final long thread_id = i;
             consumers.add(() -> {
-                List<Integer> localData = new ArrayList<>();
-                for (int j = 0; j < 50; ++j) {
+                Thread.currentThread().setName("Consumer thread №" + thread_id);
+                for (int j = 1; j <= 20; ++j) {
                     try {
-                        localData.add(bq.pop());
+                        Integer v = bq.pop();
+                        System.out.println(Thread.currentThread().getName() + " pop " + v);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
-//                System.out.println(Thread.currentThread().getName() + ": " + localData);
             });
         }
 
         List<Thread> prodThreads = producers.stream().map(Thread::new).collect(Collectors.toList());
         List<Thread> consThreads = consumers.stream().map(Thread::new).collect(Collectors.toList());
-        long start = new Date().getTime();
         prodThreads.forEach(Thread::start);
         consThreads.forEach(Thread::start);
-
         try {
             for (Thread prodThread : prodThreads) {
                 prodThread.join();
@@ -55,6 +57,5 @@ public class Main {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Time: " + (new Date().getTime() - start));
     }
 }
